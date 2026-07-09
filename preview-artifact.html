@@ -1,0 +1,333 @@
+<style>
+  :root{
+    --foam:#F2F7FA; --navy:#0A2540; --navy-2:#134a78; --marine:#1B6CA8;
+    --aqua:#2ED3C6; --coral:#FF6A3D; --amber:#FFC24B; --ink:#0E1822; --slate:#5B6B7A;
+    --bg:var(--foam); --bg-2:#ffffff; --text:var(--ink); --text-2:#43586a;
+    --line:#d3e0e4; --brand:var(--navy); --accent:var(--coral); --card:#ffffff;
+    --grid:rgba(10,37,64,.05); --chip:#e7eef1; --chip-text:#33566b;
+    --font-display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospace;
+    --maxw:1080px; --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#081a2b; --bg-2:#0c2338; --text:#eaf2f8; --text-2:#9fb2c2;
+      --line:#1d3a52; --brand:#eaf2f8; --card:#0e2740; --grid:rgba(255,255,255,.05);
+      --chip:#123049; --chip-text:#9fd7df; }
+  }
+  :root[data-theme="dark"]{ --bg:#081a2b; --bg-2:#0c2338; --text:#eaf2f8; --text-2:#9fb2c2;
+    --line:#1d3a52; --brand:#eaf2f8; --card:#0e2740; --grid:rgba(255,255,255,.05);
+    --chip:#123049; --chip-text:#9fd7df; }
+  :root[data-theme="light"]{ --bg:var(--foam); --bg-2:#ffffff; --text:var(--ink); --text-2:#43586a;
+    --line:#d3e0e4; --brand:var(--navy); --card:#ffffff; --grid:rgba(10,37,64,.05);
+    --chip:#e7eef1; --chip-text:#33566b; }
+  .boreas *{box-sizing:border-box}
+  .boreas{background:var(--bg); color:var(--text); font-family:var(--font-body); font-size:17px; line-height:1.65; margin:0 -16px}
+  .boreas h1,.boreas h2,.boreas h3{font-family:var(--font-display); font-weight:600; line-height:1.1; text-wrap:balance; margin:0}
+  .boreas a{color:inherit}
+  .b-wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  .b-eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--marine)}
+  .b-mono{font-family:var(--font-mono)}
+  .b-nav{display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:1px solid var(--line)}
+  .b-brand{display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--brand)}
+  .b-brand .name{font-family:var(--font-display); font-weight:700; font-size:20px}
+  .b-navcta{font-family:var(--font-display); font-weight:600; font-size:14px; text-decoration:none; color:#fff; background:var(--coral); padding:9px 16px; border-radius:999px}
+  .b-hero{position:relative; overflow:hidden; text-align:center; min-height:700px; display:flex; align-items:flex-start; padding:56px 0 0}
+  #seaCanvas{position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block}
+  .b-inner{position:relative; z-index:2; width:100%}
+  @media (max-width:760px){ .b-hero{min-height:560px} }
+  .b-logo{width:120px; height:120px; margin:0 auto 20px; display:block}
+  .b-hero h1{font-size:clamp(34px,6vw,58px); color:var(--brand)}
+  .b-lede{max-width:56ch; margin:16px auto 0; color:var(--text-2); font-size:clamp(16px,2.2vw,19px)}
+  .b-coord{display:inline-flex; gap:14px; margin-top:18px; font-family:var(--font-mono); font-size:13px; color:var(--marine)}
+  .b-ctarow{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:26px}
+  .b-btn{font-family:var(--font-display); font-weight:600; font-size:15px; text-decoration:none; padding:13px 24px; border-radius:999px; cursor:pointer}
+  .b-primary{background:var(--coral); color:#fff; border:0}
+  .b-ghost{border:1px solid var(--line); color:var(--text); background:transparent}
+  .b-plat{margin-top:13px; font-family:var(--font-mono); font-size:12px; color:var(--slate); letter-spacing:.03em}
+  .b-safety{background:var(--navy); color:#dbe8ef}
+  .b-safety .b-wrap{display:flex; gap:16px; align-items:flex-start; padding:20px 24px}
+  .b-safety .dot{flex:none; margin-top:3px; width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:rgba(255,106,61,.16); color:var(--coral); font-weight:700; font-size:13px; font-family:var(--font-mono)}
+  .b-safety p{margin:0; font-size:14.5px}
+  .b-safety strong{color:#fff}
+  .b-sec{padding:64px 0}
+  .b-head{max-width:60ch}
+  .b-head h2{font-size:clamp(25px,3.6vw,36px); color:var(--brand); margin-top:10px}
+  .b-head p{color:var(--text-2); margin:14px 0 0}
+  .b-rule{height:1px; background:var(--line); border:0; margin:0}
+  .b-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; margin-top:36px}
+  .b-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; display:flex; flex-direction:column; gap:10px}
+  .b-card .ic{width:38px; height:38px; border-radius:9px; display:grid; place-items:center; background:color-mix(in srgb,var(--aqua) 20%,transparent); color:var(--marine); font-size:18px}
+  .b-card h3{font-size:18px; color:var(--brand)}
+  .b-card p{margin:0; font-size:14.5px; color:var(--text-2)}
+  .b-chip{align-self:flex-start; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:4px 9px; border-radius:999px; background:var(--chip); color:var(--chip-text)}
+  .b-chip.early{background:color-mix(in srgb,var(--aqua) 24%,transparent); color:#0d6c73}
+  .b-split{display:grid; grid-template-columns:1.1fr .9fr; gap:44px; align-items:center}
+  .b-layers{display:flex; flex-direction:column; gap:14px}
+  .b-layer{border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; background:var(--card)}
+  .b-layer .lbl{font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--marine)}
+  .b-layer .val{margin-top:6px; font-size:15px; color:var(--text-2)}
+  .b-layer.own{border-color:color-mix(in srgb,var(--coral) 40%,var(--line))}
+  .b-layer.own .lbl{color:var(--coral)}
+  .b-between{font-family:var(--font-mono); font-size:12px; color:var(--slate); text-align:center}
+  .b-wait{background:var(--bg-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .b-form{display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; max-width:520px}
+  .b-form input{flex:1 1 240px; font-family:var(--font-body); font-size:16px; padding:14px 16px; border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--text)}
+  .b-form button{font-family:var(--font-display); font-weight:600; font-size:15px; color:#fff; background:var(--coral); border:0; padding:14px 24px; border-radius:999px; cursor:pointer}
+  #bFormMsg{margin-top:14px; font-family:var(--font-mono); font-size:13px; color:var(--marine); min-height:18px}
+  .b-formnote{margin-top:12px; font-size:13px; color:var(--slate)}
+  .b-foot{padding:44px 0 36px; color:var(--text-2); font-size:13.5px}
+  .b-foottop{display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; align-items:flex-start}
+  .b-footbrand{display:flex; align-items:center; gap:10px; color:var(--brand)}
+  .b-footbrand .name{font-family:var(--font-display); font-weight:700; font-size:17px}
+  .b-footlinks{display:flex; gap:22px; flex-wrap:wrap}
+  .b-footlinks a{text-decoration:none; color:var(--text-2)}
+  .b-legal{margin-top:24px; padding-top:20px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-family:var(--font-mono); font-size:12px; color:var(--slate)}
+  @media (max-width:760px){ .b-split{grid-template-columns:1fr; gap:26px} .b-sec{padding:50px 0} }
+  @media (prefers-reduced-motion:reduce){ .b-needle{animation:none !important} }
+  .b-needle{transform-origin:70px 70px; animation:bsettle 1.4s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes bsettle{0%{transform:rotate(-46deg)}70%{transform:rotate(6deg)}100%{transform:rotate(0)}}
+</style>
+
+<div class="boreas" id="btop">
+  <div class="b-wrap">
+    <div class="b-nav">
+      <a class="b-brand" href="#btop">
+        <svg width="34" height="34" viewBox="0 0 140 140" aria-hidden="true">
+          <rect x="4" y="4" width="132" height="132" rx="30" fill="#0A2540"/>
+          <circle cx="70" cy="70" r="48" fill="none" stroke="#2ED3C6" stroke-opacity=".3" stroke-width="2"/>
+          <polygon points="118,70 70,64 22,70 70,76" fill="#2ED3C6" fill-opacity=".9"/>
+          <polygon points="70,120 78,70 62,70" fill="#F2F7FA"/>
+          <polygon points="70,20 78,70 62,70" fill="#FF6A3D"/>
+          <circle cx="70" cy="70" r="6" fill="#0A2540" stroke="#F2F7FA" stroke-width="2.4"/>
+        </svg>
+        <span class="name">Boreas</span>
+      </a>
+      <a class="b-navcta" href="#bwait">Erken erişim</a>
+    </div>
+  </div>
+
+  <div class="b-hero">
+    <canvas id="seaCanvas" aria-hidden="true"></canvas>
+    <div class="b-wrap b-inner">
+      <svg class="b-logo" viewBox="0 0 140 140" role="img" aria-label="Boreas pusula ibresi">
+        <defs><linearGradient id="bbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A2540"/><stop offset="1" stop-color="#134a78"/></linearGradient></defs>
+        <rect x="4" y="4" width="132" height="132" rx="30" fill="url(#bbg)"/>
+        <g stroke="#F2F7FA" stroke-opacity=".06" stroke-width="1.2">
+          <line x1="40" y1="4" x2="40" y2="136"/><line x1="70" y1="4" x2="70" y2="136"/><line x1="100" y1="4" x2="100" y2="136"/>
+          <line x1="4" y1="40" x2="136" y2="40"/><line x1="4" y1="70" x2="136" y2="70"/><line x1="4" y1="100" x2="136" y2="100"/>
+        </g>
+        <circle cx="70" cy="70" r="48" fill="none" stroke="#2ED3C6" stroke-opacity=".3" stroke-width="2.4"/>
+        <g class="b-needle">
+          <polygon points="118,70 70,64 22,70 70,76" fill="#2ED3C6" fill-opacity=".9"/>
+          <polygon points="70,120 78,70 62,70" fill="#F2F7FA"/>
+          <polygon points="70,20 78,70 62,70" fill="#FF6A3D"/>
+        </g>
+        <circle cx="70" cy="70" r="7" fill="#0A2540" stroke="#F2F7FA" stroke-width="2.6"/>
+        <circle cx="70" cy="70" r="2.8" fill="#FF6A3D"/>
+        <text x="70" y="30" text-anchor="middle" font-family="monospace" font-size="11" fill="#FF6A3D">N</text>
+      </svg>
+      <div class="b-eyebrow">Poyraz · kuzey rüzgarı</div>
+      <h1>Küçük teknenin akıllı deniz asistanı</h1>
+      <p class="b-lede">Boreas; koyunu, rotanı ve çevreni bir arada tutan bir <strong>planlama ve farkındalık aracıdır.</strong> Resmi seyir haritası değildir — kararı hep kaptan verir.</p>
+      <div class="b-coord" aria-hidden="true"><span>40.9°N</span><span>·</span><span>28.2°E</span><span>·</span><span>SOG 6.4 kn</span></div>
+      <div class="b-ctarow">
+        <a class="b-btn b-primary" href="#bwait">Erken erişime katıl</a>
+        <a class="b-btn b-ghost" href="#bfeat">Ne yapar?</a>
+      </div>
+      <div class="b-plat">YAKINDA · ÖNCE ANDROID · ERKEN ERİŞİM</div>
+    </div>
+  </div>
+
+  <div class="b-safety">
+    <div class="b-wrap">
+      <div class="dot">!</div>
+      <p><strong>Boreas bir planlama ve farkındalık aracıdır.</strong> Resmi seyir haritası değildir; resmi haritaların, yerel kuralların, kaptan yargısının, denizcilik becerisinin veya gerçek koşulların yerine geçmez. Rota önerileri kaptan doğrulaması gerektirir.</p>
+    </div>
+  </div>
+
+  <div class="b-sec" id="bfeat">
+    <div class="b-wrap">
+      <div class="b-head">
+        <div class="b-eyebrow">Ne yapar</div>
+        <h2>Denizde farkındalık, tek bir sade araçta</h2>
+        <p>Boreas erken erişimde. Hazır olanlar <span class="b-mono">ERKEN</span>, yol haritasındakiler <span class="b-mono">PLANLI</span> — hiçbir şey abartılmıyor.</p>
+      </div>
+      <div class="b-grid">
+        <div class="b-card"><div class="ic">◎</div><span class="b-chip early">Erken</span><h3>Çevrimiçi deniz haritası</h3><p>Bulunduğun bölgeyi haritada gör. Açık-kaynak deniz verisi; resmi seyir haritası değildir.</p></div>
+        <div class="b-card"><div class="ic">➤</div><span class="b-chip early">Erken</span><h3>Konum · hız · rota</h3><p>GPS ile anlık konum, hız (knot) ve gidiş yönü (heading) — internetsiz de çalışan cihaz konumu.</p></div>
+        <div class="b-card"><div class="ic">⚓</div><span class="b-chip early">Erken</span><h3>Tekne profili</h3><p>Su çekimi, seyir hızı, yakıt kapasitesi ve tüketim — menzil farkındalığını kişiselleştirir.</p></div>
+        <div class="b-card"><div class="ic">✎</div><span class="b-chip early">Erken</span><h3>Topluluk notları</h3><p>Koya not bırak: dip tutuşu, sığlaşma, kayalık. Güvenlik-kritik notlar <em>doğrulanmamış kullanıcı bildirimi</em> olarak işaretlenir.</p></div>
+        <div class="b-card"><div class="ic">⇩</div><span class="b-chip">Planlı</span><h3>Çevrimdışı bölge paketleri</h3><p>Gideceğin bölgeyi cihazına indir; açık denizde internetsiz kullan.</p></div>
+        <div class="b-card"><div class="ic">↝</div><span class="b-chip">Planlı</span><h3>Önerilen rota</h3><p>Karadan, sığlıktan ve işaretli tehlikelerden kaçınan <em>önerilen</em> rota — planlama aracıdır, kaptan doğrulaması gerektirir.</p></div>
+        <div class="b-card"><div class="ic">☼</div><span class="b-chip">Planlı</span><h3>Hava · yakıt · risk farkındalığı</h3><p>Bölgesel rüzgar/hava değişimi bildirimi ve menzil farkındalığı — tahmini, kesin değil.</p></div>
+        <div class="b-card"><div class="ic">★</div><span class="b-chip">Planlı</span><h3>Doğrulanmış Topluluk Katmanı</h3><p>Zamanla doğrulanan topluluk gözlemleri — resmi/temel harita verisine karıştırılmadan, ayrı bir Boreas katmanında.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="b-rule">
+
+  <div class="b-sec" id="blayer">
+    <div class="b-wrap b-split">
+      <div class="b-head">
+        <div class="b-eyebrow">Veri ilkesi</div>
+        <h2>Topluluk bilgisi, resmi veriye karışmadan</h2>
+        <p>Boreas'ın topluluk gözlemleri, açık-kaynak temel harita verisinden <strong>ayrı</strong> tutulur. Kullanıcı notları hiçbir zaman OpenSeaMap/OSM türevi temel haritaya karıştırılmaz. Doğruluğu teyit edilenler ayrı bir "Doğrulanmış Topluluk Katmanı"na taşınır — yine bir farkındalık kaynağı, resmi kaynak değil.</p>
+      </div>
+      <div class="b-layers">
+        <div class="b-layer"><div class="lbl">Temel harita verisi</div><div class="val">Açık-kaynak deniz verisi (atıflı). Salt görüntüleme; resmi seyir haritası değildir.</div></div>
+        <div class="b-between">— ayrı katmanlar, karıştırılmaz —</div>
+        <div class="b-layer own"><div class="lbl">Boreas topluluk katmanı</div><div class="val">Kullanıcı notları ve gözlemleri — Boreas'a ait, temel haritaya yazılmaz.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="b-sec b-wait" id="bwait">
+    <div class="b-wrap">
+      <div class="b-head">
+        <div class="b-eyebrow">Erken erişim</div>
+        <h2>İlk denizciler arasında ol</h2>
+        <p>Boreas önce Android'de, erken erişim olarak açılıyor. E-postanı bırak; hazır olduğunda ilk sen haber al.</p>
+      </div>
+      <form class="b-form" id="bWaitForm" novalidate>
+        <input type="email" id="bEmail" placeholder="e-posta adresin" autocomplete="email" aria-label="E-posta adresi">
+        <button type="submit">Listeye katıl</button>
+      </form>
+      <div id="bFormMsg" role="status" aria-live="polite"></div>
+      <p class="b-formnote">Tekne adı ile kayıt uygulamanın içinde olacak. Spam yok; sadece çıkış haberi.</p>
+    </div>
+  </div>
+
+  <div class="b-foot">
+    <div class="b-wrap">
+      <div class="b-foottop">
+        <div class="b-footbrand">
+          <svg width="30" height="30" viewBox="0 0 140 140" aria-hidden="true">
+            <rect x="4" y="4" width="132" height="132" rx="30" fill="#0A2540"/>
+            <polygon points="118,70 70,64 22,70 70,76" fill="#2ED3C6" fill-opacity=".9"/>
+            <polygon points="70,120 78,70 62,70" fill="#F2F7FA"/>
+            <polygon points="70,20 78,70 62,70" fill="#FF6A3D"/>
+            <circle cx="70" cy="70" r="6" fill="#0A2540" stroke="#F2F7FA" stroke-width="2.4"/>
+          </svg>
+          <div><div class="name">Boreas</div><div class="b-mono" style="font-size:12px;color:var(--slate)">kuzey rüzgarı · Poyraz</div></div>
+        </div>
+        <div class="b-footlinks">
+          <a href="#bfeat">Özellikler</a><a href="#blayer">Veri ilkesi</a><a href="#bwait">Erken erişim</a>
+        </div>
+      </div>
+      <p style="max-width:70ch;margin:22px 0 0;font-size:13px;color:var(--slate)">Harita ve derinlik verisi entegre edildikçe açık-kaynak sağlayıcılara atıf verilir (ör. OpenSeaMap, GEBCO, EMODnet). Boreas resmi seyir sistemi değildir ve resmi hidrografik veri sağlamaz.</p>
+      <div class="b-legal"><span>© 2026 Boreas</span><span>RESMİ SEYİR İÇİN DEĞİLDİR · KARAR KAPTANINDIR</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var form = document.getElementById('bWaitForm');
+    var msg = document.getElementById('bFormMsg');
+    var email = document.getElementById('bEmail');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = (email.value || '').trim();
+      var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      if (!ok) { msg.style.color = 'var(--coral)'; msg.textContent = 'Geçerli bir e-posta gir.'; return; }
+      msg.style.color = 'var(--marine)';
+      msg.textContent = 'Teşekkürler — kayıt sistemi bağlandığında listeye alınacaksın.';
+      form.reset();
+    });
+  })();
+</script>
+<script>
+  (function () {
+    var canvas = document.getElementById('seaCanvas');
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var W = 1, H = 1, DPR = 1, rafId = null, boats = [], msgs = [], lastMsg = 0;
+    var CORAL = '#FF6A3D';
+    var greetings = ['Selam! ⚓', 'İyi seyirler', 'Kolay gelsin', 'Rüzgar arkadan', 'Poyraz sert', 'Balık bol', 'Görüşürüz \u{1F44B}', 'Demirdeyim'];
+    function pal() {
+      var root = document.documentElement, dt = root.getAttribute('data-theme');
+      var dark = dt ? (dt === 'dark') : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      return dark ? {
+        sea1:'#0a1f33', sea2:'#0f2c47', grid:'rgba(255,255,255,0.055)', coast:'rgba(160,178,194,0.06)',
+        wake:'rgba(210,230,240,0.18)', ping:'46,211,198', hull:'#7fb7c6', hull2:'#2ED3C6',
+        bubbleBg:'rgba(14,39,64,0.94)', bubbleBorder:'rgba(46,211,198,0.55)', bubbleText:'#eaf2f8',
+        link:'rgba(46,211,198,0.55)', topFade:'#081a2b'
+      } : {
+        sea1:'#eef7f6', sea2:'#d9ebeb', grid:'rgba(10,37,64,0.06)', coast:'rgba(185,163,106,0.13)',
+        wake:'rgba(27,108,168,0.18)', ping:'27,108,168', hull:'#1B6CA8', hull2:'#178090',
+        bubbleBg:'rgba(255,255,255,0.96)', bubbleBorder:'rgba(27,108,168,0.35)', bubbleText:'#0E1822',
+        link:'rgba(27,108,168,0.45)', topFade:'#F2F7FA'
+      };
+    }
+    var C = pal();
+    function rand(a, b) { return a + Math.random() * (b - a); }
+    function hexA(hex, a) { var h = hex.replace('#', ''); if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+      var n = parseInt(h, 16); return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')'; }
+    function buildBoats() {
+      boats = [{ hero:true, color:CORAL, t:rand(0,1), x:0, y:0, angle:0, wake:[], pings:[], nextPing:0 }];
+      var n = W < 640 ? 4 : 6;
+      for (var i = 0; i < n; i++) boats.push({ hero:false, color:(i%2===0)?C.hull:C.hull2, bx:rand(W*0.1,W*0.9), by:rand(H*0.62,H*0.92),
+        phase:rand(0,Math.PI*2), drift:rand(6,15), baseAngle:rand(-0.5,0.5), x:0, y:0, angle:0, s:rand(0.85,1.12), pings:[], nextPing:0 });
+    }
+    function resize() { DPR = Math.min(window.devicePixelRatio || 1, 2); W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); buildBoats(); }
+    function boatPos(t) { return { x:(t%1)*(W+140)-70, y:H*0.7 + Math.sin(t*Math.PI*2.2)*H*0.1 }; }
+    function drawBoat(x, y, angle, color, s) { ctx.save(); ctx.translate(x,y); ctx.rotate(angle);
+      ctx.beginPath(); ctx.moveTo(10*s,0); ctx.quadraticCurveTo(3*s,5.5*s,-8*s,4.2*s); ctx.lineTo(-8*s,-4.2*s);
+      ctx.quadraticCurveTo(3*s,-5.5*s,10*s,0); ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+      ctx.beginPath(); ctx.arc(-1*s,0,1.7*s,0,Math.PI*2); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill(); ctx.restore(); }
+    function drawPings(bo, now) { for (var i = bo.pings.length-1; i >= 0; i--) { var pr = (now-bo.pings[i])/1700;
+      if (pr >= 1) { bo.pings.splice(i,1); continue; } var r = 6+pr*(bo.hero?62:42), a = (1-pr)*(bo.hero?0.5:0.36);
+      ctx.beginPath(); ctx.arc(bo.x,bo.y,r,0,Math.PI*2); ctx.strokeStyle = 'rgba('+(bo.hero?'255,106,61':C.ping)+','+a.toFixed(3)+')';
+      ctx.lineWidth = 1.4; ctx.stroke(); } }
+    function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+    function spawnMsg(now) { if (boats.length < 3) return;
+      var a = boats[1+Math.floor(Math.random()*(boats.length-1))], b = null, best = 1e9;
+      for (var i = 0; i < boats.length; i++) { var o = boats[i]; if (o === a) continue; var dx = o.x-a.x, dy = o.y-a.y, d = dx*dx+dy*dy; if (d < best) { best = d; b = o; } }
+      if (b) msgs.push({ a:a, b:b, text:greetings[Math.floor(Math.random()*greetings.length)], start:now, life:3200 }); }
+    function drawMsg(m, now) { var pr = (now-m.start)/m.life; if (pr >= 1) return false;
+      var fade = pr < 0.15 ? pr/0.15 : (pr > 0.8 ? (1-pr)/0.2 : 1); ctx.save(); ctx.globalAlpha = fade;
+      ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(m.a.x,m.a.y); ctx.lineTo(m.b.x,m.b.y); ctx.strokeStyle = C.link; ctx.lineWidth = 1.2; ctx.stroke(); ctx.setLineDash([]);
+      var tt = Math.min(1,pr/0.6), dx = m.a.x+(m.b.x-m.a.x)*tt, dy = m.a.y+(m.b.y-m.a.y)*tt;
+      ctx.beginPath(); ctx.arc(dx,dy,2.6,0,Math.PI*2); ctx.fillStyle = C.link; ctx.fill();
+      ctx.font = "500 13px 'Inter', system-ui, sans-serif"; var tw = ctx.measureText(m.text).width, bw = tw+20, bh = 26;
+      var bx = Math.max(6,Math.min(W-bw-6,m.a.x-bw/2)), by = Math.max(6,m.a.y-36);
+      roundRect(bx,by,bw,bh,9); ctx.fillStyle = C.bubbleBg; ctx.fill(); ctx.strokeStyle = C.bubbleBorder; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = C.bubbleText; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(m.text, bx+10, by+bh/2+0.5); ctx.restore(); return true; }
+    var start = (window.performance && performance.now) ? performance.now() : Date.now();
+    function frame(now) {
+      var t = (now-start)/1000; ctx.clearRect(0,0,W,H);
+      var g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,C.sea1); g.addColorStop(1,C.sea2); ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+      ctx.strokeStyle = C.grid; ctx.lineWidth = 1; var step = 46;
+      for (var x = (t*6 % step); x < W; x += step) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for (var y = 0; y < H; y += step) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(0,H); ctx.lineTo(0,H*0.84); ctx.quadraticCurveTo(W*0.14,H*0.74,W*0.24,H*0.88); ctx.quadraticCurveTo(W*0.33,H*0.98,W*0.44,H); ctx.closePath(); ctx.fillStyle = C.coast; ctx.fill();
+      var hero = boats[0];
+      if (hero) { hero.t += reduce ? 0 : 0.00092; var p = boatPos(hero.t), p2 = boatPos(hero.t+0.004);
+        hero.x = p.x; hero.y = p.y; hero.angle = Math.atan2(p2.y-p.y,p2.x-p.x);
+        hero.wake.push({x:hero.x,y:hero.y}); if (hero.wake.length > 26) hero.wake.shift();
+        ctx.beginPath(); for (var i = 0; i < hero.wake.length; i++) { var wp = hero.wake[i]; if (i===0) ctx.moveTo(wp.x,wp.y); else ctx.lineTo(wp.x,wp.y); }
+        ctx.strokeStyle = C.wake; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.stroke(); }
+      for (var b = 1; b < boats.length; b++) { var o = boats[b]; o.x = o.bx+Math.sin(t*0.5+o.phase)*o.drift; o.y = o.by+Math.cos(t*0.4+o.phase)*o.drift*0.5; o.angle = o.baseAngle+Math.sin(t*0.3+o.phase)*0.25; }
+      for (var b2 = 0; b2 < boats.length; b2++) { var bo = boats[b2], interval = bo.hero?2600:3200;
+        if (!bo.nextPing) bo.nextPing = now+rand(300,interval);
+        if (!reduce && now >= bo.nextPing) { bo.pings.push(now); bo.nextPing = now+interval+rand(-400,700); }
+        if (reduce && bo.pings.length === 0) bo.pings.push(now-700); drawPings(bo, now); }
+      if (!reduce && now-lastMsg > 2200 && msgs.length < 2) { spawnMsg(now); lastMsg = now; }
+      for (var mi = msgs.length-1; mi >= 0; mi--) { if (!drawMsg(msgs[mi], now)) msgs.splice(mi,1); }
+      for (var b3 = 0; b3 < boats.length; b3++) { var bb = boats[b3]; drawBoat(bb.x,bb.y,bb.angle,bb.color,bb.hero?1.3:(bb.s||1)); }
+      var tf = ctx.createLinearGradient(0,0,0,H*0.6); tf.addColorStop(0,hexA(C.topFade,0.9)); tf.addColorStop(1,hexA(C.topFade,0)); ctx.fillStyle = tf; ctx.fillRect(0,0,W,H*0.6);
+      if (!reduce) rafId = requestAnimationFrame(frame);
+    }
+    function go() { resize(); if (reduce) frame(start); else rafId = requestAnimationFrame(frame); }
+    var rt = null;
+    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (rafId) cancelAnimationFrame(rafId); resize(); if (reduce) frame(start); else rafId = requestAnimationFrame(frame); }, 150); });
+    var mq = window.matchMedia('(prefers-color-scheme: dark)'); if (mq.addEventListener) mq.addEventListener('change', function () { C = pal(); });
+    try { new MutationObserver(function () { C = pal(); }).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] }); } catch (e) {}
+    go();
+  })();
+</script>
