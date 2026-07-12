@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boreas — Gizlilik Politikası & Kullanım Koşulları</title>
+<style>
+  :root{--navy:#0A2540;--marine:#1B6CA8;--line:#D8E2E6;--foam:#F2F7F9;--coral:#FF6A3D;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#12212e;line-height:1.6;background:#fff}
+  header{background:linear-gradient(160deg,var(--navy),#061A2F);color:#fff;padding:28px 20px}
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+  header .wrap{padding:0}
+  h1{margin:0 0 4px;font-size:1.5rem;letter-spacing:1px}
+  header p{margin:0;color:#BFDCE6;font-size:.9rem}
+  nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:5}
+  nav .wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 20px}
+  nav a{color:var(--marine);text-decoration:none;font-weight:600;font-size:.9rem;padding:6px 10px;border-radius:8px}
+  nav a:hover{background:var(--foam)}
+  .lang{margin-left:auto;display:flex;gap:6px}
+  .lang button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 12px;cursor:pointer;font-weight:600;font-size:.8rem;color:#555}
+  .lang button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  main{padding:24px 0 60px}
+  .draft{background:#FFF4EF;border:1px solid var(--coral);border-radius:12px;padding:14px 16px;margin:18px 0;font-size:.9rem}
+  .draft b{color:var(--coral)}
+  h2{color:var(--navy);margin:34px 0 6px;font-size:1.25rem;border-top:1px solid var(--line);padding-top:24px}
+  h3{color:var(--marine);margin:20px 0 4px;font-size:1rem}
+  p,li{font-size:.96rem}
+  .updated{color:#667;font-size:.85rem}
+  footer{border-top:1px solid var(--line);padding:24px 0;color:#667;font-size:.85rem}
+  [data-lang]{display:none}
+  html[lang="tr"] [data-lang="tr"]{display:block}
+  html[lang="en"] [data-lang="en"]{display:block}
+  li[data-lang]{display:none}
+  html[lang="tr"] li[data-lang="tr"]{display:list-item}
+  html[lang="en"] li[data-lang="en"]{display:list-item}
+  code{background:var(--foam);padding:1px 5px;border-radius:4px;color:var(--coral)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <p style="margin:0 0 8px"><a href="index.html" style="color:#BFDCE6;text-decoration:none;font-size:.85rem">← Boreas ana sayfa</a></p>
+  <h1>BOREAS</h1>
+  <p data-lang="tr">Gizlilik Politikası &amp; Kullanım Koşulları</p>
+  <p data-lang="en">Privacy Policy &amp; Terms of Use</p>
+</div></header>
+
+<nav><div class="wrap">
+  <a href="#privacy" data-lang="tr">Gizlilik</a><a href="#privacy" data-lang="en">Privacy</a>
+  <a href="#terms" data-lang="tr">Koşullar</a><a href="#terms" data-lang="en">Terms</a>
+  <div class="lang">
+    <button id="btn-tr" class="on" onclick="setLang('tr')">TR</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</div></nav>
+
+<main class="wrap">
+
+  <div class="draft">
+    <span data-lang="tr"><b>TASLAK — hukukçu onayı bekliyor.</b> Bu metinler geliştirici tarafından, güncel KVKK (6698) ve AB GDPR esas alınarak hazırlanmıştır; yayından önce KVKK/GDPR + denizcilik + tüketici hukuku alanında yetkin bir hukukçu tarafından incelenmeli ve <code>[ŞİRKET]</code>, <code>[ADRES]</code>, <code>[E-POSTA]</code> alanları gerçek değerlerle doldurulmalıdır.</span>
+    <span data-lang="en"><b>DRAFT — pending lawyer review.</b> Prepared by the developer on the basis of current Turkish KVKK (Law 6698) and EU GDPR; before release it must be reviewed by a lawyer qualified in KVKK/GDPR + maritime + consumer law, and the <code>[COMPANY]</code>, <code>[ADDRESS]</code>, <code>[EMAIL]</code> fields filled with real values.</span>
+  </div>
+
+  <!-- ============ PRIVACY ============ -->
+  <h2 id="privacy"><span data-lang="tr">Gizlilik Politikası ve KVKK/GDPR Aydınlatma Metni</span><span data-lang="en">Privacy Policy (KVKK &amp; GDPR)</span></h2>
+  <p class="updated"><span data-lang="tr">Son güncelleme: 12 Temmuz 2026</span><span data-lang="en">Last updated: 12 July 2026</span></p>
+
+  <p data-lang="tr">Boreas, tekneniz için bir seyir planlama ve farkındalık yardımcısıdır. Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) ve — Avrupa Birliği'nde de yayınlandığından — AB Genel Veri Koruma Tüzüğü (GDPR) kapsamında hangi verilerin, neden ve nasıl işlendiğini açıklar.</p>
+  <p data-lang="en">Boreas is a passage-planning and awareness aid for your boat. This notice explains, under Turkey's KVKK (Law 6698) and — because the app is also published in the EU — the EU General Data Protection Regulation (GDPR), what data is processed, why and how.</p>
+
+  <h3 data-lang="tr">1. Veri sorumlusu</h3>
+  <h3 data-lang="en">1. Data controller</h3>
+  <p data-lang="tr"><code>[ŞİRKET]</code> (veri sorumlusu). Adres: <code>[ADRES]</code>. İletişim/destek: <code>[E-POSTA]</code>. Bu bilgiler App Store ve Google Play sayfalarında ve uygulama içi Ayarlar ekranında da yayımlanır.</p>
+  <p data-lang="en"><code>[COMPANY]</code> (the controller). Address: <code>[ADDRESS]</code>. Contact/support: <code>[EMAIL]</code>. These are also published on the App Store and Google Play listings and in the app's Settings screen.</p>
+
+  <h3 data-lang="tr">2. Hangi veriler, ne için, hangi hukuki sebeple</h3>
+  <h3 data-lang="en">2. What data, what for, on what basis</h3>
+  <ul>
+    <li data-lang="tr"><b>Konum (GPS):</b> Haritada teknenizi göstermek, hız/pruva ve emniyet uyarıları (sığlık, demir, kıyı, batık) için kullanım sırasında işlenir. Varsayılan olarak cihazınızda kalır; izniniz olmadan sunucuya gönderilmez. <i>(Hukuki sebep: KVKK m.5/2-c–f; GDPR m.6/1-b sözleşmenin ifası / f meşru menfaat.)</i></li>
+    <li data-lang="en"><b>Location (GPS):</b> processed while you use the app to show your boat, speed/heading and safety aids (shallow, anchor, coast, wreck). Stays on your device by default; not sent to any server without your consent. <i>(Basis: GDPR Art. 6(1)(b) performance of a contract / (f) legitimate interest; KVKK Art. 5.)</i></li>
+    <li data-lang="tr"><b>Tekne profili (ad, boy, su çekimi, hız):</b> Alarmların teknenize göre çalışması için cihazda saklanır; bulut senkronunu açarsanız hesabınıza bağlı sunucuda da saklanır. <i>(Bulut için: açık rıza — GDPR m.6/1-a.)</i></li>
+    <li data-lang="en"><b>Boat profile (name, length, draft, speed):</b> stored on the device to tune alarms; stored server-side only if you enable cloud sync. <i>(Cloud: consent — GDPR Art. 6(1)(a).)</i></li>
+    <li data-lang="tr"><b>Yolculuk kayıtları (iz, hız, süre):</b> Cihazda tutulur. Açık rızanızla bulut senkronu açıksa yedeklenir ve topluluk haritasına yalnızca k-anonim (en az 3 farklı tekne) toplulaştırılmış katmanlar halinde katkı verir; bireysel rotanız hiçbir kullanıcıya gösterilmez.</li>
+    <li data-lang="en"><b>Trip records (track, speed, duration):</b> kept on the device; with your consent to cloud sync, backed up and contributed to community layers only in k-anonymous aggregate (≥3 distinct boats); your individual track is never shown to anyone.</li>
+    <li data-lang="tr"><b>Topluluk notları:</b> Paylaştığınız notlar (konum + metin) diğer kullanıcılara "topluluk kaynaklı, doğrulanmamış" etiketiyle herkese açık gösterilir.</li>
+    <li data-lang="en"><b>Community notes:</b> notes you share (position + text) are shown publicly to other users, labelled community-derived and unverified.</li>
+    <li data-lang="tr"><b>Fotoğraflar/görsel içerik (isteğe bağlı):</b> Yüklediğiniz fotoğraflar, incelemeden sonra herkese açık gösterilir. Yükleme sırasında mümkün olduğunda konum (EXIF) meta verisi kaldırılır; başkalarına ait tanınabilir kişisel veriyi onayları olmadan yüklememelisiniz. <i>(Hukuki sebep: ayrı açık rıza — GDPR m.6/1-a, m.9 gerektiğinde.)</i></li>
+    <li data-lang="en"><b>Photos/media (optional):</b> photos you upload are shown publicly after review. Location (EXIF) metadata is stripped where feasible; do not upload other people's identifiable data without consent. <i>(Basis: separate explicit consent — GDPR Art. 6(1)(a), Art. 9 where relevant.)</i></li>
+    <li data-lang="tr"><b>Filo görünürlüğü (isteğe bağlı):</b> "Filoya görün" açıkken canlı konumunuz ve tekne adınız gösterilir; kapatınca paylaşım durur ve konumunuz dakikalar içinde düşer. Mesajlar yalnızca karşılıklı kabul edilen bağlantılarda iletilir; engellenen kullanıcı sizi göremez.</li>
+    <li data-lang="en"><b>Fleet visibility (opt-in):</b> with "join the fleet" on, your live position and boat name are shown; turning it off stops sharing and your position drops within minutes. Messages flow only between mutually accepted contacts; blocked users cannot reach you.</li>
+    <li data-lang="tr"><b>Hesap (isteğe bağlı):</b> Bulut özellikleri için kimlik doğrulamada e-posta adresiniz işlenir (altyapı: Supabase).</li>
+    <li data-lang="en"><b>Account (optional):</b> to use cloud features your email is processed for authentication (infrastructure: Supabase).</li>
+    <li data-lang="tr"><b>Hava/deniz tahmini ve yer arama:</b> Yalnızca sorgu anında konumunuz ya da arama metniniz ilgili servise (Open-Meteo) hesap bilgisi olmadan iletilir.</li>
+    <li data-lang="en"><b>Weather/sea forecast and place search:</b> only at query time, your position or search text is sent to Open-Meteo with no account identifiers.</li>
+  </ul>
+
+  <h3 data-lang="tr">3. Açık rıza ve geri alma</h3>
+  <h3 data-lang="en">3. Consent and withdrawal</h3>
+  <p data-lang="tr">Bulut senkronu, veri katkısı ve fotoğraf yükleme yalnızca uygulama içinde ayrıca sorulan açık rızayla başlar (aydınlatma ve rıza ayrı metinlerdir). Rızanızı Tekne Profili ekranından ya da kaldırma talebiyle istediğiniz an geri alabilirsiniz.</p>
+  <p data-lang="en">Cloud sync, data contribution and photo upload start only after a separate in-app consent (the information notice and the consent are separate texts). You may withdraw at any time from the Boat Profile screen or by requesting removal.</p>
+
+  <h3 data-lang="tr">4. Paylaşım, işleyenler ve yurt dışı aktarım</h3>
+  <h3 data-lang="en">4. Sharing, processors and international transfers</h3>
+  <p data-lang="tr">Verileriniz reklam amacıyla kullanılmaz, satılmaz. İşleyenler: Supabase (sunucu/kimlik doğrulama, AB bölgesi), Open-Meteo (hava/deniz tahmini ve yer arama), Sentinel-2 cloudless / EOX (3D sahil görünümünde yalnızca baktığınız alanın koordinat kutusu; kişisel veri veya hesap bilgisi gönderilmez). Verinin AB dışına aktarıldığı hâllerde GDPR m.44 vd. uyarınca standart sözleşme hükümleri (SCC) veya eşdeğer güvenceler; KVKK bakımından m.9 aktarım kuralları uygulanır.</p>
+  <p data-lang="en">Your data is not used for advertising and never sold. Processors: Supabase (backend/auth, EU region), Open-Meteo (forecast &amp; geocoding), Sentinel-2 cloudless / EOX (in the 3D coast view, only the coordinate box of the area you view; no personal data or account identifiers). Where data is transferred outside the EU, GDPR Art. 44 et seq. safeguards (Standard Contractual Clauses or equivalent) apply; for KVKK, Art. 9 transfer rules apply.</p>
+
+  <h3 data-lang="tr">5. Saklama ve silme</h3>
+  <h3 data-lang="en">5. Retention and deletion</h3>
+  <p data-lang="tr">Cihazdaki veriyi uygulamayı silerek; sunucudaki veriyi (hesap, yedek, paylaşılan not/fotoğraf) uygulama içinden ya da iletişim adresi üzerinden talep ederek sildirebilirsiniz. Talepler makul sürede (KVKK'da en geç 30 gün) karşılanır.</p>
+  <p data-lang="en">Delete on-device data by uninstalling; request server-side deletion (account, backups, shared notes/photos) in-app or via the contact address. Requests are handled within a reasonable time (KVKK: within 30 days at the latest).</p>
+
+  <h3 data-lang="tr">6. Haklarınız</h3>
+  <h3 data-lang="en">6. Your rights</h3>
+  <p data-lang="tr">KVKK m.11 ve GDPR m.15–22 uyarınca: erişim, düzeltme, silme ("unutulma"), işlemeyi kısıtlama, işlemeye itiraz, veri taşınabilirliği ve verdiğiniz rızayı geri alma haklarına sahipsiniz. Talebinizi <code>[E-POSTA]</code> adresine iletebilirsiniz. Ayrıca bir denetim makamına şikâyette bulunabilirsiniz: Türkiye'de Kişisel Verileri Koruma Kurumu (KVKK); AB'de ikamet ettiğiniz ülkenin veri koruma otoritesi.</p>
+  <p data-lang="en">Under KVKK Art. 11 and GDPR Art. 15–22 you have the rights of access, rectification, erasure ("right to be forgotten"), restriction, objection, data portability, and withdrawal of consent. Contact <code>[EMAIL]</code>. You may also lodge a complaint with a supervisory authority: in Turkey the Personal Data Protection Authority (KVKK); in the EU your local data protection authority.</p>
+
+  <h3 data-lang="tr">7. Çocuklar</h3>
+  <h3 data-lang="en">7. Children</h3>
+  <p data-lang="tr">Boreas çocuklara yönelik değildir. Hesap ve içerik paylaşımı (not/fotoğraf/filo) özellikleri 16 yaş ve üzeri içindir.</p>
+  <p data-lang="en">Boreas is not directed at children. Account and content-sharing features (notes/photos/fleet) are for users aged 16 and over.</p>
+
+  <!-- ============ TERMS ============ -->
+  <h2 id="terms"><span data-lang="tr">Kullanım Koşulları</span><span data-lang="en">Terms of Use</span></h2>
+  <p class="updated"><span data-lang="tr">Son güncelleme: 12 Temmuz 2026</span><span data-lang="en">Last updated: 12 July 2026</span></p>
+
+  <h3 data-lang="tr">1. Uygulamanın niteliği — emniyet uyarısı</h3>
+  <h3 data-lang="en">1. Nature of the app — safety notice</h3>
+  <p data-lang="tr">Boreas yalnızca bir planlama ve farkındalık yardımcısıdır. Resmî seyir haritası değildir; resmî haritaların, yerel düzenlemelerin, COLREG kurallarının, kaptan muhakemesinin ve gerçek koşulların yerine geçmez. Derinlikler, işaretler, rotalar ve tüm uyarılar gösterge niteliğindedir ve doğrulanmamıştır. Seyirde kullanım için değildir; birincil seyir aracınız resmî harita ve donanımınız olmalıdır. Seyir emniyetinin tüm sorumluluğu kaptandadır.</p>
+  <p data-lang="en">Boreas is a planning and awareness aid only. It is not an official nautical chart and does not replace official charts, local regulations, the COLREGs, captain judgment or real conditions. Depths, marks, routes and all alerts are indicative and unverified. It is not for navigation; your primary means must be official charts and equipment. The captain remains fully responsible for safe navigation.</p>
+
+  <h3 data-lang="tr">2. Acil durum servisi değildir</h3>
+  <h3 data-lang="en">2. Not an emergency service</h3>
+  <p data-lang="tr">Boreas bir acil durum, tehlike ihbarı veya arama-kurtarma servisi değildir. "Denize adam düştü (MOB)" gibi işaretler yalnızca konum işaretidir; gerçek acil durumda resmî kanalları kullanın (ör. VHF Kanal 16, 112/Sahil Güvenlik).</p>
+  <p data-lang="en">Boreas is not an emergency, distress or search-and-rescue service. Markers such as "man overboard (MOB)" are position markers only; in a real emergency use official channels (e.g. VHF Ch 16, coastguard/112).</p>
+
+  <h3 data-lang="tr">3. Topluluk içeriği</h3>
+  <h3 data-lang="en">3. Community content</h3>
+  <p data-lang="tr">Topluluk notları, fotoğraflar ve yoğunluk katmanları kullanıcı katkılarından türetilir, doğrulanmamıştır ve hatalı olabilir. Emniyet-kritik kararlar buna dayandırılamaz.</p>
+  <p data-lang="en">Community notes, photos and density layers derive from user contributions, are unverified and may be wrong. Do not base safety-critical decisions on them.</p>
+
+  <h3 data-lang="tr">4. Kullanıcı içeriği; bildirme, kaldırma ve engelleme</h3>
+  <h3 data-lang="en">4. User content; reporting, removal and blocking</h3>
+  <p data-lang="tr">Yüklediğiniz not ve fotoğraflar incelememizin ardından herkese açık gösterilir. İçerik yükleyerek Boreas'a uygulama içinde barındırma, gösterme, çoğaltma ve moderasyon için münhasır olmayan, telifsiz, dünya çapında lisans verirsiniz (telif hakkı sizde kalır). İçerik üzerinde gerekli haklara sahip olduğunuzu ve üçüncü kişilerin telif/gizlilik/kişisel verilerini ihlal etmediğini taahhüt edersiniz. Yasak: hukuka aykırı, yanıltıcı emniyet bilgisi, spam, nefret/hakaret, müstehcen içerik. Uygunsuz içeriği herhangi bir topluluk notundaki <b>uygulama içi "bildir" düğmesiyle</b> ya da iletişim adresinden bildirebilirsiniz; bildirimleri inceler, makul sürede yanıt verir, içeriği kaldırabilir veya erişimi kısıtlayabiliriz. Kötüye kullanan kullanıcıları engelleyebilirsiniz.</p>
+  <p data-lang="en">Notes and photos you upload are shown publicly after our review. By uploading you grant Boreas a non-exclusive, royalty-free, worldwide licence to host, display, reproduce and moderate the content in the app (you keep your copyright). You warrant you hold the necessary rights and that the content infringes no third party's copyright, privacy or personal data. Prohibited: unlawful, misleading safety info, spam, hate/abuse, obscene material. Report objectionable content with the <b>in-app "report" button</b> on any community note or via the contact address; we review reports, respond within a reasonable time, and may remove content or restrict access. You can block abusive users.</p>
+
+  <h3 data-lang="tr">5. Abonelikler ve ödemeler (Pro / Pro Plus)</h3>
+  <h3 data-lang="en">5. Subscriptions and payments (Pro / Pro Plus)</h3>
+  <p data-lang="tr">Boreas'ın temel özellikleri ücretsizdir. Pro ve Pro Plus, App Store / Google Play üzerinden satılan aylık, yıllık veya tek seferlik (ömür boyu) satın alımlardır. Abonelikler, dönem bitiminden önce mağaza hesabınızdan iptal etmediğiniz sürece otomatik yenilenir; yönetim ve iptal ilgili mağazanın hesap ayarlarından yapılır. Fiyat, süre ve yenileme bilgisi satın alma ekranında gösterilir. AB tüketici hukuku kapsamındaki cayma hakkınız saklıdır; dijital içeriğin ifasına açık onayınızla hemen başlanması hâlinde bu hak mevzuatın öngördüğü ölçüde sınırlanabilir. Ödemeler ilgili mağaza (Apple/Google) tarafından işlenir.</p>
+  <p data-lang="en">Boreas's core features are free. Pro and Pro Plus are monthly, yearly or one-time (lifetime) purchases sold via the App Store / Google Play. Subscriptions renew automatically unless cancelled in your store account before the period ends; management and cancellation are done in the relevant store's account settings. Price, term and renewal are shown on the purchase screen. Your EU consumer right of withdrawal is preserved; where you consent to immediate performance of digital content, that right may be limited to the extent the law allows. Payments are processed by the relevant store (Apple/Google).</p>
+
+  <h3 data-lang="tr">6. Sorumluluğun sınırı</h3>
+  <h3 data-lang="en">6. Limitation of liability</h3>
+  <p data-lang="tr">Uygulama "olduğu gibi" sunulur. Geliştirici; verilerin kesintisizliği, doğruluğu veya belirli bir amaca uygunluğu konusunda garanti vermez ve uygulamanın kullanımından, verilere güvenilmesinden, seyir hatalarından, karaya oturmadan veya tekneye/kişilere gelebilecek zararlardan hukukun izin verdiği azami ölçüde sorumlu tutulamaz. Bu madde; kasıt, ağır kusur ve tüketicinin emredici yasal haklarını (KVKK/GDPR ve tüketici mevzuatı dâhil) kapsamaz ve etkilemez.</p>
+  <p data-lang="en">The app is provided "as is". To the maximum extent permitted by law, the developer gives no warranty of availability, accuracy or fitness for a particular purpose and is not liable for damages arising from use, reliance on the data, navigation errors, running aground, or harm to the vessel or persons. This clause does not cover intent or gross negligence and does not affect a consumer's mandatory statutory rights (including under KVKK/GDPR and consumer law).</p>
+
+  <h3 data-lang="tr">7. Fikri haklar ve veri kaynakları</h3>
+  <h3 data-lang="en">7. Intellectual property and data sources</h3>
+  <p data-lang="tr">Harita verileri GSHHG, GEBCO, EMODnet ve OpenStreetMap katkıcılarından; hava verileri Open-Meteo'dan; uydu görüntüleri Copernicus/Sentinel-2 (EOX) kaynaklarından türetilmiştir ve ilgili lisans/atıf koşullarına tabidir.</p>
+  <p data-lang="en">Chart data derives from GSHHG, GEBCO, EMODnet and OpenStreetMap contributors; weather from Open-Meteo; satellite imagery from Copernicus/Sentinel-2 (EOX), each subject to its licence and attribution terms.</p>
+
+  <h3 data-lang="tr">8. Uygulanacak hukuk</h3>
+  <h3 data-lang="en">8. Governing law</h3>
+  <p data-lang="tr">Bu koşullara Türkiye Cumhuriyeti hukuku uygulanır. AB'de mutad meskeni bulunan tüketicilerin, ikamet ettikleri ülkenin emredici tüketici koruma hükümlerinden doğan hakları saklıdır.</p>
+  <p data-lang="en">These terms are governed by the laws of the Republic of Türkiye. Consumers habitually resident in the EU retain the rights afforded by the mandatory consumer-protection provisions of their country of residence.</p>
+
+  <h3 data-lang="tr">9. Değişiklikler</h3>
+  <h3 data-lang="en">9. Changes</h3>
+  <p data-lang="tr">Koşullar güncellenebilir; önemli değişikliklerde uygulama yeniden onay ister.</p>
+  <p data-lang="en">These terms may change; material changes require renewed in-app acceptance.</p>
+
+  <footer>
+    <span data-lang="tr">© 2026 Boreas · <code>[ŞİRKET]</code> · İletişim: <code>[E-POSTA]</code></span>
+    <span data-lang="en">© 2026 Boreas · <code>[COMPANY]</code> · Contact: <code>[EMAIL]</code></span>
+  </footer>
+</main>
+
+<script>
+  function setLang(l){
+    document.documentElement.lang = l;
+    document.getElementById('btn-tr').classList.toggle('on', l==='tr');
+    document.getElementById('btn-en').classList.toggle('on', l==='en');
+  }
+</script>
+</body>
+</html>
