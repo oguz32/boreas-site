@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "harbours": [
+    {
+      "id": "mudanya",
+      "name": "Mudanya",
+      "lat": 40.376,
+      "lon": 28.884,
+      "card": "mudanya.jpg"
+    },
+    {
+      "id": "bandirma",
+      "name": "Bandırma",
+      "lat": 40.352,
+      "lon": 27.968,
+      "card": "bandirma.jpg"
+    },
+    {
+      "id": "gemlik",
+      "name": "Gemlik",
+      "lat": 40.43,
+      "lon": 29.152,
+      "card": "gemlik.jpg"
+    },
+    {
+      "id": "atakoy",
+      "name": "Ataköy Marina",
+      "lat": 40.975,
+      "lon": 28.855,
+      "card": "atakoy.jpg"
+    },
+    {
+      "id": "kalamis",
+      "name": "Kalamış",
+      "lat": 40.973,
+      "lon": 29.036,
+      "card": "kalamis.jpg"
+    },
+    {
+      "id": "tuzla",
+      "name": "Tuzla",
+      "lat": 40.826,
+      "lon": 29.297,
+      "card": "tuzla.jpg"
+    }
+  ]
+}
