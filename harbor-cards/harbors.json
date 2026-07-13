@@ -2,46 +2,158 @@
   "version": 1,
   "harbours": [
     {
-      "id": "mudanya",
-      "name": "Mudanya",
-      "lat": 40.376,
-      "lon": 28.884,
-      "card": "mudanya.jpg"
+      "id": "alemdar-limani",
+      "name": "Alemdar Limanı",
+      "lat": 40.7679426,
+      "lon": 29.5380285,
+      "card": "alemdar-limani.jpg"
     },
     {
-      "id": "bandirma",
-      "name": "Bandırma",
-      "lat": 40.352,
-      "lon": 27.968,
-      "card": "bandirma.jpg"
+      "id": "ambarli-limani",
+      "name": "Ambarlı Limani",
+      "lat": 40.960337,
+      "lon": 28.6805621,
+      "card": "ambarli-limani.jpg"
     },
     {
-      "id": "gemlik",
-      "name": "Gemlik",
-      "lat": 40.43,
-      "lon": 29.152,
-      "card": "gemlik.jpg"
+      "id": "salipazari-limani",
+      "name": "Salıpazarı Limanı",
+      "lat": 41.0285767,
+      "lon": 28.9883958,
+      "card": "salipazari-limani.jpg"
     },
     {
-      "id": "atakoy",
-      "name": "Ataköy Marina",
-      "lat": 40.975,
-      "lon": 28.855,
-      "card": "atakoy.jpg"
+      "id": "akcansa-limani",
+      "name": "Akçansa Limanı",
+      "lat": 39.8795214,
+      "lon": 26.1526667,
+      "card": "akcansa-limani.jpg"
     },
     {
-      "id": "kalamis",
-      "name": "Kalamış",
-      "lat": 40.973,
-      "lon": 29.036,
-      "card": "kalamis.jpg"
+      "id": "icdas-limani",
+      "name": "İçdaş Limanı",
+      "lat": 40.4550085,
+      "lon": 27.3005458,
+      "card": "icdas-limani.jpg"
     },
     {
-      "id": "tuzla",
-      "name": "Tuzla",
-      "lat": 40.826,
-      "lon": 29.297,
-      "card": "tuzla.jpg"
+      "id": "port-of-istanbul",
+      "name": "Port of Istanbul",
+      "lat": 41.01277,
+      "lon": 28.999,
+      "card": "port-of-istanbul.jpg"
+    },
+    {
+      "id": "zeytinburnu-limani",
+      "name": "Zeytinburnu Limanı",
+      "lat": 40.98027,
+      "lon": 28.8955,
+      "card": "zeytinburnu-limani.jpg"
+    },
+    {
+      "id": "izmit-yat-limani",
+      "name": "İzmit Yat Limanı",
+      "lat": 40.7606042,
+      "lon": 29.9146439,
+      "card": "izmit-yat-limani.jpg"
+    },
+    {
+      "id": "poyrazkoy-limani",
+      "name": "Poyrazköy Limanı",
+      "lat": 41.2058986,
+      "lon": 29.1292946,
+      "card": "poyrazkoy-limani.jpg"
+    },
+    {
+      "id": "ibrice-limani",
+      "name": "İbrice Limanı",
+      "lat": 40.6025458,
+      "lon": 26.5423278,
+      "card": "ibrice-limani.jpg"
+    },
+    {
+      "id": "buyukkumla-iskelesi",
+      "name": "Büyükkumla İskelesi",
+      "lat": 40.4767613,
+      "lon": 29.0837683,
+      "card": "buyukkumla-iskelesi.jpg"
+    },
+    {
+      "id": "ulasli-limani",
+      "name": "Ulaşlı Limanı",
+      "lat": 40.706171,
+      "lon": 29.6895353,
+      "card": "ulasli-limani.jpg"
+    },
+    {
+      "id": "kefken-limani",
+      "name": "Kefken Limanı",
+      "lat": 41.1685359,
+      "lon": 30.2253353,
+      "card": "kefken-limani.jpg"
+    },
+    {
+      "id": "bayramoglu-marina-yat-limani",
+      "name": "Bayramoğlu Marina Yat Limanı",
+      "lat": 40.790774,
+      "lon": 29.3431709,
+      "card": "bayramoglu-marina-yat-limani.jpg"
+    },
+    {
+      "id": "lapseki-limani",
+      "name": "Lapseki Limanı",
+      "lat": 40.3525171,
+      "lon": 26.6923088,
+      "card": "lapseki-limani.jpg"
+    },
+    {
+      "id": "karaburun-mahallesi",
+      "name": "Karaburun Mahallesi",
+      "lat": 41.3426405,
+      "lon": 28.686955,
+      "card": "karaburun-mahallesi.jpg"
+    },
+    {
+      "id": "guzelyali-yat-limani",
+      "name": "Güzelyalı Yat Limani",
+      "lat": 40.3560226,
+      "lon": 28.9303421,
+      "card": "guzelyali-yat-limani.jpg"
+    },
+    {
+      "id": "hereke-yat-ve-tekne-limani",
+      "name": "Hereke Yat ve Tekne Limanı",
+      "lat": 40.7831435,
+      "lon": 29.6182018,
+      "card": "hereke-yat-ve-tekne-limani.jpg"
+    },
+    {
+      "id": "tirilye-limani",
+      "name": "Tirilye Limanı",
+      "lat": 40.3927331,
+      "lon": 28.8007944,
+      "card": "tirilye-limani.jpg"
+    },
+    {
+      "id": "armutlu-devlet-limani",
+      "name": "Armutlu Devlet Limanı",
+      "lat": 40.5093416,
+      "lon": 28.8252553,
+      "card": "armutlu-devlet-limani.jpg"
+    },
+    {
+      "id": "guzelce-marina",
+      "name": "Güzelce Marina",
+      "lat": 40.9993687,
+      "lon": 28.5088576,
+      "card": "guzelce-marina.jpg"
+    },
+    {
+      "id": "karacaali-iskelesi",
+      "name": "Karacaali İskelesi",
+      "lat": 40.478702,
+      "lon": 29.0633127,
+      "card": "karacaali-iskelesi.jpg"
     }
   ]
 }
