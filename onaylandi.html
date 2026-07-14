@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boreas — E-posta Onaylandı / Email Confirmed</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{--navy:#0A2540;--marine:#1B6CA8;--line:#D8E2E6;--foam:#F2F7F9;--coral:#FF6A3D;--teal:#2ED3C6;--green:#1B7A4B;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#12212e;line-height:1.6;background:#fff;
+       min-height:100vh;display:flex;flex-direction:column}
+  header{background:linear-gradient(160deg,var(--navy),#061A2F);color:#fff;padding:28px 20px;text-align:center}
+  h1{margin:0 0 4px;font-size:1.5rem;letter-spacing:1px}
+  header p{margin:0;color:#BFDCE6;font-size:.9rem}
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
+  .card{max-width:520px;width:100%;text-align:center;background:var(--foam);border:1px solid var(--line);
+        border-radius:16px;padding:36px 26px}
+  .tick{width:72px;height:72px;border-radius:50%;background:rgba(27,122,75,.12);border:2px solid var(--green);
+        display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+  .tick svg{width:38px;height:38px;stroke:var(--green);stroke-width:3;fill:none;
+            stroke-linecap:round;stroke-linejoin:round}
+  h2{color:var(--navy);margin:0 0 8px;font-size:1.35rem}
+  .lead{margin:0 0 22px;font-size:1rem;color:#33485c}
+  .steps{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:0 0 22px}
+  .steps ol{margin:0;padding-left:20px}
+  .steps li{margin:6px 0;font-size:.95rem}
+  .hint{font-size:.85rem;color:#667;margin:0}
+  .lang{display:flex;gap:6px;justify-content:center;margin-top:14px}
+  .lang button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 12px;cursor:pointer;
+               font-weight:600;font-size:.8rem;color:#555}
+  .lang button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  footer{border-top:1px solid var(--line);padding:20px;color:#667;font-size:.85rem;text-align:center}
+  footer a{color:var(--marine);text-decoration:none}
+  [data-lang]{display:none}
+  html[lang="tr"] [data-lang="tr"]{display:block}
+  html[lang="en"] [data-lang="en"]{display:block}
+  li[data-lang]{display:none}
+  html[lang="tr"] li[data-lang="tr"]{display:list-item}
+  html[lang="en"] li[data-lang="en"]{display:list-item}
+</style>
+</head>
+<body>
+<header>
+  <h1>BOREAS</h1>
+  <p data-lang="tr">Türkiye kıyıları için denizcilik haritası</p>
+  <p data-lang="en">Marine chart for Turkish coastal waters</p>
+</header>
+
+<main>
+  <div class="card">
+    <div class="tick" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg>
+    </div>
+
+    <h2 data-lang="tr">E-postan onaylandı</h2>
+    <h2 data-lang="en">Your email is confirmed</h2>
+
+    <p class="lead" data-lang="tr">Hesabın hazır. Artık Boreas uygulamasına giriş yapabilirsin.</p>
+    <p class="lead" data-lang="en">Your account is ready. You can now sign in to the Boreas app.</p>
+
+    <div class="steps">
+      <ol>
+        <li data-lang="tr">Bu sayfayı kapat.</li>
+        <li data-lang="tr"><strong>Boreas</strong> uygulamasına dön.</li>
+        <li data-lang="tr">E-postan ve şifrenle <strong>giriş yap</strong>.</li>
+        <li data-lang="en">Close this page.</li>
+        <li data-lang="en">Go back to the <strong>Boreas</strong> app.</li>
+        <li data-lang="en"><strong>Sign in</strong> with your email and password.</li>
+      </ol>
+    </div>
+
+    <p class="hint" data-lang="tr">Sorun yaşarsan: <a href="mailto:oguzbayar97@gmail.com">oguzbayar97@gmail.com</a></p>
+    <p class="hint" data-lang="en">Need help? <a href="mailto:oguzbayar97@gmail.com">oguzbayar97@gmail.com</a></p>
+
+    <div class="lang">
+      <button id="btn-tr" onclick="setLang('tr')">Türkçe</button>
+      <button id="btn-en" onclick="setLang('en')">English</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <a href="/">boreasmarinemap.com</a> ·
+  <a href="/legal.html" data-lang="tr" style="display:inline">Gizlilik</a>
+  <a href="/legal.html" data-lang="en" style="display:inline">Privacy</a>
+</footer>
+
+<script>
+  function setLang(l){
+    document.documentElement.lang = l;
+    document.getElementById('btn-tr').classList.toggle('on', l === 'tr');
+    document.getElementById('btn-en').classList.toggle('on', l === 'en');
+  }
+  // Default to Turkish; switch to English for non-Turkish browsers.
+  setLang((navigator.language || 'tr').toLowerCase().startsWith('tr') ? 'tr' : 'en');
+</script>
+</body>
+</html>
