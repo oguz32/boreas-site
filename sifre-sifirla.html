@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boreas — Şifre Sıfırla / Reset Password</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{--navy:#0A2540;--marine:#1B6CA8;--line:#D8E2E6;--foam:#F2F7F9;--coral:#FF6A3D;--green:#1B7A4B;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#12212e;
+       line-height:1.6;background:#fff;min-height:100vh;display:flex;flex-direction:column}
+  header{background:linear-gradient(160deg,var(--navy),#061A2F);color:#fff;padding:28px 20px;text-align:center}
+  h1{margin:0 0 4px;font-size:1.5rem;letter-spacing:1px}
+  header p{margin:0;color:#BFDCE6;font-size:.9rem}
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
+  .card{max-width:480px;width:100%;background:var(--foam);border:1px solid var(--line);
+        border-radius:16px;padding:30px 26px}
+  h2{color:var(--navy);margin:0 0 8px;font-size:1.3rem}
+  p.lead{margin:0 0 18px;font-size:.96rem;color:#33485c}
+  label{display:block;font-size:.85rem;font-weight:600;color:var(--navy);margin:12px 0 4px}
+  input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:#fff}
+  input:focus{outline:2px solid var(--marine);outline-offset:1px}
+  button.primary{width:100%;margin-top:18px;padding:12px;border:0;border-radius:10px;background:var(--marine);
+                 color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
+  button.primary:disabled{opacity:.55;cursor:default}
+  .msg{margin-top:16px;padding:12px 14px;border-radius:10px;font-size:.9rem;display:none}
+  .msg.err{display:block;background:rgba(255,106,61,.12);border:1px solid var(--coral);color:#8a2f12}
+  .msg.ok{display:block;background:rgba(27,122,75,.12);border:1px solid var(--green);color:#0f5230}
+  .tick{width:64px;height:64px;border-radius:50%;background:rgba(27,122,75,.12);border:2px solid var(--green);
+        display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+  .tick svg{width:34px;height:34px;stroke:var(--green);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .steps{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin-top:16px}
+  .steps li{margin:6px 0;font-size:.93rem}
+  .hint{font-size:.82rem;color:#667;margin:14px 0 0;text-align:center}
+  .lang{display:flex;gap:6px;justify-content:center;margin-top:16px}
+  .lang button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 12px;cursor:pointer;
+               font-weight:600;font-size:.8rem;color:#555}
+  .lang button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  footer{border-top:1px solid var(--line);padding:20px;color:#667;font-size:.85rem;text-align:center}
+  footer a{color:var(--marine);text-decoration:none}
+  .center{text-align:center}
+  [data-lang]{display:none}
+  html[lang="tr"] [data-lang="tr"]{display:block}
+  html[lang="en"] [data-lang="en"]{display:block}
+  li[data-lang]{display:none}
+  html[lang="tr"] li[data-lang="tr"]{display:list-item}
+  html[lang="en"] li[data-lang="en"]{display:list-item}
+  span[data-lang]{display:none}
+  html[lang="tr"] span[data-lang="tr"]{display:inline}
+  html[lang="en"] span[data-lang="en"]{display:inline}
+</style>
+</head>
+<body>
+<header>
+  <h1>BOREAS</h1>
+  <p data-lang="tr">Şifre sıfırlama</p>
+  <p data-lang="en">Password reset</p>
+</header>
+
+<main>
+  <div class="card">
+
+    <!-- STATE 1: ask for the e-mail (no token in the URL yet) -->
+    <div id="ask" style="display:none">
+      <h2 data-lang="tr">Şifreni sıfırla</h2>
+      <h2 data-lang="en">Reset your password</h2>
+      <p class="lead" data-lang="tr">Hesabının e-posta adresini yaz; sana bir sıfırlama bağlantısı gönderelim.</p>
+      <p class="lead" data-lang="en">Enter your account e-mail and we'll send you a reset link.</p>
+      <label for="email"><span data-lang="tr">E-posta</span><span data-lang="en">E-mail</span></label>
+      <input id="email" type="email" autocomplete="email" placeholder="ornek@eposta.com">
+      <button class="primary" id="sendBtn">
+        <span data-lang="tr">Bağlantı gönder</span><span data-lang="en">Send link</span>
+      </button>
+      <div class="msg" id="askMsg"></div>
+    </div>
+
+    <!-- STATE 2: set a new password (recovery token present) -->
+    <div id="set" style="display:none">
+      <h2 data-lang="tr">Yeni şifre belirle</h2>
+      <h2 data-lang="en">Set a new password</h2>
+      <p class="lead" data-lang="tr">En az 8 karakter; harf ve rakam içersin.</p>
+      <p class="lead" data-lang="en">At least 8 characters, with letters and numbers.</p>
+      <label for="pw1"><span data-lang="tr">Yeni şifre</span><span data-lang="en">New password</span></label>
+      <input id="pw1" type="password" autocomplete="new-password">
+      <label for="pw2"><span data-lang="tr">Yeni şifre (tekrar)</span><span data-lang="en">New password (again)</span></label>
+      <input id="pw2" type="password" autocomplete="new-password">
+      <button class="primary" id="saveBtn">
+        <span data-lang="tr">Şifreyi kaydet</span><span data-lang="en">Save password</span>
+      </button>
+      <div class="msg" id="setMsg"></div>
+    </div>
+
+    <!-- STATE 3: done -->
+    <div id="done" style="display:none">
+      <div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg></div>
+      <h2 class="center" data-lang="tr">Şifren güncellendi</h2>
+      <h2 class="center" data-lang="en">Your password is updated</h2>
+      <div class="steps">
+        <ol>
+          <li data-lang="tr">Bu sayfayı kapat.</li>
+          <li data-lang="tr"><strong>Boreas</strong> uygulamasına dön.</li>
+          <li data-lang="tr">Yeni şifrenle <strong>giriş yap</strong>.</li>
+          <li data-lang="en">Close this page.</li>
+          <li data-lang="en">Go back to the <strong>Boreas</strong> app.</li>
+          <li data-lang="en"><strong>Sign in</strong> with your new password.</li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="hint">
+      <span data-lang="tr">Sorun yaşarsan: </span><span data-lang="en">Need help? </span>
+      <a href="mailto:oguzbayar97@gmail.com">oguzbayar97@gmail.com</a>
+    </p>
+    <div class="lang">
+      <button id="btn-tr" onclick="setLang('tr')">Türkçe</button>
+      <button id="btn-en" onclick="setLang('en')">English</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <a href="/">boreasmarinemap.com</a> ·
+  <a href="/legal.html"><span data-lang="tr">Gizlilik</span><span data-lang="en">Privacy</span></a>
+</footer>
+
+<script>
+  // Public, ship-safe values (the same publishable key the app embeds).
+  var SUPABASE_URL = 'https://szjaxfnystiqmgluupbl.supabase.co';
+  var ANON_KEY = 'sb_publishable_tHqBBRUQUIYv4ggQYiVqmw_LKu-h7VY';
+  var REDIRECT = 'https://boreasmarinemap.com/sifre-sifirla.html';
+
+  var TXT = {
+    tr: {
+      needEmail: 'Geçerli bir e-posta adresi yaz.',
+      sent: 'Bağlantı gönderildi. Gelen kutunu (ve spam klasörünü) kontrol et.',
+      sendFail: 'Gönderilemedi. Biraz sonra tekrar dene.',
+      short: 'Şifre en az 8 karakter olmalı, harf ve rakam içermeli.',
+      mismatch: 'Şifreler aynı değil.',
+      saveFail: 'Şifre güncellenemedi. Bağlantının süresi dolmuş olabilir — yeni bir bağlantı iste.',
+      expired: 'Bağlantının süresi dolmuş. Aşağıdan yeni bir bağlantı iste.'
+    },
+    en: {
+      needEmail: 'Enter a valid e-mail address.',
+      sent: 'Link sent. Check your inbox (and spam folder).',
+      sendFail: "Couldn't send. Try again shortly.",
+      short: 'Password must be at least 8 characters with letters and numbers.',
+      mismatch: 'Passwords do not match.',
+      saveFail: "Couldn't update the password. The link may have expired — request a new one.",
+      expired: 'This link has expired. Request a new one below.'
+    }
+  };
+  var lang = 'tr';
+  function t(k){ return TXT[lang][k]; }
+
+  function setLang(l){
+    lang = l;
+    document.documentElement.lang = l;
+    document.getElementById('btn-tr').classList.toggle('on', l === 'tr');
+    document.getElementById('btn-en').classList.toggle('on', l === 'en');
+  }
+
+  function show(id){ document.getElementById(id).style.display = 'block'; }
+  function hide(id){ document.getElementById(id).style.display = 'none'; }
+  function msg(id, text, kind){
+    var el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'msg ' + kind;
+  }
+
+  // GoTrue returns the recovery token in the URL fragment (implicit flow).
+  function recoveryToken(){
+    var h = (location.hash || '').replace(/^#/, '');
+    if (!h) return null;
+    var p = new URLSearchParams(h);
+    if (p.get('error')) return {error: p.get('error_description') || p.get('error')};
+    if (p.get('type') === 'recovery' && p.get('access_token')) {
+      return {token: p.get('access_token')};
+    }
+    return null;
+  }
+
+  function validPassword(p){ return p.length >= 8 && /[A-Za-z]/.test(p) && /[0-9]/.test(p); }
+
+  document.getElementById('sendBtn').onclick = function(){
+    var email = document.getElementById('email').value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg('askMsg', t('needEmail'), 'err'); return; }
+    var btn = this; btn.disabled = true;
+    fetch(SUPABASE_URL + '/auth/v1/recover?redirect_to=' + encodeURIComponent(REDIRECT), {
+      method: 'POST',
+      headers: {'apikey': ANON_KEY, 'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email})
+    }).then(function(r){
+      // GoTrue answers 200 even for unknown addresses (no account enumeration).
+      msg('askMsg', r.ok ? t('sent') : t('sendFail'), r.ok ? 'ok' : 'err');
+    }).catch(function(){
+      msg('askMsg', t('sendFail'), 'err');
+    }).then(function(){ btn.disabled = false; });
+  };
+
+  document.getElementById('saveBtn').onclick = function(){
+    var p1 = document.getElementById('pw1').value;
+    var p2 = document.getElementById('pw2').value;
+    if (!validPassword(p1)) { msg('setMsg', t('short'), 'err'); return; }
+    if (p1 !== p2) { msg('setMsg', t('mismatch'), 'err'); return; }
+    var tok = (recoveryToken() || {}).token;
+    if (!tok) { msg('setMsg', t('saveFail'), 'err'); return; }
+    var btn = this; btn.disabled = true;
+    fetch(SUPABASE_URL + '/auth/v1/user', {
+      method: 'PUT',
+      headers: {
+        'apikey': ANON_KEY,
+        'Authorization': 'Bearer ' + tok,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({password: p1})
+    }).then(function(r){
+      if (!r.ok) { msg('setMsg', t('saveFail'), 'err'); btn.disabled = false; return; }
+      // Drop the token from the URL so it isn't left in history.
+      history.replaceState(null, '', location.pathname);
+      hide('set'); show('done');
+    }).catch(function(){
+      msg('setMsg', t('saveFail'), 'err');
+      btn.disabled = false;
+    });
+  };
+
+  (function init(){
+    setLang((navigator.language || 'tr').toLowerCase().startsWith('tr') ? 'tr' : 'en');
+    var r = recoveryToken();
+    if (r && r.token) {
+      show('set');
+    } else {
+      show('ask');
+      if (r && r.error) msg('askMsg', t('expired'), 'err');
+    }
+  })();
+</script>
+</body>
+</html>
