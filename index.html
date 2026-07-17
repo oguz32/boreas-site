@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Boreas — Teknen için akıllı deniz asistanı</title>
-<meta name="description" content="Boreas, tekneciler için bir planlama ve farkındalık aracıdır. Resmi seyir haritası değildir. Erken erişim — önce Android.">
+<title>Boreas — İnternetsiz çalışan deniz asistanı</title>
+<meta name="description" content="Türkiye kıyıları için internetsiz çalışan deniz haritası: rota, tehlike ve sığlık alarmları, hava & deniz durumu, filo. Bir planlama ve farkındalık aracıdır — resmi seyir haritası değildir.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -112,6 +112,8 @@
     text-transform:uppercase; padding:4px 9px; border-radius:999px; background:var(--chip); color:var(--chip-text)}
   .chip.early{background:color-mix(in srgb,var(--aqua) 24%,transparent); color:#0d6c73}
   :root[data-theme="dark"] .chip.early{color:#8fe6ed}
+  .chip.free{background:color-mix(in srgb,var(--aqua) 24%,transparent); color:#0d6c73}
+  :root[data-theme="dark"] .chip.free{color:#8fe6ed}
   .chip.planned{background:var(--chip); color:var(--chip-text)}
 
   /* community layer split */
@@ -263,14 +265,14 @@
         <text x="70" y="30" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#FF6A3D">N</text>
       </svg>
       <div class="eyebrow">Poyraz · kuzey rüzgarı</div>
-      <h1>Teknenin akıllı deniz asistanı</h1>
-      <p class="lede">Boreas; koyunu, rotanı ve çevreni bir arada tutan bir <strong>planlama ve farkındalık aracıdır.</strong> Resmi seyir haritası değildir — kararı hep kaptan verir.</p>
+      <h1>Çekim gitse de rotan yanında</h1>
+      <p class="lede">Türkiye kıyıları için <strong>internetsiz çalışan</strong> deniz asistanı. Harita, GPS, rota ve alarmlar açık denizde de cebinde. Bir <strong>planlama ve farkındalık aracıdır</strong> — resmi seyir haritası değildir, kararı hep kaptan verir.</p>
       <div class="coord" aria-hidden="true"><span>40.9°N</span><span>·</span><span>28.2°E</span><span>·</span><span>SOG 6.4 kn</span></div>
       <div class="cta-row">
         <a class="btn btn-primary" href="#waitlist">Erken erişime katıl</a>
         <a class="btn btn-ghost" href="#ozellikler">Ne yapar?</a>
       </div>
-      <div class="platform-note">ERKEN ERİŞİM · ÖNCE ANDROID · DAHİLİ TESTTE</div>
+      <div class="platform-note">ERKEN ERİŞİM · iOS TESTFLIGHT · ANDROID DAHİLİ TEST</div>
     </div>
   </section>
 
@@ -286,56 +288,91 @@
       <div class="section-head">
         <div class="eyebrow">Ne yapar</div>
         <h2>Denizde farkındalık, tek bir sade araçta</h2>
-        <p>Boreas erken erişimde ve Android'de dahili testte. Hazır olanlar <span class="mono">ERKEN</span>; abonelik gerektirenler <span class="mono">PRO</span> / <span class="mono">PRO+</span>; yol haritasında olanlar <span class="mono">PLANLI</span> olarak işaretli — hiçbir şey abartılmıyor.</p>
+        <p>Boreas'ın çoğu <span class="mono">ÜCRETSİZ</span>. Abonelik gerektirenler <span class="mono">PRO</span> / <span class="mono">PRO+</span>; henüz yapılmamış olanlar <span class="mono">PLANLI</span> olarak işaretli — hiçbir şey abartılmıyor.</p>
       </div>
       <div class="grid">
         <div class="card">
-          <div class="ic">◎</div><span class="chip early">Erken</span>
-          <h3>Çevrimiçi deniz haritası</h3>
-          <p>Bulunduğun bölgeyi haritada gör. Açık-kaynak deniz verisi; resmi seyir haritası değildir.</p>
+          <div class="ic">◎</div><span class="chip free">Ücretsiz</span>
+          <h3>Çevrimdışı deniz haritası</h3>
+          <p>Marmara haritası uygulamayla birlikte gelir — indirme yok, internet yok. Derinlik, konturlar, iskandiller, fenerler ve seyir işaretleri açık denizde de yanında.</p>
         </div>
         <div class="card">
-          <div class="ic">➤</div><span class="chip early">Erken</span>
+          <div class="ic">➤</div><span class="chip free">Ücretsiz</span>
           <h3>Konum · hız · rota</h3>
-          <p>GPS ile anlık konum, hız (knot) ve gidiş yönü (heading) — internetsiz de çalışan cihaz konumu.</p>
+          <p>GPS ile anlık konum, hız (knot) ve gidiş yönü. Zayıf sinyali sana söyler; duruşta yön göstermez — çünkü durunca yön güvenilir değildir.</p>
         </div>
         <div class="card">
-          <div class="ic">⚓</div><span class="chip early">Erken</span>
-          <h3>Tekne profili</h3>
-          <p>Su çekimi, seyir hızı, yakıt kapasitesi ve tüketim — menzil ve sığlık alarmlarını teknene göre ayarlar.</p>
+          <div class="ic">↝</div><span class="chip free">Ücretsiz</span>
+          <h3>Rota planlama &amp; tehlike</h3>
+          <p>Karadan ve sığlıktan kaçınan <em>önerilen</em> rota; noktaları sürükleyerek düzenle. Rotandaki kayalık ve sığlıklar önceden işaretlenir. Kaptan doğrulaması gerektirir.</p>
         </div>
         <div class="card">
-          <div class="ic">↝</div><span class="chip early">Erken</span>
-          <h3>Rota planlama</h3>
-          <p>Karadan ve sığlıktan kaçınan <em>önerilen</em> rota; noktaları sürükleyerek düzenle. Planlama aracıdır, kaptan doğrulaması gerektirir.</p>
+          <div class="ic">!</div><span class="chip free">Ücretsiz</span>
+          <h3>Güvenlik alarmları</h3>
+          <p>Sığlık alarmı <strong>senin su çekimine</strong> göre çalışır. Demir nöbeti taramayı yakalar, MOB tek dokunuşla noktayı işaretler.</p>
         </div>
         <div class="card">
-          <div class="ic">✎</div><span class="chip early">Erken</span>
-          <h3>Topluluk notları + bildir</h3>
-          <p>Koya not bırak: dip tutuşu, sığlaşma, kayalık. Notlar <em>doğrulanmamış kullanıcı bildirimi</em> olarak işaretlenir; uygunsuz içeriği tek dokunuşla bildir.</p>
+          <div class="ic">⌖</div><span class="chip free">Ücretsiz</span>
+          <h3>Deniz sınırları uyarısı</h3>
+          <p>Karasularına yaklaşınca haber verir. İç sular, karasuları ve uluslararası sular haritada ayrı — farkında olmadan sınır geçme.</p>
         </div>
         <div class="card">
-          <div class="ic">◈</div><span class="chip early">Erken</span>
-          <h3>Filo — canlı konum &amp; mesaj</h3>
-          <p>İstersen konumunu filoya aç, yakındaki tekneleri gör, karşılıklı kabul edilen bağlantılarla mesajlaş. İstediğin an kapat.</p>
-        </div>
-        <div class="card">
-          <div class="ic">☼</div><span class="chip pro">Pro</span>
+          <div class="ic">☼</div><span class="chip free">Ücretsiz</span>
           <h3>Hava &amp; deniz durumu</h3>
-          <p>Rüzgar, hamle, dalga, akıntı ve deniz seviyesi — ticari Open-Meteo verisiyle. Tahmindir, kesin değil.</p>
+          <p>Rüzgar, hamle, saatlik tahmin, dalga, akıntı ve deniz seviyesi — Open-Meteo verisiyle. Tahmindir, kesin değil. Son veriyi çevrimdışı saklar ve eskidiğini söyler.</p>
         </div>
         <div class="card">
-          <div class="ic">✓</div><span class="chip pro">Pro</span>
+          <div class="ic">✓</div><span class="chip free">Ücretsiz</span>
           <h3>Kalkış öncesi kontrol</h3>
-          <p>Halat çözmeden önce tek ekranda hüküm: rota, rüzgar, değişen hava ve deniz durumu + pusula kalibrasyonu.</p>
+          <p>Halat çözmeden tek ekranda hüküm: rota, rüzgar ve değişen hava. Tahmin, son konumundan değil <em>rotanın kalkış noktasından</em> alınır. Dalga &amp; deniz durumu satırı Pro'dadır.</p>
+        </div>
+        <div class="card">
+          <div class="ic">☾</div><span class="chip free">Ücretsiz</span>
+          <h3>Gece modu</h3>
+          <p>Kırmızı ışık düzeni gece görüşünü korur. Elle aç, ya da gün batımına göre kendi açılsın.</p>
+        </div>
+        <div class="card">
+          <div class="ic">⚓</div><span class="chip free">Ücretsiz</span>
+          <h3>Tekne profili</h3>
+          <p>Su çekimi, seyir hızı, yakıt kapasitesi ve tüketim — cihazda kayıtlı. Menzili hesaplar, sığlık alarmını teknene göre ayarlar.</p>
+        </div>
+        <div class="card">
+          <div class="ic">◈</div><span class="chip free">Ücretsiz</span>
+          <h3>Filo — canlı konum &amp; mesaj</h3>
+          <p>İstersen konumunu filoya aç, yakındaki tekneleri gör, selamla, karşılıklı kabul edilen bağlantılarla mesajlaş. İstediğin an kapat ya da engelle.</p>
+        </div>
+        <div class="card">
+          <div class="ic">✎</div><span class="chip free">Ücretsiz</span>
+          <h3>Topluluk notları + bildir</h3>
+          <p>Koya not bırak: demirleme, sığ su, kaya, marina, yakıt, balık noktası. Notlar <em>doğrulanmamış kullanıcı bildirimi</em> olarak işaretlenir; uygunsuz içeriği tek dokunuşla bildir.</p>
+        </div>
+        <div class="card">
+          <div class="ic">↺</div><span class="chip free">Ücretsiz</span>
+          <h3>Sefer geçmişi</h3>
+          <p>Her seyir kendiliğinden kaydedilir. Geçmiş seferini haritada izle, süre ve mesafeyi gör, seyir kartını paylaş.</p>
+        </div>
+        <div class="card">
+          <div class="ic">◱</div><span class="chip free">Ücretsiz</span>
+          <h3>3B liman yaklaşımı</h3>
+          <p>Limana 6 km kala, o limanın önceden hazırlanmış 3B yaklaşım kartı çıkar — nereden gireceğini görerek yaklaş.</p>
+        </div>
+        <div class="card">
+          <div class="ic">◇</div><span class="chip free">Ücretsiz</span>
+          <h3>AIS gemi trafiği</h3>
+          <p>Çevrendeki canlı gemiler (çevrimiçi, isteğe bağlı katman). Bilgi amaçlıdır — <strong>çatışma önleme için değildir.</strong></p>
         </div>
         <div class="card">
           <div class="ic">⇩</div><span class="chip pro">Pro</span>
           <h3>Çevrimdışı bölge paketleri</h3>
-          <p>Ege, Gökova, Akdeniz, Karadeniz… Gideceğin bölgeyi indir, açık denizde internetsiz kullan.</p>
+          <p>Ege, Gökova-Bodrum, Akdeniz (Batı &amp; Doğu), Karadeniz (Batı &amp; Doğu). Gideceğin bölgeyi indir, açık denizde internetsiz kullan. Marmara zaten ücretsiz.</p>
         </div>
         <div class="card">
-          <div class="ic">◱</div><span class="chip proplus">Pro+</span>
+          <div class="ic">≋</div><span class="chip pro">Pro</span>
+          <h3>Kalkış kontrolünde deniz durumu</h3>
+          <p>Kalkış öncesi hükme dalga yüksekliği ve deniz durumu satırı eklenir — rüzgarın yanında denizin kendisini de gör.</p>
+        </div>
+        <div class="card">
+          <div class="ic">▲</div><span class="chip proplus">Pro+</span>
           <h3>3D uydu sahil görünümü</h3>
           <p>Yavaşlayınca sahili Sentinel-2 uydu dokusuyla 3B gör — yanaşma ve koy girişinde arazi farkındalığı.</p>
         </div>
@@ -382,19 +419,23 @@
     <div class="wrap">
       <div class="section-head">
         <div class="eyebrow">Fiyatlar</div>
-        <h2>Temeli ücretsiz. Fazlası isteğe bağlı.</h2>
-        <p>Harita, GPS, alarmlar, notlar, temel rota ve filo her zaman ücretsiz. Pro ve Pro Plus; aylık, yıllık veya ömür boyu — App Store / Google Play üzerinden. Yıllık ≈ 4 ay bedava.</p>
+        <h2>Neredeyse her şey ücretsiz.</h2>
+        <p>Marmara haritası, GPS, alarmlar, hava &amp; deniz durumu, kalkış kontrolü, filo, notlar ve sefer geçmişi — hepsi ücretsiz, süresiz. Para istediğimiz tek şey: <strong>Marmara dışındaki bölge paketleri</strong> ve <strong>3D uydu görünümü.</strong> Aylık, yıllık veya ömür boyu — App Store / Google Play üzerinden. Yıllık ≈ 4 ay bedava.</p>
       </div>
       <div class="pricing">
         <div class="plan">
           <div class="tier"><b>Ücretsiz</b></div>
           <div class="lead-price">₺0</div>
           <ul>
-            <li>Deniz haritası, GPS, hız &amp; rota</li>
-            <li>Sığlık / demir / kıyı alarmları</li>
-            <li>Topluluk notları + bildir</li>
-            <li>Temel rota planlama</li>
+            <li>Marmara haritası — çevrimdışı, gömülü</li>
+            <li>GPS, hız, rota &amp; tehlike uyarısı</li>
+            <li>Sığlık / demir nöbeti / MOB alarmları</li>
+            <li>Deniz sınırları uyarısı</li>
+            <li>Hava &amp; deniz durumu</li>
+            <li>Kalkış öncesi kontrol</li>
+            <li>Gece modu · Sefer geçmişi · AIS</li>
             <li>Filo — canlı konum &amp; mesaj</li>
+            <li>Topluluk notları · 3B liman yaklaşımı</li>
           </ul>
         </div>
         <div class="plan featured">
@@ -407,10 +448,10 @@
           </div>
           <ul>
             <li>Ücretsiz'deki her şey</li>
-            <li>Hava &amp; deniz durumu</li>
-            <li>Kalkış öncesi kontrol</li>
-            <li>Tüm indirilebilir bölgeler</li>
-            <li>Sınırsız rota &amp; çevrimiçi arama</li>
+            <li>Ege · Gökova-Bodrum bölgeleri</li>
+            <li>Akdeniz Batı &amp; Doğu bölgeleri</li>
+            <li>Karadeniz Batı &amp; Doğu bölgeleri</li>
+            <li>Kalkış kontrolünde dalga &amp; deniz durumu</li>
           </ul>
         </div>
         <div class="plan">
@@ -428,7 +469,7 @@
           </ul>
         </div>
       </div>
-      <p class="price-note">Abonelikler dönem sonunda otomatik yenilenir; mağaza hesabından iptal edebilirsin. Fiyatlar TL'dir ve değişebilir.</p>
+      <p class="price-note">Abonelikler dönem sonunda otomatik yenilenir; mağaza hesabından iptal edebilirsin. Ömür boyu seçeneği tek seferlik ödemedir. Fiyatlar TL'dir, mağazada gösterilen fiyat geçerlidir ve değişebilir.</p>
     </div>
   </section>
 
@@ -444,23 +485,23 @@
       <div class="roadmap">
         <div class="phase now">
           <div class="when">Şimdi · Erken erişim</div>
-          <h3>Android dahili test</h3>
+          <h3>iOS TestFlight · Android dahili test</h3>
           <ul>
-            <li>Harita, GPS, hız &amp; rota</li>
-            <li>Hava &amp; deniz durumu (Pro)</li>
-            <li>Kalkış öncesi kontrol</li>
-            <li>Topluluk notları + bildir</li>
-            <li>Filo · Pro / Pro Plus abonelik</li>
+            <li>Çevrimdışı Marmara haritası</li>
+            <li>Rota, tehlike &amp; güvenlik alarmları</li>
+            <li>Hava &amp; deniz durumu · kalkış kontrolü</li>
+            <li>Filo · topluluk notları · sefer geçmişi</li>
+            <li>Pro / Pro Plus abonelik altyapısı</li>
           </ul>
         </div>
         <div class="phase">
           <div class="when">Sırada</div>
           <h3>Yakında</h3>
           <ul>
-            <li>iOS — App Store (TestFlight'ta)</li>
-            <li>Fotoğraflar (moderasyonlu)</li>
+            <li>App Store &amp; Google Play yayını</li>
             <li>Daha fazla indirilebilir bölge</li>
-            <li>Hesap silme &amp; kalan iyileştirmeler</li>
+            <li>Fotoğraflar (moderasyonlu)</li>
+            <li>Daha fazla 3B liman kartı</li>
           </ul>
         </div>
         <div class="phase">
@@ -495,12 +536,14 @@
           <div class="val">Erişim, düzeltme, silme ve diğer haklarınız için <a href="legal.html">KVKK / Gizlilik</a> sayfasına bakın.</div>
         </div>
         <div class="contact-card">
-          <div class="lbl">Şirket (veri sorumlusu)</div>
-          <div class="val">Teknojet Bilişim Teknolojileri Sanayi ve Tic. Ltd. Şti.</div>
+          <div class="lbl">Geliştirici (veri sorumlusu)</div>
+          <div class="val">Oğuz Bayar</div>
           <div class="lbl">Adres</div>
           <div class="val">Bursa / Nilüfer</div>
           <div class="lbl">Yasal metinler</div>
           <div class="val"><a href="legal.html">Gizlilik Politikası &amp; Kullanım Koşulları</a></div>
+          <div class="lbl">Hesap &amp; veri silme</div>
+          <div class="val"><a href="hesap-sil.html">Hesabımı ve verilerimi sil</a></div>
         </div>
       </div>
     </div>
@@ -545,13 +588,14 @@
           <a href="#iletisim">İletişim</a>
           <a href="legal.html">Gizlilik &amp; KVKK</a>
           <a href="legal.html#terms">Kullanım koşulları</a>
+          <a href="hesap-sil.html">Hesap silme</a>
         </div>
       </div>
       <p style="max-width:70ch;margin:22px 0 0;font-size:13px;color:var(--slate)">
         Harita ve derinlik verisi entegre edildikçe açık-kaynak sağlayıcılara atıf verilir (ör. OpenSeaMap, GEBCO, EMODnet). Boreas resmi seyir sistemi değildir ve resmi hidrografik veri sağlamaz.
       </p>
       <div class="foot-legal">
-        <span>© 2026 Boreas · Teknojet Bilişim Teknolojileri Sanayi ve Tic. Ltd. Şti.</span>
+        <span>© 2026 Boreas · Oğuz Bayar</span>
         <span>RESMİ SEYİR İÇİN DEĞİLDİR · KARAR KAPTANINDIR</span>
       </div>
     </div>
