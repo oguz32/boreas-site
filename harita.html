@@ -135,6 +135,7 @@
     <div class="row" data-k="light" onclick="toggleLayer('light')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Fener</div>
     <div class="row" data-k="buoy" onclick="toggleLayer('buoy')"><span class="ck"></span><span class="dot" style="background:#2e9e6b"></span> Şamandıra</div>
     <div class="row" data-k="harbour" onclick="toggleLayer('harbour')"><span class="ck"></span><span class="dot" style="background:#2b6da0"></span> Liman / marina</div>
+    <div class="row" data-k="fishfarm" onclick="toggleLayer('fishfarm')"><span class="ck"></span><span class="dot" style="background:#8e44ad"></span> Balık çiftliği</div>
     <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#d8352a"></span> Kayalık / tehlike</div>
     <div class="row" data-k="contour" onclick="toggleLayer('contour')"><span class="ck"></span><span style="width:16px;height:0;border-top:2px solid #437ea6;display:inline-block"></span> Derinlik konturu</div>
   </div>
@@ -148,14 +149,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const NM = 1852;
-const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a' };
+const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a', fishfarm:'#8e44ad' };
 const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:5, maxZoom:15 }).setView([40.75,28.3], 9);
 const canvas = L.canvas({ padding:0.5 });
 const landLayer = L.layerGroup().addTo(map);   // land — always shown
 // Toggleable layers, one group per kind so the captain can hide clutter.
 const groups = { contour:L.layerGroup(), harbour:L.layerGroup(), light:L.layerGroup(),
-                 buoy:L.layerGroup(), hazard:L.layerGroup() };
-const vis = { contour:true, harbour:true, light:true, buoy:true, hazard:true };
+                 buoy:L.layerGroup(), fishfarm:L.layerGroup(), hazard:L.layerGroup() };
+const vis = { contour:true, harbour:true, light:true, buoy:true, fishfarm:true, hazard:true };
 Object.keys(groups).forEach(k=>{ if(vis[k]) groups[k].addTo(map); });
 let hazards = [];
 
@@ -191,10 +192,11 @@ function renderRegion(data){
       light:  {r:3.2, color:'#8a6d00', fill:COL.light},
       buoy:   {r:2.8, color:'#1f6b53', fill:COL.buoy},
       harbour:{r:3.6, color:'#1a4f7a', fill:COL.harbour},
+      fishfarm:{r:3.0, color:'#5e2d75', fill:COL.fishfarm},
       hazard: {r:3.2, color:'#a11', fill:COL.hazard},
     }[k] || {r:2.5,color:'#888',fill:'#aaa'};
     const mk = L.circleMarker(ll,{ radius:style.r, color:style.color, weight:1, fillColor:style.fill, fillOpacity:.95, renderer:canvas });
-    const label = {light:'Fener',buoy:'Şamandıra',harbour:'Liman / marina',hazard:'Kayalık / tehlike'}[k]||k;
+    const label = {light:'Fener',buoy:'Şamandıra',harbour:'Liman / marina',fishfarm:'Balık çiftliği',hazard:'Kayalık / tehlike'}[k]||k;
     const nm = m.n ? '<br>'+m.n : '';
     const lt = m.lt ? '<br><span style="color:#9fb6cc">'+m.lt+'</span>' : '';
     mk.bindPopup('<span class="k">'+label+'</span>'+nm+lt);

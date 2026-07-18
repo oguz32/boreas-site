@@ -18,6 +18,11 @@ ASSETS = os.path.join(MM, "assets", "map")
 OUT = os.path.join(HERE, "demo", "regions")
 os.makedirs(OUT, exist_ok=True)
 
+# Fish farms (aquaculture) come from build_fishfarms.py's cache and are merged
+# into each region's marks as kind 'fishfarm'. Empty if the cache isn't built.
+FF_PATH = os.path.join(HERE, "demo", "fishfarms.json")
+FF = json.load(open(FF_PATH, encoding="utf-8")) if os.path.exists(FF_PATH) else {}
+
 r = lambda v: round(v, 4)
 def rc(pt): return [r(pt[0]), r(pt[1])]
 def walkgeom(coords):
@@ -49,6 +54,8 @@ def marks_out(seamarks):
     return out
 
 def write_region(rid, name, bbox, land, contours, marks):
+    marks = marks + [{"k": "fishfarm", "n": m.get("n", ""), "c": m["c"], "lt": ""}
+                     for m in FF.get(rid, [])]
     obj = {"id": rid, "name": name, "bbox": [r(x) for x in bbox],
            "land": land, "contours": contours, "marks": marks}
     path = os.path.join(OUT, f"{rid}.json")
