@@ -18,6 +18,8 @@
   header .spacer{flex:1}
   header a.cta{background:var(--coral);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 14px;border-radius:20px;white-space:nowrap}
   header a.back{color:#9fb6cc;text-decoration:none;font-size:13px;margin-right:4px}
+  header select{background:var(--navy2);color:#eaf2f8;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;cursor:pointer;max-width:210px}
+  header select:focus{outline:1px solid var(--teal)}
   #map{flex:1;background:var(--sea)}
   .leaflet-container{background:var(--sea)}
   /* panels */
@@ -52,7 +54,8 @@
 <div id="wrap">
   <header>
     <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#0f2a43"/><circle cx="50" cy="50" r="30" fill="none" stroke="#1c7293" stroke-width="5"/><path d="M50 20 L57 50 L50 80 L43 50 Z" fill="#f96167"/><path d="M20 50 L50 43 L80 50 L50 57 Z" fill="#5dcaa5"/><circle cx="50" cy="50" r="4.5" fill="#fff"/></svg>
-    <b>Boreas</b><span class="tag">· Haritayı dene — Marmara</span>
+    <b>Boreas</b><span class="tag">· Haritayı dene</span>
+    <select id="region" aria-label="Bölge seç"></select>
     <span class="spacer"></span>
     <a class="back" href="/">← siteye dön</a>
     <a class="cta" href="/#waitlist">Yayına girince haber ver</a>
@@ -90,35 +93,35 @@
 <script>
 const NM = 1852;
 const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a' };
-const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:8, maxZoom:15 }).setView([40.75,28.3], 9);
+const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:5, maxZoom:15 }).setView([40.75,28.3], 9);
 const canvas = L.canvas({ padding:0.5 });
+const dataLayer = L.layerGroup().addTo(map);   // base chart (land/contours/marks)
+let hazards = [];
 
 function sw(pt){ return [pt[1], pt[0]]; }          // [lon,lat] -> [lat,lon]
 function ringLL(r){ return r.map(sw); }
+const depthColor = d => d<=5?'#8fbcd6':d<=10?'#6ea6c6':d<=20?'#5590b5':d<=50?'#437ea6':d<=100?'#356a90':'#284f70';
 
-fetch('/demo/marmara.json').then(r=>r.json()).then(data=>{
-  map.setMaxBounds([[data.bbox[1]-0.3,data.bbox[0]-0.3],[data.bbox[3]+0.3,data.bbox[2]+0.3]]);
+function renderRegion(data){
+  dataLayer.clearLayers();
+  hazards = [];
+  clearRoute();
 
-  // depth contours (shallow light -> deep dark)
-  const depthColor = d => d<=5?'#8fbcd6':d<=10?'#6ea6c6':d<=20?'#5590b5':d<=50?'#437ea6':d<=100?'#356a90':'#284f70';
   data.contours.slice().reverse().forEach(c=>{
     c.l.forEach(line=>{
-      L.polyline(ringLL(line),{ color:depthColor(c.d), weight:1, opacity:.7, renderer:canvas, interactive:false }).addTo(map);
+      L.polyline(ringLL(line),{ color:depthColor(c.d), weight:1, opacity:.7, renderer:canvas, interactive:false }).addTo(dataLayer);
     });
   });
 
-  // land
   data.land.forEach(f=>{
     const polys = f.t==='MultiPolygon' ? f.c : [f.c];
     polys.forEach(poly=>{
       const outer = ringLL(poly[0]);
       const holes = poly.slice(1).map(ringLL);
-      L.polygon([outer,...holes],{ color:COL.landEdge, weight:.8, fillColor:COL.land, fillOpacity:1, renderer:canvas, interactive:false }).addTo(map);
+      L.polygon([outer,...holes],{ color:COL.landEdge, weight:.8, fillColor:COL.land, fillOpacity:1, renderer:canvas, interactive:false }).addTo(dataLayer);
     });
   });
 
-  // seamarks
-  const hazards=[];
   data.marks.forEach(m=>{
     const ll = sw(m.c), k=m.k;
     if(k==='hazard') hazards.push(ll);
@@ -133,54 +136,69 @@ fetch('/demo/marmara.json').then(r=>r.json()).then(data=>{
     const nm = m.n ? '<br>'+m.n : '';
     const lt = m.lt ? '<br><span style="color:#9fb6cc">'+m.lt+'</span>' : '';
     mk.bindPopup('<span class="k">'+label+'</span>'+nm+lt);
-    mk.addTo(map);
+    mk.addTo(dataLayer);
   });
 
-  // ---- route drawing ----
-  let pts=[], line=null, markers=[];
-  const dEl=document.getElementById('dist'), legsEl=document.getElementById('legs'),
-        statsEl=document.getElementById('stats'), warnEl=document.getElementById('hazwarn');
-  function hav(a,b){ const R=6371000,toR=x=>x*Math.PI/180,
-    dLa=toR(b[0]-a[0]),dLo=toR(b[1]-a[1]),
-    s=Math.sin(dLa/2)**2+Math.cos(toR(a[0]))*Math.cos(toR(b[0]))*Math.sin(dLo/2)**2;
-    return 2*R*Math.asin(Math.sqrt(s)); }
-  // point-to-segment distance in metres (approx, small angles)
-  function segDist(p,a,b){
-    const mLat=(a[0]+b[0])/2, kx=111320*Math.cos(mLat*Math.PI/180), ky=110540;
-    const ax=a[1]*kx, ay=a[0]*ky, bx=b[1]*kx, by=b[0]*ky, px=p[1]*kx, py=p[0]*ky;
-    const dx=bx-ax, dy=by-ay, L2=dx*dx+dy*dy;
-    let t = L2? ((px-ax)*dx+(py-ay)*dy)/L2 : 0; t=Math.max(0,Math.min(1,t));
-    const cx=ax+t*dx, cy=ay+t*dy; return Math.hypot(px-cx,py-cy);
+  const b=data.bbox;
+  map.setMaxBounds([[b[1]-0.5,b[0]-0.5],[b[3]+0.5,b[2]+0.5]]);
+  map.fitBounds([[b[1],b[0]],[b[3],b[2]]]);
+}
+
+let loading=false;
+function loadRegion(id){
+  if(loading) return; loading=true;
+  const tag=document.querySelector('header .tag');
+  fetch('/demo/regions/'+id+'.json').then(r=>r.json()).then(d=>{ renderRegion(d); loading=false; })
+    .catch(()=>{ loading=false; });
+}
+
+// ---- route drawing (persists across region switches) ----
+let pts=[], line=null, markers=[];
+const dEl=document.getElementById('dist'), legsEl=document.getElementById('legs'),
+      statsEl=document.getElementById('stats'), warnEl=document.getElementById('hazwarn');
+function hav(a,b){ const R=6371000,toR=x=>x*Math.PI/180,
+  dLa=toR(b[0]-a[0]),dLo=toR(b[1]-a[1]),
+  s=Math.sin(dLa/2)**2+Math.cos(toR(a[0]))*Math.cos(toR(b[0]))*Math.sin(dLo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s)); }
+function segDist(p,a,b){
+  const mLat=(a[0]+b[0])/2, kx=111320*Math.cos(mLat*Math.PI/180), ky=110540;
+  const ax=a[1]*kx, ay=a[0]*ky, bx=b[1]*kx, by=b[0]*ky, px=p[1]*kx, py=p[0]*ky;
+  const dx=bx-ax, dy=by-ay, L2=dx*dx+dy*dy;
+  let t = L2? ((px-ax)*dx+(py-ay)*dy)/L2 : 0; t=Math.max(0,Math.min(1,t));
+  const cx=ax+t*dx, cy=ay+t*dy; return Math.hypot(px-cx,py-cy);
+}
+function redraw(){
+  if(line){ map.removeLayer(line); line=null; }
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  if(pts.length){
+    line=L.polyline(pts,{color:'#ff8a4a',weight:3,opacity:.95}).addTo(map);
+    pts.forEach(p=>{ markers.push(L.circleMarker(p,{radius:4,color:'#fff',weight:2,fillColor:'#ff8a4a',fillOpacity:1}).addTo(map)); });
   }
-  function redraw(){
-    if(line) map.removeLayer(line);
-    markers.forEach(m=>map.removeLayer(m)); markers=[];
-    if(pts.length){
-      line=L.polyline(pts,{color:COL.hazard==='#f96167'?'#ff8a4a':'#ff8a4a',weight:3,opacity:.95,dashArray:'1,0'}).addTo(map);
-      pts.forEach((p,i)=>{
-        const mm=L.circleMarker(p,{radius:4,color:'#fff',weight:2,fillColor:'#ff8a4a',fillOpacity:1}).addTo(map);
-        markers.push(mm);
-      });
+  let tot=0; for(let i=1;i<pts.length;i++) tot+=hav(pts[i-1],pts[i]);
+  statsEl.style.display = pts.length? 'block':'none';
+  dEl.textContent = (tot/NM).toFixed(1)+' dnm';
+  legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' bacak':' · başla';
+  let near=0;
+  if(pts.length>1){
+    for(let i=1;i<pts.length;i++){
+      for(const h of hazards){ if(segDist([h[0],h[1]],pts[i-1],pts[i])<140){ near++; break; } }
     }
-    // distance
-    let tot=0; for(let i=1;i<pts.length;i++) tot+=hav(pts[i-1],pts[i]);
-    const nmv=tot/NM;
-    statsEl.style.display = pts.length? 'block':'none';
-    dEl.textContent = nmv.toFixed(1)+' dnm';
-    legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' bacak':' · başla';
-    // hazard check
-    let near=0;
-    if(pts.length>1){
-      for(let i=1;i<pts.length;i++){
-        for(const h of hazards){ if(segDist([h[0],h[1]],pts[i-1],pts[i])<140){ near++; break; } }
-      }
-    }
-    if(near){ warnEl.style.display='block'; warnEl.textContent='⚠ '+near+' bacakta rota yakınında kayalık/tehlike var'; }
-    else warnEl.style.display='none';
   }
-  map.on('click',e=>{ pts.push([e.latlng.lat,e.latlng.lng]); redraw(); });
-  document.getElementById('undo').onclick=()=>{ pts.pop(); redraw(); };
-  document.getElementById('clear').onclick=()=>{ pts=[]; redraw(); };
+  if(near){ warnEl.style.display='block'; warnEl.textContent='⚠ '+near+' bacakta rota yakınında kayalık/tehlike var'; }
+  else warnEl.style.display='none';
+}
+function clearRoute(){ pts=[]; redraw(); }
+map.on('click',e=>{ pts.push([e.latlng.lat,e.latlng.lng]); redraw(); });
+document.getElementById('undo').onclick=()=>{ pts.pop(); redraw(); };
+document.getElementById('clear').onclick=()=>{ pts=[]; redraw(); };
+
+// ---- init: region index + selector ----
+fetch('/demo/regions.json').then(r=>r.json()).then(list=>{
+  const sel=document.getElementById('region');
+  list.forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=e.name; sel.appendChild(o); });
+  sel.value='marmara';
+  sel.onchange=()=>loadRegion(sel.value);
+  loadRegion('marmara');
 });
 </script>
 </body>
