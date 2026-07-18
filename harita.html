@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Boreas — Haritayı dene (Marmara)</title>
+<meta name="description" content="Boreas deniz haritasını tarayıcında dene: Marmara kıyısı, derinlik, fenerler ve tehlikeler. Tıklayarak rota çiz.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root{ --navy:#0f2a43; --navy2:#0a1e30; --sea:#aed2e2; --teal:#1c7293; --mint:#5dcaa5; --coral:#f96167; --ice:#cADCFC; --line:#20455f; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--navy2);color:#eaf2f8}
+  #wrap{position:fixed;inset:0;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--navy);border-bottom:1px solid var(--line);z-index:1200}
+  header .logo{width:26px;height:26px;flex:0 0 auto}
+  header b{font-size:16px;letter-spacing:.5px}
+  header .tag{font-size:12px;color:#9fb6cc;margin-left:2px}
+  header .spacer{flex:1}
+  header a.cta{background:var(--coral);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 14px;border-radius:20px;white-space:nowrap}
+  header a.back{color:#9fb6cc;text-decoration:none;font-size:13px;margin-right:4px}
+  #map{flex:1;background:var(--sea)}
+  .leaflet-container{background:var(--sea)}
+  /* panels */
+  .panel{position:absolute;z-index:1100;background:rgba(10,30,48,.92);border:1px solid var(--line);border-radius:12px;backdrop-filter:blur(3px)}
+  #tools{top:64px;left:12px;padding:10px 12px;width:230px}
+  #tools h4{margin:0 0 6px;font-size:13px;color:var(--mint);letter-spacing:.4px}
+  #tools p{margin:0 0 8px;font-size:12px;color:#bcd0e0;line-height:1.35}
+  #tools .btns{display:flex;gap:6px}
+  #tools button{flex:1;background:var(--teal);color:#fff;border:0;border-radius:8px;padding:8px;font-size:12.5px;font-weight:600;cursor:pointer}
+  #tools button.ghost{background:transparent;border:1px solid var(--line);color:#cfe0ee}
+  #stats{margin-top:8px;font-size:12px;color:#eaf2f8;display:none}
+  #stats .big{font-size:20px;font-weight:800;color:#fff}
+  #stats .warn{color:var(--coral);font-weight:700;margin-top:4px;display:block}
+  #legend{bottom:14px;left:12px;padding:9px 12px;font-size:12px;line-height:1.7}
+  #legend .row{display:flex;align-items:center;gap:8px}
+  #legend .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+  #legend .di{width:11px;height:11px;flex:0 0 auto;transform:rotate(45deg)}
+  #note{bottom:14px;right:12px;max-width:290px;padding:10px 13px;font-size:12px;color:#cfe0ee;line-height:1.4}
+  #note b{color:#fff}
+  .leaflet-popup-content-wrapper{background:var(--navy);color:#eaf2f8;border-radius:10px}
+  .leaflet-popup-tip{background:var(--navy)}
+  .leaflet-popup-content{margin:9px 12px;font-size:13px}
+  .leaflet-popup-content .k{color:var(--mint);font-weight:700}
+  @media(max-width:620px){
+    #tools{width:auto;left:8px;right:8px;top:58px}
+    #note{display:none}
+    header .tag{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#0f2a43"/><circle cx="50" cy="50" r="30" fill="none" stroke="#1c7293" stroke-width="5"/><path d="M50 20 L57 50 L50 80 L43 50 Z" fill="#f96167"/><path d="M20 50 L50 43 L80 50 L50 57 Z" fill="#5dcaa5"/><circle cx="50" cy="50" r="4.5" fill="#fff"/></svg>
+    <b>Boreas</b><span class="tag">· Haritayı dene — Marmara</span>
+    <span class="spacer"></span>
+    <a class="back" href="/">← siteye dön</a>
+    <a class="cta" href="/#waitlist">Yayına girince haber ver</a>
+  </header>
+  <div id="map"></div>
+
+  <div class="panel" id="tools">
+    <h4>Rota çiz</h4>
+    <p>Haritaya tıklayarak nokta ekle — mesafeyi ve rotandaki tehlikeleri gör.</p>
+    <div class="btns">
+      <button id="undo" class="ghost">Geri al</button>
+      <button id="clear" class="ghost">Temizle</button>
+    </div>
+    <div id="stats">
+      <span class="big" id="dist">0.0 dnm</span>
+      <span id="legs" style="color:#9fb6cc"></span>
+      <span class="warn" id="hazwarn" style="display:none"></span>
+    </div>
+  </div>
+
+  <div class="panel" id="legend">
+    <div class="row"><span class="dot" style="background:#f5a623"></span> Fener</div>
+    <div class="row"><span class="dot" style="background:#2e9e6b"></span> Şamandıra</div>
+    <div class="row"><span class="dot" style="background:#2b6da0"></span> Liman / marina</div>
+    <div class="row"><span class="di" style="background:#d8352a"></span> Kayalık / tehlike</div>
+    <div class="row"><span style="width:16px;height:0;border-top:2px solid #437ea6;display:inline-block"></span> Derinlik konturu</div>
+  </div>
+
+  <div class="panel" id="note">
+    <b>Bu bir tadımlık.</b> Uygulamada bu harita <b>internetsiz</b> çalışır; GPS, hıza bağlı sığlık alarmı, demir nöbeti ve 3B sahil görünümü eklenir. Veri: açık kaynak (GSHHG · OpenStreetMap · EMODnet). Resmi seyir haritası değildir.
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const NM = 1852;
+const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a' };
+const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:8, maxZoom:15 }).setView([40.75,28.3], 9);
+const canvas = L.canvas({ padding:0.5 });
+
+function sw(pt){ return [pt[1], pt[0]]; }          // [lon,lat] -> [lat,lon]
+function ringLL(r){ return r.map(sw); }
+
+fetch('/demo/marmara.json').then(r=>r.json()).then(data=>{
+  map.setMaxBounds([[data.bbox[1]-0.3,data.bbox[0]-0.3],[data.bbox[3]+0.3,data.bbox[2]+0.3]]);
+
+  // depth contours (shallow light -> deep dark)
+  const depthColor = d => d<=5?'#8fbcd6':d<=10?'#6ea6c6':d<=20?'#5590b5':d<=50?'#437ea6':d<=100?'#356a90':'#284f70';
+  data.contours.slice().reverse().forEach(c=>{
+    c.l.forEach(line=>{
+      L.polyline(ringLL(line),{ color:depthColor(c.d), weight:1, opacity:.7, renderer:canvas, interactive:false }).addTo(map);
+    });
+  });
+
+  // land
+  data.land.forEach(f=>{
+    const polys = f.t==='MultiPolygon' ? f.c : [f.c];
+    polys.forEach(poly=>{
+      const outer = ringLL(poly[0]);
+      const holes = poly.slice(1).map(ringLL);
+      L.polygon([outer,...holes],{ color:COL.landEdge, weight:.8, fillColor:COL.land, fillOpacity:1, renderer:canvas, interactive:false }).addTo(map);
+    });
+  });
+
+  // seamarks
+  const hazards=[];
+  data.marks.forEach(m=>{
+    const ll = sw(m.c), k=m.k;
+    if(k==='hazard') hazards.push(ll);
+    const style = {
+      light:  {r:3.2, color:'#8a6d00', fill:COL.light},
+      buoy:   {r:2.8, color:'#1f6b53', fill:COL.buoy},
+      harbour:{r:3.6, color:'#1a4f7a', fill:COL.harbour},
+      hazard: {r:3.2, color:'#a11', fill:COL.hazard},
+    }[k] || {r:2.5,color:'#888',fill:'#aaa'};
+    const mk = L.circleMarker(ll,{ radius:style.r, color:style.color, weight:1, fillColor:style.fill, fillOpacity:.95, renderer:canvas });
+    const label = {light:'Fener',buoy:'Şamandıra',harbour:'Liman / marina',hazard:'Kayalık / tehlike'}[k]||k;
+    const nm = m.n ? '<br>'+m.n : '';
+    const lt = m.lt ? '<br><span style="color:#9fb6cc">'+m.lt+'</span>' : '';
+    mk.bindPopup('<span class="k">'+label+'</span>'+nm+lt);
+    mk.addTo(map);
+  });
+
+  // ---- route drawing ----
+  let pts=[], line=null, markers=[];
+  const dEl=document.getElementById('dist'), legsEl=document.getElementById('legs'),
+        statsEl=document.getElementById('stats'), warnEl=document.getElementById('hazwarn');
+  function hav(a,b){ const R=6371000,toR=x=>x*Math.PI/180,
+    dLa=toR(b[0]-a[0]),dLo=toR(b[1]-a[1]),
+    s=Math.sin(dLa/2)**2+Math.cos(toR(a[0]))*Math.cos(toR(b[0]))*Math.sin(dLo/2)**2;
+    return 2*R*Math.asin(Math.sqrt(s)); }
+  // point-to-segment distance in metres (approx, small angles)
+  function segDist(p,a,b){
+    const mLat=(a[0]+b[0])/2, kx=111320*Math.cos(mLat*Math.PI/180), ky=110540;
+    const ax=a[1]*kx, ay=a[0]*ky, bx=b[1]*kx, by=b[0]*ky, px=p[1]*kx, py=p[0]*ky;
+    const dx=bx-ax, dy=by-ay, L2=dx*dx+dy*dy;
+    let t = L2? ((px-ax)*dx+(py-ay)*dy)/L2 : 0; t=Math.max(0,Math.min(1,t));
+    const cx=ax+t*dx, cy=ay+t*dy; return Math.hypot(px-cx,py-cy);
+  }
+  function redraw(){
+    if(line) map.removeLayer(line);
+    markers.forEach(m=>map.removeLayer(m)); markers=[];
+    if(pts.length){
+      line=L.polyline(pts,{color:COL.hazard==='#f96167'?'#ff8a4a':'#ff8a4a',weight:3,opacity:.95,dashArray:'1,0'}).addTo(map);
+      pts.forEach((p,i)=>{
+        const mm=L.circleMarker(p,{radius:4,color:'#fff',weight:2,fillColor:'#ff8a4a',fillOpacity:1}).addTo(map);
+        markers.push(mm);
+      });
+    }
+    // distance
+    let tot=0; for(let i=1;i<pts.length;i++) tot+=hav(pts[i-1],pts[i]);
+    const nmv=tot/NM;
+    statsEl.style.display = pts.length? 'block':'none';
+    dEl.textContent = nmv.toFixed(1)+' dnm';
+    legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' bacak':' · başla';
+    // hazard check
+    let near=0;
+    if(pts.length>1){
+      for(let i=1;i<pts.length;i++){
+        for(const h of hazards){ if(segDist([h[0],h[1]],pts[i-1],pts[i])<140){ near++; break; } }
+      }
+    }
+    if(near){ warnEl.style.display='block'; warnEl.textContent='⚠ '+near+' bacakta rota yakınında kayalık/tehlike var'; }
+    else warnEl.style.display='none';
+  }
+  map.on('click',e=>{ pts.push([e.latlng.lat,e.latlng.lng]); redraw(); });
+  document.getElementById('undo').onclick=()=>{ pts.pop(); redraw(); };
+  document.getElementById('clear').onclick=()=>{ pts=[]; redraw(); };
+});
+</script>
+</body>
+</html>
