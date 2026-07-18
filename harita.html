@@ -48,6 +48,29 @@
     #note{display:none}
     header .tag{display:none}
   }
+  /* auth + routes */
+  header .auth{display:flex;align-items:center;gap:8px;margin-right:6px}
+  header .auth button{background:transparent;border:1px solid var(--line);color:#cfe0ee;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer}
+  header .auth .email{font-size:12px;color:#9fb6cc;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #save{margin-top:8px;width:100%;background:var(--mint);color:#06301f;border:0;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer;display:none}
+  #myRoutes{margin-top:10px;border-top:1px solid var(--line);padding-top:8px;display:none}
+  #myRoutes h4{margin:0 0 6px;font-size:12px;color:var(--mint);letter-spacing:.4px}
+  #myRoutes .r{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;cursor:pointer;font-size:12.5px}
+  #myRoutes .r:hover{background:rgba(255,255,255,.06)}
+  #myRoutes .r .d{color:#9fb6cc;font-size:11px}
+  #myRoutes .empty{font-size:12px;color:#9fb6cc}
+  /* modal */
+  #modal{position:fixed;inset:0;background:rgba(4,14,24,.72);z-index:2000;display:none;align-items:center;justify-content:center}
+  #modal .box{background:var(--navy);border:1px solid var(--line);border-radius:16px;padding:22px;width:min(360px,92vw)}
+  #modal h3{margin:0 0 4px;font-size:19px}
+  #modal p{margin:0 0 14px;font-size:12.5px;color:#9fb6cc;line-height:1.4}
+  #modal label{display:block;font-size:12px;color:#bcd0e0;margin:10px 0 4px}
+  #modal input{width:100%;background:var(--navy2);border:1px solid var(--line);border-radius:9px;padding:11px;color:#eaf2f8;font-size:14px}
+  #modal input:focus{outline:1px solid var(--teal)}
+  #modal .go{width:100%;margin-top:16px;background:var(--coral);color:#fff;border:0;border-radius:22px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
+  #modal .x{position:absolute;top:14px;right:16px;color:#9fb6cc;background:0;border:0;font-size:22px;cursor:pointer}
+  #modal .err{color:var(--coral);font-size:12.5px;margin-top:10px;min-height:16px}
+  #modal .box{position:relative}
 </style>
 </head>
 <body>
@@ -57,6 +80,11 @@
     <b>Boreas</b><span class="tag">· Haritayı dene</span>
     <select id="region" aria-label="Bölge seç"></select>
     <span class="spacer"></span>
+    <span class="auth" id="auth">
+      <span class="email" id="userEmail" style="display:none"></span>
+      <button id="loginBtn">Giriş yap</button>
+      <button id="logoutBtn" style="display:none">Çıkış</button>
+    </span>
     <a class="back" href="/">← siteye dön</a>
     <a class="cta" href="/#waitlist">Yayına girince haber ver</a>
   </header>
@@ -74,6 +102,25 @@
       <span id="legs" style="color:#9fb6cc"></span>
       <span class="warn" id="hazwarn" style="display:none"></span>
     </div>
+    <button id="save">Rotayı hesabıma kaydet</button>
+    <div id="myRoutes">
+      <h4>ROTALARIM</h4>
+      <div id="routesList"></div>
+    </div>
+  </div>
+
+  <div id="modal">
+    <div class="box">
+      <button class="x" id="modalClose" aria-label="Kapat">×</button>
+      <h3>Boreas hesabına giriş</h3>
+      <p>Uygulamadaki <b>aynı hesabınla</b> giriş yap. Web'de çizip kaydettiğin rotalar telefonundaki Boreas'ta da belirir.</p>
+      <label for="email">E-posta</label>
+      <input id="email" type="email" autocomplete="email" placeholder="ornek@eposta.com">
+      <label for="pass">Şifre</label>
+      <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
+      <div class="err" id="loginErr"></div>
+      <button class="go" id="doLogin">Giriş yap</button>
+    </div>
   </div>
 
   <div class="panel" id="legend">
@@ -90,6 +137,7 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const NM = 1852;
 const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a' };
@@ -200,6 +248,89 @@ fetch('/demo/regions.json').then(r=>r.json()).then(list=>{
   sel.onchange=()=>loadRegion(sel.value);
   loadRegion('marmara');
 });
+
+// ================= account sync (Supabase) =================
+// Same project + publishable key the app ships; RLS protects every row.
+// A route saved here writes to the same `routes` table the phone reads, so
+// it appears on the captain's device on the next sync.
+const SB_URL = 'https://szjaxfnystiqmgluupbl.supabase.co';
+const SB_KEY = 'sb_publishable_tHqBBRUQUIYv4ggQYiVqmw_LKu-h7VY';
+const sb = window.supabase.createClient(SB_URL, SB_KEY);
+
+const loginBtn=document.getElementById('loginBtn'), logoutBtn=document.getElementById('logoutBtn'),
+      userEmail=document.getElementById('userEmail'), modal=document.getElementById('modal'),
+      saveBtn=document.getElementById('save'), myRoutes=document.getElementById('myRoutes'),
+      routesList=document.getElementById('routesList'), loginErr=document.getElementById('loginErr');
+let user=null;
+
+function openModal(){ modal.style.display='flex'; loginErr.textContent=''; document.getElementById('email').focus(); }
+function closeModal(){ modal.style.display='none'; }
+loginBtn.onclick=openModal;
+document.getElementById('modalClose').onclick=closeModal;
+modal.onclick=e=>{ if(e.target===modal) closeModal(); };
+
+function setAuthUI(){
+  const on=!!user;
+  loginBtn.style.display=on?'none':'';
+  logoutBtn.style.display=on?'':'none';
+  userEmail.style.display=on?'':'none';
+  userEmail.textContent=on?user.email:'';
+  myRoutes.style.display=on?'block':'none';
+  updateSaveBtn();
+}
+function updateSaveBtn(){ saveBtn.style.display=(user && pts.length>=2)?'block':'none'; }
+
+document.getElementById('doLogin').onclick=async()=>{
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('pass').value;
+  if(!email||!password){ loginErr.textContent='E-posta ve şifre gerekli.'; return; }
+  loginErr.textContent='Giriş yapılıyor…';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if(error){ loginErr.textContent = error.message.includes('Invalid')?'E-posta veya şifre hatalı.':error.message; return; }
+  user=data.user; closeModal(); setAuthUI(); loadMyRoutes();
+};
+logoutBtn.onclick=async()=>{ await sb.auth.signOut(); user=null; setAuthUI(); routesList.innerHTML=''; };
+
+async function loadMyRoutes(){
+  routesList.innerHTML='<div class="empty">Yükleniyor…</div>';
+  const { data, error } = await sb.from('routes').select('payload').is('deleted_at',null);
+  if(error){ routesList.innerHTML='<div class="empty">Rotalar okunamadı.</div>'; return; }
+  const routes=(data||[]).map(r=>r.payload).filter(p=>p&&p.points&&p.points.length>1)
+    .sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  if(!routes.length){ routesList.innerHTML='<div class="empty">Henüz kayıtlı rota yok. Haritada çiz, kaydet.</div>'; return; }
+  routesList.innerHTML='';
+  routes.forEach(p=>{
+    const el=document.createElement('div'); el.className='r';
+    const d=p.createdAt?new Date(p.createdAt).toLocaleDateString('tr-TR'):'';
+    el.innerHTML='<span>'+(p.name||'Rota')+'</span><span class="d">'+d+'</span>';
+    el.onclick=()=>{ pts=p.points.map(pt=>[pt[0],pt[1]]); redraw();
+      if(pts.length){ map.fitBounds(pts,{padding:[60,60]}); } };
+    routesList.appendChild(el);
+  });
+}
+
+saveBtn.onclick=async()=>{
+  if(!user||pts.length<2) return;
+  const name=prompt('Rota adı:','Rota '+new Date().toLocaleDateString('tr-TR'));
+  if(name===null) return;
+  const now=new Date().toISOString();
+  const id=(crypto.randomUUID?crypto.randomUUID():(Date.now()+''+Math.random()).replace('.',''));
+  const payload={ name:name||'Rota', points:pts.map(p=>[p[0],p[1]]), createdAt:now,
+    meta:{ id, schemaVersion:2, updatedAt:now, deletedAt:null } };
+  saveBtn.textContent='Kaydediliyor…'; saveBtn.disabled=true;
+  const { error } = await sb.from('routes').upsert({ id, payload, schema_version:2, updated_at:now, deleted_at:null });
+  saveBtn.disabled=false; saveBtn.textContent='Rotayı hesabıma kaydet';
+  if(error){ alert('Kaydedilemedi: '+error.message); return; }
+  saveBtn.textContent='✓ Kaydedildi — telefonunda görünecek'; setTimeout(()=>saveBtn.textContent='Rotayı hesabıma kaydet',2500);
+  loadMyRoutes();
+};
+
+// keep the save button in sync as the route changes
+const _redraw=redraw;
+redraw=function(){ _redraw(); updateSaveBtn(); };
+
+// restore an existing session on load
+sb.auth.getSession().then(({data})=>{ if(data.session){ user=data.session.user; setAuthUI(); loadMyRoutes(); } });
 </script>
 </body>
 </html>
