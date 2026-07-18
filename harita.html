@@ -34,7 +34,14 @@
   #stats .big{font-size:20px;font-weight:800;color:#fff}
   #stats .warn{color:var(--coral);font-weight:700;margin-top:4px;display:block}
   #legend{bottom:14px;left:12px;padding:9px 12px;font-size:12px;line-height:1.7}
-  #legend .row{display:flex;align-items:center;gap:8px}
+  #legend .ltitle{font-size:10.5px;color:var(--mint);letter-spacing:.5px;margin-bottom:4px;font-weight:700}
+  #legend .row{display:flex;align-items:center;gap:8px;cursor:pointer;padding:1px 4px;border-radius:5px;user-select:none}
+  #legend .row:hover{background:rgba(255,255,255,.06)}
+  #legend .row .ck{width:12px;height:12px;border:1.5px solid var(--mint);border-radius:3px;background:var(--mint);flex:0 0 auto;position:relative}
+  #legend .row .ck::after{content:'✓';position:absolute;inset:-2px 0 0 1px;font-size:10px;color:#06301f;font-weight:900}
+  #legend .row.off{opacity:.5}
+  #legend .row.off .ck{background:transparent}
+  #legend .row.off .ck::after{content:''}
   #legend .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
   #legend .di{width:11px;height:11px;flex:0 0 auto;transform:rotate(45deg)}
   #note{bottom:14px;right:12px;max-width:290px;padding:10px 13px;font-size:12px;color:#cfe0ee;line-height:1.4}
@@ -124,11 +131,12 @@
   </div>
 
   <div class="panel" id="legend">
-    <div class="row"><span class="dot" style="background:#f5a623"></span> Fener</div>
-    <div class="row"><span class="dot" style="background:#2e9e6b"></span> Şamandıra</div>
-    <div class="row"><span class="dot" style="background:#2b6da0"></span> Liman / marina</div>
-    <div class="row"><span class="di" style="background:#d8352a"></span> Kayalık / tehlike</div>
-    <div class="row"><span style="width:16px;height:0;border-top:2px solid #437ea6;display:inline-block"></span> Derinlik konturu</div>
+    <div class="ltitle">KATMANLAR · aç/kapat</div>
+    <div class="row" data-k="light" onclick="toggleLayer('light')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Fener</div>
+    <div class="row" data-k="buoy" onclick="toggleLayer('buoy')"><span class="ck"></span><span class="dot" style="background:#2e9e6b"></span> Şamandıra</div>
+    <div class="row" data-k="harbour" onclick="toggleLayer('harbour')"><span class="ck"></span><span class="dot" style="background:#2b6da0"></span> Liman / marina</div>
+    <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#d8352a"></span> Kayalık / tehlike</div>
+    <div class="row" data-k="contour" onclick="toggleLayer('contour')"><span class="ck"></span><span style="width:16px;height:0;border-top:2px solid #437ea6;display:inline-block"></span> Derinlik konturu</div>
   </div>
 
   <div class="panel" id="note">
@@ -143,7 +151,12 @@ const NM = 1852;
 const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a' };
 const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:5, maxZoom:15 }).setView([40.75,28.3], 9);
 const canvas = L.canvas({ padding:0.5 });
-const dataLayer = L.layerGroup().addTo(map);   // base chart (land/contours/marks)
+const landLayer = L.layerGroup().addTo(map);   // land — always shown
+// Toggleable layers, one group per kind so the captain can hide clutter.
+const groups = { contour:L.layerGroup(), harbour:L.layerGroup(), light:L.layerGroup(),
+                 buoy:L.layerGroup(), hazard:L.layerGroup() };
+const vis = { contour:true, harbour:true, light:true, buoy:true, hazard:true };
+Object.keys(groups).forEach(k=>{ if(vis[k]) groups[k].addTo(map); });
 let hazards = [];
 
 function sw(pt){ return [pt[1], pt[0]]; }          // [lon,lat] -> [lat,lon]
@@ -151,13 +164,14 @@ function ringLL(r){ return r.map(sw); }
 const depthColor = d => d<=5?'#8fbcd6':d<=10?'#6ea6c6':d<=20?'#5590b5':d<=50?'#437ea6':d<=100?'#356a90':'#284f70';
 
 function renderRegion(data){
-  dataLayer.clearLayers();
+  landLayer.clearLayers();
+  Object.values(groups).forEach(g=>g.clearLayers());
   hazards = [];
   clearRoute();
 
   data.contours.slice().reverse().forEach(c=>{
     c.l.forEach(line=>{
-      L.polyline(ringLL(line),{ color:depthColor(c.d), weight:1, opacity:.7, renderer:canvas, interactive:false }).addTo(dataLayer);
+      L.polyline(ringLL(line),{ color:depthColor(c.d), weight:1, opacity:.7, renderer:canvas, interactive:false }).addTo(groups.contour);
     });
   });
 
@@ -166,7 +180,7 @@ function renderRegion(data){
     polys.forEach(poly=>{
       const outer = ringLL(poly[0]);
       const holes = poly.slice(1).map(ringLL);
-      L.polygon([outer,...holes],{ color:COL.landEdge, weight:.8, fillColor:COL.land, fillOpacity:1, renderer:canvas, interactive:false }).addTo(dataLayer);
+      L.polygon([outer,...holes],{ color:COL.landEdge, weight:.8, fillColor:COL.land, fillOpacity:1, renderer:canvas, interactive:false }).addTo(landLayer);
     });
   });
 
@@ -184,12 +198,20 @@ function renderRegion(data){
     const nm = m.n ? '<br>'+m.n : '';
     const lt = m.lt ? '<br><span style="color:#9fb6cc">'+m.lt+'</span>' : '';
     mk.bindPopup('<span class="k">'+label+'</span>'+nm+lt);
-    mk.addTo(dataLayer);
+    mk.addTo(groups[k] || landLayer);
   });
 
   const b=data.bbox;
   map.setMaxBounds([[b[1]-0.5,b[0]-0.5],[b[3]+0.5,b[2]+0.5]]);
   map.fitBounds([[b[1],b[0]],[b[3],b[2]]]);
+}
+
+// legend rows double as filters
+function toggleLayer(k){
+  vis[k]=!vis[k];
+  if(vis[k]) groups[k].addTo(map); else map.removeLayer(groups[k]);
+  const row=document.querySelector('#legend .row[data-k="'+k+'"]');
+  if(row) row.classList.toggle('off', !vis[k]);
 }
 
 let loading=false;
