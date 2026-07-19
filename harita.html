@@ -91,6 +91,8 @@
   #modal .go{width:100%;margin-top:16px;background:var(--coral);color:#fff;border:0;border-radius:22px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
   #modal .x{position:absolute;top:14px;right:16px;color:#9fb6cc;background:0;border:0;font-size:22px;cursor:pointer}
   #modal .err{color:var(--coral);font-size:12.5px;margin-top:10px;min-height:16px}
+  #modal .linkbtn{display:block;width:100%;margin-top:12px;background:0;border:0;color:#9fb6cc;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  #modal .linkbtn:hover{color:var(--mint)}
   #modal .box{position:relative}
 </style>
 </head>
@@ -143,14 +145,33 @@
   <div id="modal">
     <div class="box">
       <button class="x" id="modalClose" aria-label="Kapat">×</button>
-      <h3>Boreas hesabına giriş</h3>
-      <p>Uygulamadaki <b>aynı hesabınla</b> giriş yap. Web'de çizip kaydettiğin rotalar telefonundaki Boreas'ta da belirir.</p>
-      <label for="email">E-posta</label>
-      <input id="email" type="email" autocomplete="email" placeholder="ornek@eposta.com">
-      <label for="pass">Şifre</label>
-      <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
-      <div class="err" id="loginErr"></div>
-      <button class="go" id="doLogin">Giriş yap</button>
+      <div id="loginView">
+        <h3>Boreas hesabına giriş</h3>
+        <p>Uygulamadaki <b>aynı hesabınla</b> giriş yap. Web'de çizip kaydettiğin rotalar telefonundaki Boreas'ta da belirir.</p>
+        <label for="email">E-posta</label>
+        <input id="email" type="email" autocomplete="email" placeholder="ornek@eposta.com">
+        <label for="pass">Şifre</label>
+        <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
+        <div class="err" id="loginErr"></div>
+        <button class="go" id="doLogin">Giriş yap</button>
+        <button class="linkbtn" id="toReset">Şifremi unuttum</button>
+      </div>
+      <div id="resetView" style="display:none">
+        <h3>Şifre sıfırla</h3>
+        <p>E-postana <b>6 haneli bir kod</b> gönderelim; o kodla yeni şifreni belirle.</p>
+        <label for="rEmail">E-posta</label>
+        <input id="rEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com">
+        <button class="go" id="sendCode">Kod gönder</button>
+        <div id="codeStep" style="display:none">
+          <label for="rCode">E-postana gelen kod</label>
+          <input id="rCode" inputmode="numeric" autocomplete="one-time-code" placeholder="6 haneli kod">
+          <label for="rPass">Yeni şifre</label>
+          <input id="rPass" type="password" autocomplete="new-password" placeholder="en az 6 karakter">
+          <button class="go" id="doReset" style="margin-top:12px">Şifreyi sıfırla</button>
+        </div>
+        <div class="err" id="resetErr"></div>
+        <button class="linkbtn" id="toLogin">← Girişe dön</button>
+      </div>
     </div>
   </div>
 
@@ -350,6 +371,38 @@ document.getElementById('doLogin').onclick=async()=>{
   user=data.user; closeModal(); setAuthUI(); loadMyRoutes();
 };
 logoutBtn.onclick=async()=>{ await sb.auth.signOut(); user=null; setAuthUI(); routesList.innerHTML=''; };
+
+// ---- forgot password (email 6-digit code → reset) ----
+const loginView=document.getElementById('loginView'), resetView=document.getElementById('resetView'),
+      codeStep=document.getElementById('codeStep'), resetErr=document.getElementById('resetErr');
+document.getElementById('toReset').onclick=()=>{ loginView.style.display='none'; resetView.style.display='block';
+  resetErr.textContent=''; document.getElementById('rEmail').value=document.getElementById('email').value; };
+document.getElementById('toLogin').onclick=()=>{ resetView.style.display='none'; loginView.style.display='block'; };
+document.getElementById('sendCode').onclick=async()=>{
+  const email=document.getElementById('rEmail').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ resetErr.style.color='var(--coral)'; resetErr.textContent='Geçerli bir e-posta gir.'; return; }
+  resetErr.style.color='#9fb6cc'; resetErr.textContent='Kod gönderiliyor…';
+  const { error } = await sb.auth.resetPasswordForEmail(email);
+  if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent=error.message; return; }
+  codeStep.style.display='block';
+  resetErr.style.color='var(--mint)'; resetErr.textContent='Kod e-postana gönderildi. Gelen kutusu / spam klasörünü kontrol et.';
+};
+document.getElementById('doReset').onclick=async()=>{
+  const email=document.getElementById('rEmail').value.trim();
+  const token=document.getElementById('rCode').value.trim();
+  const password=document.getElementById('rPass').value;
+  if(!token){ resetErr.style.color='var(--coral)'; resetErr.textContent='E-postana gelen kodu gir.'; return; }
+  if((password||'').length<6){ resetErr.style.color='var(--coral)'; resetErr.textContent='Yeni şifre en az 6 karakter olmalı.'; return; }
+  resetErr.style.color='#9fb6cc'; resetErr.textContent='Doğrulanıyor…';
+  const { data, error } = await sb.auth.verifyOtp({ email, token, type:'recovery' });
+  if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent = /expired|invalid/i.test(error.message)?'Kod hatalı veya süresi dolmuş.':error.message; return; }
+  const up = await sb.auth.updateUser({ password });
+  if(up.error){ resetErr.style.color='var(--coral)'; resetErr.textContent=up.error.message; return; }
+  // reset succeeds with an active session — log the captain straight in.
+  user=(data&&data.user)||up.data.user; closeModal();
+  resetView.style.display='none'; loginView.style.display='block'; codeStep.style.display='none';
+  setAuthUI(); loadMyRoutes();
+};
 
 async function loadMyRoutes(){
   routesList.innerHTML='<div class="empty">Yükleniyor…</div>';
