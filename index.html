@@ -604,23 +604,41 @@
   </footer>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Waitlist — placeholder handler.
-  // TODO (yayından önce): gerçek bir servise bağla (Formspree / Google Form / Supabase).
-  // Şu an hiçbir yere veri göndermez; sadece onay mesajı gösterir.
+  // Waitlist — writes to the Supabase `waitlist` table (anon insert; the
+  // publishable key is safe to ship, RLS allows insert only, never select).
   (function () {
     var form = document.getElementById('waitlistForm');
     var msg = document.getElementById('formMsg');
     var email = document.getElementById('email');
     if (!form) return;
+    var sb = window.supabase.createClient(
+      'https://szjaxfnystiqmgluupbl.supabase.co',
+      'sb_publishable_tHqBBRUQUIYv4ggQYiVqmw_LKu-h7VY');
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var v = (email.value || '').trim();
       var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
       if (!ok) { msg.style.color = 'var(--coral)'; msg.textContent = 'Geçerli bir e-posta gir.'; return; }
       msg.style.color = 'var(--marine)';
-      msg.textContent = 'Teşekkürler — kayıt sistemi bağlandığında listeye alınacaksın.';
-      form.reset();
+      msg.textContent = 'Kaydediliyor…';
+      sb.from('waitlist').insert({ email: v, source: 'web' }).then(function (res) {
+        if (res.error) {
+          if ((res.error.code === '23505') || /duplicate/i.test(res.error.message || '')) {
+            msg.style.color = 'var(--marine)';
+            msg.textContent = 'Zaten listedesin — çıkışta ilk sen haberdar olacaksın. ⚓';
+            form.reset();
+          } else {
+            msg.style.color = 'var(--coral)';
+            msg.textContent = 'Bir sorun oldu, birazdan tekrar dene.';
+          }
+          return;
+        }
+        msg.style.color = 'var(--marine)';
+        msg.textContent = 'Teşekkürler! Çıkışta ilk sen haberdar olacaksın. ⚓';
+        form.reset();
+      });
     });
   })();
 </script>
