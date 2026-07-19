@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="tr">
+<html lang="pt">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Boreas — İnternetsiz deniz haritası · haritayı tarayıcında dene</title>
-<meta name="description" content="Türkiye ve Akdeniz kıyıları için internetsiz çalışan deniz haritası. Tarayıcında dene: kıyı, derinlik, fenerler, balık çiftlikleri ve tehlikeler; tıklayarak rota çiz. Uygulamada offline, GPS ve güvenlik alarmlarıyla.">
+<title>Boreas — Carta náutica offline · experimente o mapa no navegador</title>
+<meta name="description" content="Carta náutica que funciona sem internet para as costas da Turquia e do Mediterrâneo. Experimente no navegador: costa, profundidades, faróis, pisciculturas e perigos; trace rotas com um clique. Na aplicação: offline, com GPS e alertas de segurança.">
 <link rel="alternate" hreflang="tr" href="https://boreasmarinemap.com/harita.html">
 <link rel="alternate" hreflang="en" href="https://boreasmarinemap.com/en/harita.html">
 <link rel="alternate" hreflang="el" href="https://boreasmarinemap.com/el/harita.html">
@@ -106,91 +106,91 @@
 <div id="wrap">
   <header>
     <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#0f2a43"/><circle cx="50" cy="50" r="30" fill="none" stroke="#1c7293" stroke-width="5"/><path d="M50 20 L57 50 L50 80 L43 50 Z" fill="#f96167"/><path d="M20 50 L50 43 L80 50 L50 57 Z" fill="#5dcaa5"/><circle cx="50" cy="50" r="4.5" fill="#fff"/></svg>
-    <b>Boreas</b><span class="tag">· Haritayı dene</span>
-    <select id="region" aria-label="Bölge seç"></select>
+    <b>Boreas</b><span class="tag">· Experimente o mapa</span>
+    <select id="region" aria-label="Escolher região"></select>
     <span class="baseswitch">
-      <button id="baseHarita" class="on" onclick="setBase(false)">Harita</button>
-      <button id="baseUydu" onclick="setBase(true)">Uydu</button>
+      <button id="baseHarita" class="on" onclick="setBase(false)">Mapa</button>
+      <button id="baseUydu" onclick="setBase(true)">Satélite</button>
     </span>
     <span class="spacer"></span>
     <span class="auth" id="auth">
       <span class="email" id="userEmail" style="display:none"></span>
-      <button id="loginBtn">Giriş yap</button>
-      <button id="logoutBtn" style="display:none">Çıkış</button>
+      <button id="loginBtn">Iniciar sessão</button>
+      <button id="logoutBtn" style="display:none">Sair</button>
     </span>
-    <a class="back" href="/">← siteye dön</a>
-    <a class="cta" href="https://apps.apple.com/tr/app/boreas/id6790090752">App Store'dan indir</a>
+    <a class="back" href="/pt/">← voltar ao site</a>
+    <a class="cta" href="https://apps.apple.com/tr/app/boreas/id6790090752">Descarregar na App Store</a>
   </header>
   <div id="map"></div>
 
   <div class="panel" id="tools">
-    <h4>Rota çiz</h4>
-    <p>Tıkla, nokta ekle. Noktayı <b>sürükle</b> ile taşı, <b>tıkla</b> ile sil.</p>
+    <h4>Trace uma rota</h4>
+    <p>Clique para adicionar pontos. <b>Arraste</b> um ponto para o mover, <b>clique</b> nele para o eliminar.</p>
     <div class="btns">
-      <button id="undo" class="ghost">Geri al</button>
-      <button id="reverse" class="ghost">Ters çevir</button>
-      <button id="clear" class="ghost">Temizle</button>
+      <button id="undo" class="ghost">Anular</button>
+      <button id="reverse" class="ghost">Inverter</button>
+      <button id="clear" class="ghost">Limpar</button>
     </div>
     <div id="stats">
-      <span class="big" id="dist">0.0 dnm</span>
+      <span class="big" id="dist">0.0 MN</span>
       <span id="legs" style="color:#9fb6cc"></span>
       <div class="eta-row">
-        <label for="spd">Hız</label>
+        <label for="spd">Velocidade</label>
         <input id="spd" type="number" min="1" max="60" step="0.5" value="6"> kn
         <span id="eta"></span>
       </div>
       <span class="warn" id="hazwarn" style="display:none"></span>
     </div>
-    <button id="save">Rotayı hesabıma kaydet</button>
+    <button id="save">Guardar a rota na minha conta</button>
     <div id="myRoutes">
-      <h4>ROTALARIM</h4>
+      <h4>AS MINHAS ROTAS</h4>
       <div id="routesList"></div>
     </div>
   </div>
 
   <div id="modal">
     <div class="box">
-      <button class="x" id="modalClose" aria-label="Kapat">×</button>
+      <button class="x" id="modalClose" aria-label="Fechar">×</button>
       <div id="loginView">
-        <h3>Boreas hesabına giriş</h3>
-        <p>Uygulamadaki <b>aynı hesabınla</b> giriş yap. Web'de çizip kaydettiğin rotalar telefonundaki Boreas'ta da belirir.</p>
-        <label for="email">E-posta</label>
-        <input id="email" type="email" autocomplete="email" placeholder="ornek@eposta.com">
-        <label for="pass">Şifre</label>
+        <h3>Iniciar sessão na conta Boreas</h3>
+        <p>Inicie sessão com <b>a mesma conta</b> da aplicação. As rotas que traçar e guardar na web aparecem também no Boreas do seu telemóvel.</p>
+        <label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="email" placeholder="exemplo@email.com">
+        <label for="pass">Palavra-passe</label>
         <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
         <div class="err" id="loginErr"></div>
-        <button class="go" id="doLogin">Giriş yap</button>
-        <button class="linkbtn" id="toReset">Şifremi unuttum</button>
+        <button class="go" id="doLogin">Iniciar sessão</button>
+        <button class="linkbtn" id="toReset">Esqueci-me da palavra-passe</button>
       </div>
       <div id="resetView" style="display:none">
-        <h3>Şifre sıfırla</h3>
-        <p>E-postana <b>6 haneli bir kod</b> gönderelim; o kodla yeni şifreni belirle.</p>
-        <label for="rEmail">E-posta</label>
-        <input id="rEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com">
-        <button class="go" id="sendCode">Kod gönder</button>
+        <h3>Repor palavra-passe</h3>
+        <p>Enviamos <b>um código de 6 dígitos</b> para o seu e-mail; use-o para definir a nova palavra-passe.</p>
+        <label for="rEmail">E-mail</label>
+        <input id="rEmail" type="email" autocomplete="email" placeholder="exemplo@email.com">
+        <button class="go" id="sendCode">Enviar código</button>
         <div id="codeStep" style="display:none">
-          <label for="rCode">E-postana gelen kod</label>
-          <input id="rCode" inputmode="numeric" autocomplete="one-time-code" placeholder="6 haneli kod">
-          <label for="rPass">Yeni şifre</label>
-          <input id="rPass" type="password" autocomplete="new-password" placeholder="en az 6 karakter">
-          <button class="go" id="doReset" style="margin-top:12px">Şifreyi sıfırla</button>
+          <label for="rCode">Código recebido por e-mail</label>
+          <input id="rCode" inputmode="numeric" autocomplete="one-time-code" placeholder="código de 6 dígitos">
+          <label for="rPass">Nova palavra-passe</label>
+          <input id="rPass" type="password" autocomplete="new-password" placeholder="mínimo 6 caracteres">
+          <button class="go" id="doReset" style="margin-top:12px">Repor palavra-passe</button>
         </div>
         <div class="err" id="resetErr"></div>
-        <button class="linkbtn" id="toLogin">← Girişe dön</button>
+        <button class="linkbtn" id="toLogin">← Voltar ao início de sessão</button>
       </div>
     </div>
   </div>
 
   <div class="panel" id="legend">
-    <div class="ltitle">KATMANLAR · aç/kapat</div>
-    <div class="row" data-k="seamark" onclick="toggleLayer('seamark')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Seyir işaretleri</div>
-    <div class="row off" data-k="depth" onclick="toggleLayer('depth')"><span class="ck"></span><span class="dot" style="background:#4f93bd"></span> Derinlik (renkli)</div>
-    <div class="row" data-k="fishfarm" onclick="toggleLayer('fishfarm')"><span class="ck"></span><span class="dot" style="background:#a25bd8"></span> Balık çiftliği</div>
-    <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#e63030"></span> Kayalık / tehlike</div>
+    <div class="ltitle">CAMADAS · mostrar/ocultar</div>
+    <div class="row" data-k="seamark" onclick="toggleLayer('seamark')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Sinais de navegação</div>
+    <div class="row off" data-k="depth" onclick="toggleLayer('depth')"><span class="ck"></span><span class="dot" style="background:#4f93bd"></span> Profundidade (colorida)</div>
+    <div class="row" data-k="fishfarm" onclick="toggleLayer('fishfarm')"><span class="ck"></span><span class="dot" style="background:#a25bd8"></span> Piscicultura</div>
+    <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#e63030"></span> Rochas / perigos</div>
   </div>
 
   <div class="panel" id="note">
-    <b>Bu bir tadımlık.</b> Uygulamada bu harita <b>internetsiz</b> çalışır; GPS, hıza bağlı sığlık alarmı, demir nöbeti ve 3B sahil görünümü eklenir. Altlık: CARTO · Uydu: Sentinel-2 (EOX) · İşaretler: OpenSeaMap · Derinlik: EMODnet · Tehlike & çiftlik: açık kaynak türevi. Resmi seyir haritası değildir.
+    <b>Isto é uma amostra.</b> Na aplicação, este mapa funciona <b>sem internet</b>; juntam-se o GPS, o alarme de baixio em função da velocidade, a vigia de fundeadouro e a vista 3D da costa. Base: CARTO · Satélite: Sentinel-2 (EOX) · Sinais: OpenSeaMap · Profundidade: EMODnet · Perigos &amp; pisciculturas: derivados de fontes abertas. Não é uma carta náutica oficial.
   </div>
 </div>
 
@@ -242,7 +242,7 @@ function renderRegion(data){
     if(k==='hazard') hazards.push(ll);
     const style = k==='hazard' ? {r:3.6,color:'#7a0f0f',fill:'#e63030'} : {r:3.2,color:'#4a2160',fill:'#a25bd8'};
     const mk = L.circleMarker(ll,{ radius:style.r, color:style.color, weight:1.2, fillColor:style.fill, fillOpacity:.95, renderer:canvas });
-    const label = k==='hazard' ? 'Kayalık / tehlike' : 'Balık çiftliği';
+    const label = k==='hazard' ? 'Rochas / perigo' : 'Piscicultura';
     mk.bindPopup('<span class="k">'+label+'</span>'+(m.n?'<br>'+m.n:''));
     mk.addTo(groups[k]);
   });
@@ -305,11 +305,11 @@ function liveStats(){
   let tot=0; for(let i=1;i<pts.length;i++) tot+=hav(pts[i-1],pts[i]);
   const nmv=tot/NM;
   statsEl.style.display = pts.length? 'block':'none';
-  dEl.textContent = nmv.toFixed(1)+' dnm';
-  legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' bacak':' · başla';
+  dEl.textContent = nmv.toFixed(1)+' MN';
+  legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' troços':' · comece';
   const spd=parseFloat(document.getElementById('spd').value)||0, etaEl=document.getElementById('eta');
   if(pts.length>1 && spd>0){ const hrs=nmv/spd, h=Math.floor(hrs), mn=Math.round((hrs-h)*60);
-    etaEl.textContent='≈ '+(h?h+' sa ':'')+mn+' dk'; }
+    etaEl.textContent='≈ '+(h?h+' h ':'')+mn+' min'; }
   else etaEl.textContent='';
   let near=0;
   if(pts.length>1){
@@ -317,7 +317,7 @@ function liveStats(){
       for(const h of hazards){ if(segDist([h[0],h[1]],pts[i-1],pts[i])<140){ near++; break; } }
     }
   }
-  if(near){ warnEl.style.display='block'; warnEl.textContent='⚠ '+near+' bacakta rota yakınında kayalık/tehlike var'; }
+  if(near){ warnEl.style.display='block'; warnEl.textContent='⚠ rochas/perigos perto da rota em '+near+' troço(s)'; }
   else warnEl.style.display='none';
 }
 function clearRoute(){ pts=[]; redraw(); }
@@ -327,10 +327,21 @@ document.getElementById('clear').onclick=()=>{ pts=[]; redraw(); };
 document.getElementById('reverse').onclick=()=>{ pts.reverse(); redraw(); };
 document.getElementById('spd').addEventListener('input', liveStats);
 
-// ---- init: region index + selector ----
+// ---- init: region index + selector (Portuguese display names by region id) ----
+const REGION_PT = {
+  'marmara':'Mármara', 'ege':'Egeu', 'gokova':'Gökova – Bodrum',
+  'akdeniz-bati':'Mediterrâneo Oeste', 'akdeniz-dogu':'Mediterrâneo Este',
+  'karadeniz-bati':'Mar Negro Oeste', 'karadeniz-dogu':'Mar Negro Este',
+  'kibris':'Chipre', 'yunanistan-ion':'Grécia – Jónico', 'yunanistan-ege':'Grécia – Egeu',
+  'yunanistan-girit':'Grécia – Creta', 'ispanya-dogu':'Espanha – Catalunha/Valência',
+  'ispanya-guney':'Espanha – Sul', 'balear':'Ilhas Baleares',
+  'portekiz-guney':'Portugal – Algarve', 'portekiz-bati':'Portugal – Atlântico',
+  'hirvatistan-kuzey':'Croácia – Norte', 'hirvatistan-guney':'Croácia – Sul',
+  'malta':'Malta', 'karadag':'Montenegro'
+};
 fetch('/demo/regions.json').then(r=>r.json()).then(list=>{
   const sel=document.getElementById('region');
-  list.forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=e.name; sel.appendChild(o); });
+  list.forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=REGION_PT[e.id]||e.name; sel.appendChild(o); });
   sel.value='marmara';
   sel.onchange=()=>loadRegion(sel.value);
   loadRegion('marmara');
@@ -370,10 +381,10 @@ function updateSaveBtn(){ saveBtn.style.display=(user && pts.length>=2)?'block':
 document.getElementById('doLogin').onclick=async()=>{
   const email=document.getElementById('email').value.trim();
   const password=document.getElementById('pass').value;
-  if(!email||!password){ loginErr.textContent='E-posta ve şifre gerekli.'; return; }
-  loginErr.textContent='Giriş yapılıyor…';
+  if(!email||!password){ loginErr.textContent='Indique o e-mail e a palavra-passe.'; return; }
+  loginErr.textContent='A iniciar sessão…';
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if(error){ loginErr.textContent = error.message.includes('Invalid')?'E-posta veya şifre hatalı.':error.message; return; }
+  if(error){ loginErr.textContent = error.message.includes('Invalid')?'E-mail ou palavra-passe incorretos.':error.message; return; }
   user=data.user; closeModal(); setAuthUI(); loadMyRoutes();
 };
 logoutBtn.onclick=async()=>{ await sb.auth.signOut(); user=null; setAuthUI(); routesList.innerHTML=''; };
@@ -386,22 +397,22 @@ document.getElementById('toReset').onclick=()=>{ loginView.style.display='none';
 document.getElementById('toLogin').onclick=()=>{ resetView.style.display='none'; loginView.style.display='block'; };
 document.getElementById('sendCode').onclick=async()=>{
   const email=document.getElementById('rEmail').value.trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ resetErr.style.color='var(--coral)'; resetErr.textContent='Geçerli bir e-posta gir.'; return; }
-  resetErr.style.color='#9fb6cc'; resetErr.textContent='Kod gönderiliyor…';
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ resetErr.style.color='var(--coral)'; resetErr.textContent='Introduza um e-mail válido.'; return; }
+  resetErr.style.color='#9fb6cc'; resetErr.textContent='A enviar o código…';
   const { error } = await sb.auth.resetPasswordForEmail(email);
   if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent=error.message; return; }
   codeStep.style.display='block';
-  resetErr.style.color='var(--mint)'; resetErr.textContent='Kod e-postana gönderildi. Gelen kutusu / spam klasörünü kontrol et.';
+  resetErr.style.color='var(--mint)'; resetErr.textContent='Código enviado para o seu e-mail. Verifique a caixa de entrada e a pasta de spam.';
 };
 document.getElementById('doReset').onclick=async()=>{
   const email=document.getElementById('rEmail').value.trim();
   const token=document.getElementById('rCode').value.trim();
   const password=document.getElementById('rPass').value;
-  if(!token){ resetErr.style.color='var(--coral)'; resetErr.textContent='E-postana gelen kodu gir.'; return; }
-  if((password||'').length<6){ resetErr.style.color='var(--coral)'; resetErr.textContent='Yeni şifre en az 6 karakter olmalı.'; return; }
-  resetErr.style.color='#9fb6cc'; resetErr.textContent='Doğrulanıyor…';
+  if(!token){ resetErr.style.color='var(--coral)'; resetErr.textContent='Introduza o código recebido por e-mail.'; return; }
+  if((password||'').length<6){ resetErr.style.color='var(--coral)'; resetErr.textContent='A nova palavra-passe deve ter pelo menos 6 caracteres.'; return; }
+  resetErr.style.color='#9fb6cc'; resetErr.textContent='A verificar…';
   const { data, error } = await sb.auth.verifyOtp({ email, token, type:'recovery' });
-  if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent = /expired|invalid/i.test(error.message)?'Kod hatalı veya süresi dolmuş.':error.message; return; }
+  if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent = /expired|invalid/i.test(error.message)?'Código incorreto ou expirado.':error.message; return; }
   const up = await sb.auth.updateUser({ password });
   if(up.error){ resetErr.style.color='var(--coral)'; resetErr.textContent=up.error.message; return; }
   // reset succeeds with an active session — log the captain straight in.
@@ -411,16 +422,16 @@ document.getElementById('doReset').onclick=async()=>{
 };
 
 async function loadMyRoutes(){
-  routesList.innerHTML='<div class="empty">Yükleniyor…</div>';
+  routesList.innerHTML='<div class="empty">A carregar…</div>';
   const { data, error } = await sb.from('routes').select('payload').is('deleted_at',null);
-  if(error){ routesList.innerHTML='<div class="empty">Rotalar okunamadı.</div>'; return; }
+  if(error){ routesList.innerHTML='<div class="empty">Não foi possível ler as rotas.</div>'; return; }
   const routes=(data||[]).map(r=>r.payload).filter(p=>p&&p.points&&p.points.length>1)
     .sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
-  if(!routes.length){ routesList.innerHTML='<div class="empty">Henüz kayıtlı rota yok. Haritada çiz, kaydet.</div>'; return; }
+  if(!routes.length){ routesList.innerHTML='<div class="empty">Ainda não há rotas guardadas. Trace no mapa e guarde.</div>'; return; }
   routesList.innerHTML='';
   routes.forEach(p=>{
     const el=document.createElement('div'); el.className='r';
-    const d=p.createdAt?new Date(p.createdAt).toLocaleDateString('tr-TR'):'';
+    const d=p.createdAt?new Date(p.createdAt).toLocaleDateString('pt-PT'):'';
     el.innerHTML='<span>'+(p.name||'Rota')+'</span><span class="d">'+d+'</span>';
     el.onclick=()=>{ pts=p.points.map(pt=>[pt[0],pt[1]]); redraw();
       if(pts.length){ map.fitBounds(pts,{padding:[60,60]}); } };
@@ -430,17 +441,17 @@ async function loadMyRoutes(){
 
 saveBtn.onclick=async()=>{
   if(!user||pts.length<2) return;
-  const name=prompt('Rota adı:','Rota '+new Date().toLocaleDateString('tr-TR'));
+  const name=prompt('Nome da rota:','Rota '+new Date().toLocaleDateString('pt-PT'));
   if(name===null) return;
   const now=new Date().toISOString();
   const id=(crypto.randomUUID?crypto.randomUUID():(Date.now()+''+Math.random()).replace('.',''));
   const payload={ name:name||'Rota', points:pts.map(p=>[p[0],p[1]]), createdAt:now,
     meta:{ id, schemaVersion:2, updatedAt:now, deletedAt:null } };
-  saveBtn.textContent='Kaydediliyor…'; saveBtn.disabled=true;
+  saveBtn.textContent='A guardar…'; saveBtn.disabled=true;
   const { error } = await sb.from('routes').upsert({ id, payload, schema_version:2, updated_at:now, deleted_at:null });
-  saveBtn.disabled=false; saveBtn.textContent='Rotayı hesabıma kaydet';
-  if(error){ alert('Kaydedilemedi: '+error.message); return; }
-  saveBtn.textContent='✓ Kaydedildi — telefonunda görünecek'; setTimeout(()=>saveBtn.textContent='Rotayı hesabıma kaydet',2500);
+  saveBtn.disabled=false; saveBtn.textContent='Guardar a rota na minha conta';
+  if(error){ alert('Não foi possível guardar: '+error.message); return; }
+  saveBtn.textContent='✓ Guardada — vai aparecer no seu telemóvel'; setTimeout(()=>saveBtn.textContent='Guardar a rota na minha conta',2500);
   loadMyRoutes();
 };
 

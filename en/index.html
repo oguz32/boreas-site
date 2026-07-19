@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Boreas — İnternetsiz çalışan deniz asistanı</title>
-<meta name="description" content="Türkiye kıyıları için internetsiz çalışan deniz haritası: rota, tehlike ve sığlık alarmları, hava & deniz durumu, filo. Bir planlama ve farkındalık aracıdır — resmi seyir haritası değildir.">
+<title>Boreas — The marine assistant that works offline</title>
+<meta name="description" content="An offline nautical map for the Turkish coast: routes, hazard and shallow-water alarms, weather & sea state, fleet. A planning and awareness aid — not an official nautical chart.">
 <link rel="alternate" hreflang="tr" href="https://boreasmarinemap.com/">
 <link rel="alternate" hreflang="en" href="https://boreasmarinemap.com/en/">
 <link rel="alternate" hreflang="el" href="https://boreasmarinemap.com/el/">
@@ -247,19 +247,19 @@
 </style>
 </head>
 <body>
-<div class="annc" role="region" aria-label="Duyuru">
+<div class="annc" role="region" aria-label="Announcement">
   <div class="wrap">
-    <span class="tag">YAYINDA</span>
-    <span class="lead">Boreas App Store'da — açılış kampanyası: Pro ilk 3 ay ₺99/ay.</span>
-    <a href="https://apps.apple.com/tr/app/boreas/id6790090752">App Store'dan indir <span class="ar">→</span></a>
+    <span class="tag">NOW LIVE</span>
+    <span class="lead">Boreas is on the App Store — launch offer on the App Store: Pro discounted for your first 3 months.</span>
+    <a href="https://apps.apple.com/tr/app/boreas/id6790090752">Download on the App Store <span class="ar">→</span></a>
     <span class="sep">·</span>
-    <a href="/harita.html">Haritayı dene</a>
+    <a href="/en/harita.html">Try the map</a>
   </div>
 </div>
 <header>
   <div class="wrap">
     <nav>
-      <a class="brand" href="#top" aria-label="Boreas ana sayfa">
+      <a class="brand" href="#top" aria-label="Boreas home">
         <svg width="34" height="34" viewBox="0 0 140 140" aria-hidden="true">
           <rect x="4" y="4" width="132" height="132" rx="30" fill="#0A2540"/>
           <circle cx="70" cy="70" r="48" fill="none" stroke="#2ED3C6" stroke-opacity=".3" stroke-width="2"/>
@@ -272,19 +272,19 @@
         <span class="name">Boreas</span>
       </a>
       <div class="nav-links">
-        <a href="/harita.html">Haritayı dene</a>
-        <a href="#ozellikler">Özellikler</a>
-        <a href="#fiyatlar">Fiyatlar</a>
-        <a href="#yolharitasi">Yol haritası</a>
-        <a href="#iletisim">İletişim</a>
-        <a href="legal.html">KVKK</a>
-        <a href="/" style="font-weight:700">TR</a>
-        <a href="/en/">EN</a>
+        <a href="/en/harita.html">Try the map</a>
+        <a href="#ozellikler">Features</a>
+        <a href="#fiyatlar">Pricing</a>
+        <a href="#yolharitasi">Roadmap</a>
+        <a href="#iletisim">Contact</a>
+        <a href="/legal.html">Privacy</a>
+        <a href="/">TR</a>
+        <a href="/en/" style="font-weight:700">EN</a>
         <a href="/el/">ΕΛ</a>
         <a href="/es/">ES</a>
         <a href="/pt/">PT</a>
       </div>
-      <a class="nav-cta" href="https://apps.apple.com/tr/app/boreas/id6790090752">App Store'dan indir</a>
+      <a class="nav-cta" href="https://apps.apple.com/tr/app/boreas/id6790090752">Download on the App Store</a>
     </nav>
   </div>
 </header>
@@ -293,7 +293,7 @@
   <section class="hero">
     <canvas id="seaCanvas" aria-hidden="true"></canvas>
     <div class="wrap inner">
-      <svg class="logo-lg" viewBox="0 0 140 140" role="img" aria-label="Boreas — kuzeyi gösteren pusula ibresi">
+      <svg class="logo-lg" viewBox="0 0 140 140" role="img" aria-label="Boreas — compass needle pointing north">
         <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#0A2540"/><stop offset="1" stop-color="#134a78"/>
         </linearGradient></defs>
@@ -312,36 +312,36 @@
         <circle cx="70" cy="70" r="2.8" fill="#FF6A3D"/>
         <text x="70" y="30" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#FF6A3D">N</text>
       </svg>
-      <div class="eyebrow">Poyraz · kuzey rüzgarı</div>
-      <h1>Çekim gitse de rotan yanında</h1>
-      <p class="lede">Türkiye kıyıları için <strong>internetsiz çalışan</strong> deniz asistanı. Harita, GPS, rota ve alarmlar açık denizde de cebinde. Bir <strong>planlama ve farkındalık aracıdır</strong> — resmi seyir haritası değildir, kararı hep kaptan verir.</p>
+      <div class="eyebrow">Boreas · the north wind</div>
+      <h1>When the signal drops, your route doesn't</h1>
+      <p class="lede">The marine assistant for the Turkish coast that <strong>works without internet</strong>. Chart, GPS, routes and alarms stay in your pocket — even offshore. A <strong>planning and awareness aid</strong> — not an official nautical chart; the captain always has the final say.</p>
       <div class="coord" aria-hidden="true"><span>40.9°N</span><span>·</span><span>28.2°E</span><span>·</span><span>SOG 6.4 kn</span></div>
       <div class="cta-row">
-        <a class="btn btn-primary" href="https://apps.apple.com/tr/app/boreas/id6790090752">App Store'dan indir</a>
-        <a class="btn btn-ghost" href="/harita.html">Haritayı tarayıcında dene</a>
-        <a class="btn btn-ghost" href="#ozellikler">Ne yapar?</a>
+        <a class="btn btn-primary" href="https://apps.apple.com/tr/app/boreas/id6790090752">Download on the App Store</a>
+        <a class="btn btn-ghost" href="/en/harita.html">Try the map in your browser</a>
+        <a class="btn btn-ghost" href="#ozellikler">What does it do?</a>
       </div>
-      <div class="platform-note">iOS APP STORE'DA YAYINDA · ANDROID YAKINDA</div>
+      <div class="platform-note">LIVE ON THE iOS APP STORE · ANDROID COMING SOON</div>
     </div>
   </section>
 
   <div class="safety" id="guvenlik-strip">
     <div class="wrap">
       <div class="dot">!</div>
-      <p><strong>Boreas bir planlama ve farkındalık aracıdır.</strong> Resmi seyir haritası değildir; resmi haritaların, yerel kuralların, kaptan yargısının, denizcilik becerisinin veya gerçek koşulların yerine geçmez. Rota önerileri kaptan doğrulaması gerektirir.</p>
+      <p><strong>Boreas is a planning and awareness aid.</strong> It is not an official nautical chart; it does not replace official charts, local regulations, the captain's judgment, seamanship, or actual conditions. Route suggestions require the captain's verification.</p>
     </div>
   </div>
 
   <section id="harita-onizleme" style="padding-bottom:40px">
     <div class="wrap">
       <div class="section-head" style="max-width:none;text-align:center;margin-bottom:26px">
-        <div class="eyebrow">İnteraktif · tarayıcıda</div>
-        <h2>Haritayı buradan dene</h2>
-        <p style="margin-left:auto;margin-right:auto">Kıyı, derinlik, fenerler, balık çiftlikleri ve tehlikeler — 20 bölge. Tıkla, tam ekran aç; rota çiz, katmanları filtrele.</p>
+        <div class="eyebrow">Interactive · in your browser</div>
+        <h2>Try the map right here</h2>
+        <p style="margin-left:auto;margin-right:auto">Coastline, depths, lighthouses, fish farms and hazards — 20 regions. Click to open it full screen; draw a route, filter the layers.</p>
       </div>
-      <a href="/harita.html" class="map-embed" aria-label="Haritayı tam ekran aç">
-        <iframe src="/harita.html?embed=1" loading="lazy" title="Boreas harita önizleme" tabindex="-1" aria-hidden="true"></iframe>
-        <span class="open">Haritayı aç →</span>
+      <a href="/en/harita.html" class="map-embed" aria-label="Open the map full screen">
+        <iframe src="/en/harita.html?embed=1" loading="lazy" title="Boreas map preview" tabindex="-1" aria-hidden="true"></iframe>
+        <span class="open">Open the map →</span>
       </a>
     </div>
   </section>
@@ -351,105 +351,105 @@
   <section id="ozellikler">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Ne yapar</div>
-        <h2>Denizde farkındalık, tek bir sade araçta</h2>
-        <p>Boreas'ın çoğu <span class="mono">ÜCRETSİZ</span>. Abonelik gerektirenler <span class="mono">PRO</span> / <span class="mono">PRO+</span>; henüz yapılmamış olanlar <span class="mono">PLANLI</span> olarak işaretli — hiçbir şey abartılmıyor.</p>
+        <div class="eyebrow">What it does</div>
+        <h2>Awareness at sea, in one simple tool</h2>
+        <p>Most of Boreas is <span class="mono">FREE</span>. Features that need a subscription are marked <span class="mono">PRO</span> / <span class="mono">PRO+</span>; anything not built yet is marked <span class="mono">PLANNED</span> — nothing is oversold.</p>
       </div>
       <div class="grid">
         <div class="card">
-          <div class="ic">◎</div><span class="chip free">Ücretsiz</span>
-          <h3>Çevrimdışı deniz haritası</h3>
-          <p>Marmara haritası uygulamayla birlikte gelir — indirme yok, internet yok. Derinlik, konturlar, iskandiller, fenerler ve seyir işaretleri açık denizde de yanında.</p>
+          <div class="ic">◎</div><span class="chip free">Free</span>
+          <h3>Offline nautical map</h3>
+          <p>The Marmara chart ships with the app — no download, no internet. Depths, contours, soundings, lighthouses and navigation marks stay with you offshore.</p>
         </div>
         <div class="card">
-          <div class="ic">➤</div><span class="chip free">Ücretsiz</span>
-          <h3>Konum · hız · rota</h3>
-          <p>GPS ile anlık konum, hız (knot) ve gidiş yönü. Zayıf sinyali sana söyler; duruşta yön göstermez — çünkü durunca yön güvenilir değildir.</p>
+          <div class="ic">➤</div><span class="chip free">Free</span>
+          <h3>Position · speed · course</h3>
+          <p>Live position, speed (knots) and heading via GPS. It tells you when the signal is weak, and hides heading while you're stopped — because heading isn't reliable at a standstill.</p>
         </div>
         <div class="card">
-          <div class="ic">↝</div><span class="chip free">Ücretsiz</span>
-          <h3>Rota planlama &amp; tehlike</h3>
-          <p>Karadan ve sığlıktan kaçınan <em>önerilen</em> rota; noktaları sürükleyerek düzenle. Rotandaki kayalık, sığlık ve batıklar önceden işaretlenir — açık kaynak batimetri ve batık kayıtlarından türetilmiş binlerce tehlike noktası. Kaptan doğrulaması gerektirir.</p>
+          <div class="ic">↝</div><span class="chip free">Free</span>
+          <h3>Route planning &amp; hazards</h3>
+          <p>A <em>suggested</em> route that avoids land and shallows; drag the waypoints to edit it. Rocks, shallows and wrecks along your route are flagged in advance — thousands of hazard points derived from open-source bathymetry and wreck records. Requires the captain's verification.</p>
         </div>
         <div class="card">
-          <div class="ic">!</div><span class="chip free">Ücretsiz</span>
-          <h3>Güvenlik alarmları</h3>
-          <p>Sığlık alarmı <strong>senin su çekimine</strong> göre çalışır. Demir nöbeti taramayı yakalar, MOB tek dokunuşla noktayı işaretler.</p>
+          <div class="ic">!</div><span class="chip free">Free</span>
+          <h3>Safety alarms</h3>
+          <p>The shallow-water alarm works from <strong>your own draft</strong>. Anchor watch catches dragging; MOB marks the spot with a single tap.</p>
         </div>
         <div class="card">
-          <div class="ic">⌖</div><span class="chip free">Ücretsiz</span>
-          <h3>Deniz sınırları uyarısı</h3>
-          <p>Karasularına yaklaşınca haber verir. İç sular, karasuları ve uluslararası sular haritada ayrı — farkında olmadan sınır geçme.</p>
+          <div class="ic">⌖</div><span class="chip free">Free</span>
+          <h3>Maritime boundary alerts</h3>
+          <p>Warns you as you approach territorial waters. Internal waters, territorial waters and international waters are shown separately on the map — never cross a boundary unaware.</p>
         </div>
         <div class="card">
-          <div class="ic">☼</div><span class="chip free">Ücretsiz</span>
-          <h3>Hava &amp; deniz durumu</h3>
-          <p>Rüzgar, hamle, saatlik tahmin, dalga, akıntı ve deniz seviyesi — Open-Meteo verisiyle. Tahmindir, kesin değil. Son veriyi çevrimdışı saklar ve eskidiğini söyler.</p>
+          <div class="ic">☼</div><span class="chip free">Free</span>
+          <h3>Weather &amp; sea state</h3>
+          <p>Wind, gusts, hourly forecast, waves, currents and sea level — powered by Open-Meteo data. It's a forecast, not a certainty. The latest data is stored offline and clearly marked when it goes stale.</p>
         </div>
         <div class="card">
-          <div class="ic">✓</div><span class="chip free">Ücretsiz</span>
-          <h3>Kalkış öncesi kontrol</h3>
-          <p>Halat çözmeden tek ekranda hüküm: rota, rüzgar ve değişen hava. Tahmin, son konumundan değil <em>rotanın kalkış noktasından</em> alınır. Dalga &amp; deniz durumu satırı Pro'dadır.</p>
+          <div class="ic">✓</div><span class="chip free">Free</span>
+          <h3>Pre-departure check</h3>
+          <p>One screen of judgment before you cast off: route, wind and changing weather. The forecast is taken from <em>your route's departure point</em>, not your last position. The wave &amp; sea state line is part of Pro.</p>
         </div>
         <div class="card">
-          <div class="ic">☾</div><span class="chip free">Ücretsiz</span>
-          <h3>Gece modu</h3>
-          <p>Kırmızı ışık düzeni gece görüşünü korur. Elle aç, ya da gün batımına göre kendi açılsın.</p>
+          <div class="ic">☾</div><span class="chip free">Free</span>
+          <h3>Night mode</h3>
+          <p>A red-light scheme protects your night vision. Turn it on manually, or let it switch on by itself at sunset.</p>
         </div>
         <div class="card">
-          <div class="ic">⚓</div><span class="chip free">Ücretsiz</span>
-          <h3>Tekne profili</h3>
-          <p>Su çekimi, seyir hızı, yakıt kapasitesi ve tüketim — cihazda kayıtlı. Menzili hesaplar, sığlık alarmını teknene göre ayarlar.</p>
+          <div class="ic">⚓</div><span class="chip free">Free</span>
+          <h3>Boat profile</h3>
+          <p>Draft, cruising speed, fuel capacity and consumption — stored on your device. It calculates your range and tunes the shallow-water alarm to your boat.</p>
         </div>
         <div class="card">
-          <div class="ic">◈</div><span class="chip free">Ücretsiz</span>
-          <h3>Filo — canlı konum &amp; mesaj</h3>
-          <p>İstersen konumunu filoya aç, yakındaki tekneleri gör, selamla, karşılıklı kabul edilen bağlantılarla mesajlaş. İstediğin an kapat ya da engelle.</p>
+          <div class="ic">◈</div><span class="chip free">Free</span>
+          <h3>Fleet — live position &amp; messages</h3>
+          <p>Share your position with the fleet if you choose, see nearby boats, wave hello, and message mutually accepted connections. Switch it off or block anyone, anytime.</p>
         </div>
         <div class="card">
-          <div class="ic">✎</div><span class="chip free">Ücretsiz</span>
-          <h3>Topluluk notları + bildir</h3>
-          <p>Koya not bırak: demirleme, sığ su, kaya, marina, yakıt, balık noktası. Notlar <em>doğrulanmamış kullanıcı bildirimi</em> olarak işaretlenir; uygunsuz içeriği tek dokunuşla bildir.</p>
+          <div class="ic">✎</div><span class="chip free">Free</span>
+          <h3>Community notes + reporting</h3>
+          <p>Leave a note on a cove: anchoring, shallow water, rocks, marina, fuel, fishing spot. Notes are marked as <em>unverified user reports</em>; flag inappropriate content with a single tap.</p>
         </div>
         <div class="card">
-          <div class="ic">↺</div><span class="chip free">Ücretsiz</span>
-          <h3>Sefer geçmişi</h3>
-          <p>Her seyir kendiliğinden kaydedilir. Geçmiş seferini haritada izle, süre ve mesafeyi gör, seyir kartını paylaş.</p>
+          <div class="ic">↺</div><span class="chip free">Free</span>
+          <h3>Voyage history</h3>
+          <p>Every voyage is recorded automatically. Replay past trips on the map, see duration and distance, and share your voyage card.</p>
         </div>
         <div class="card">
-          <div class="ic">◱</div><span class="chip free">Ücretsiz</span>
-          <h3>3B liman yaklaşımı</h3>
-          <p>Limana 6 km kala, o limanın önceden hazırlanmış 3B yaklaşım kartı çıkar — nereden gireceğini görerek yaklaş.</p>
+          <div class="ic">◱</div><span class="chip free">Free</span>
+          <h3>3D harbor approach</h3>
+          <p>Within 6 km of a harbor, its pre-built 3D approach card appears — see where you'll enter before you get there.</p>
         </div>
         <div class="card">
-          <div class="ic">◇</div><span class="chip free">Ücretsiz</span>
-          <h3>AIS gemi trafiği</h3>
-          <p>Çevrendeki canlı gemiler (çevrimiçi, isteğe bağlı katman). Bilgi amaçlıdır — <strong>çatışma önleme için değildir.</strong></p>
+          <div class="ic">◇</div><span class="chip free">Free</span>
+          <h3>AIS vessel traffic</h3>
+          <p>Live vessels around you (online, optional layer). For information only — <strong>not for collision avoidance.</strong></p>
         </div>
         <div class="card">
           <div class="ic">⇩</div><span class="chip pro">Pro</span>
-          <h3>Çevrimdışı bölge paketleri</h3>
-          <p>Ege, Gökova-Bodrum, Akdeniz (Batı &amp; Doğu), Karadeniz (Batı &amp; Doğu) ve Kıbrıs. Gideceğin bölgeyi indir, açık denizde internetsiz kullan. Marmara zaten ücretsiz.</p>
+          <h3>Offline region packs</h3>
+          <p>Aegean, Gökova-Bodrum, Mediterranean (West &amp; East), Black Sea (West &amp; East) and Cyprus. Download the region you're heading to and use it offshore without internet. Marmara is already free.</p>
         </div>
         <div class="card">
           <div class="ic">≋</div><span class="chip pro">Pro</span>
-          <h3>Kalkış kontrolünde deniz durumu</h3>
-          <p>Kalkış öncesi hükme dalga yüksekliği ve deniz durumu satırı eklenir — rüzgarın yanında denizin kendisini de gör.</p>
+          <h3>Sea state in the departure check</h3>
+          <p>Adds a wave height and sea state line to the pre-departure verdict — see the sea itself, not just the wind.</p>
         </div>
         <div class="card">
           <div class="ic">▲</div><span class="chip proplus">Pro+</span>
-          <h3>3D sahil görünümü</h3>
-          <p>Sahili denizden gör: gerçek arazi yüksekliği (dağlar yükselir) + güncel uydu dokusu, cihazında canlı bakış açısıyla. Güverte ve kuş bakışı iki kamera. Yanaşma ve koy girişinde arazi farkındalığı.</p>
+          <h3>3D coastal view</h3>
+          <p>See the coast from the sea: real terrain elevation (mountains rise) + up-to-date satellite imagery, with a live viewpoint on your device. Two cameras: deck and bird's-eye. Terrain awareness for docking and cove entries.</p>
         </div>
         <div class="card">
-          <div class="ic">★</div><span class="chip planned">Planlı</span>
-          <h3>Doğrulanmış topluluk katmanı</h3>
-          <p>Zamanla doğrulanan topluluk gözlemleri — temel harita verisine karıştırılmadan, ayrı bir Boreas katmanında.</p>
+          <div class="ic">★</div><span class="chip planned">Planned</span>
+          <h3>Verified community layer</h3>
+          <p>Community observations verified over time — in a separate Boreas layer, never mixed into the base chart data.</p>
         </div>
         <div class="card">
-          <div class="ic">◐</div><span class="chip planned">Planlı</span>
-          <h3>Fotoğraflar</h3>
-          <p>Koy ve marina fotoğrafları — moderasyon ve açık rıza sonrası, topluluk katmanında.</p>
+          <div class="ic">◐</div><span class="chip planned">Planned</span>
+          <h3>Photos</h3>
+          <p>Cove and marina photos — after moderation and explicit consent, in the community layer.</p>
         </div>
       </div>
     </div>
@@ -460,19 +460,19 @@
   <section id="katman">
     <div class="wrap split">
       <div class="section-head">
-        <div class="eyebrow">Veri ilkesi</div>
-        <h2>Topluluk bilgisi, resmi veriye karışmadan</h2>
-        <p>Boreas'ın topluluk gözlemleri, açık-kaynak temel harita verisinden <strong>ayrı</strong> tutulur. Kullanıcı notları hiçbir zaman OpenSeaMap/OSM türevi temel haritaya karıştırılmaz. Doğruluğu zamanla teyit edilenler ayrı bir "Doğrulanmış Topluluk Katmanı"na taşınır — yine bir farkındalık kaynağı, resmi kaynak değil.</p>
+        <div class="eyebrow">Data principle</div>
+        <h2>Community knowledge, kept apart from official data</h2>
+        <p>Boreas keeps community observations <strong>separate</strong> from the open-source base chart data. User notes are never mixed into the OpenSeaMap/OSM-derived base chart. Observations whose accuracy is confirmed over time move to a separate "Verified Community Layer" — still an awareness source, not an official one.</p>
       </div>
       <div class="layers">
         <div class="layer">
-          <div class="lbl">Temel harita verisi</div>
-          <div class="val">Açık-kaynak deniz verisi (atıflı). Salt görüntüleme; resmi seyir haritası değildir.</div>
+          <div class="lbl">Base chart data</div>
+          <div class="val">Open-source marine data (with attribution). Display only; not an official nautical chart.</div>
         </div>
-        <div class="between">— ayrı katmanlar, karıştırılmaz —</div>
+        <div class="between">— separate layers, never mixed —</div>
         <div class="layer own">
-          <div class="lbl">Boreas topluluk katmanı</div>
-          <div class="val">Kullanıcı notları ve gözlemleri — Boreas'a ait, temel haritaya yazılmaz.</div>
+          <div class="lbl">Boreas community layer</div>
+          <div class="val">User notes and observations — owned by Boreas, never written into the base chart.</div>
         </div>
       </div>
     </div>
@@ -483,58 +483,58 @@
   <section id="fiyatlar">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Fiyatlar</div>
-        <h2>Neredeyse her şey ücretsiz.</h2>
-        <p>Marmara haritası, GPS, alarmlar, hava &amp; deniz durumu, kalkış kontrolü, filo, notlar ve sefer geçmişi — hepsi ücretsiz, süresiz. Para istediğimiz tek şey: <strong>Marmara dışındaki bölge paketleri</strong> ve <strong>3D uydu görünümü.</strong> Aylık, yıllık veya ömür boyu — App Store / Google Play üzerinden. Yıllık ≈ 4 ay bedava.</p>
+        <div class="eyebrow">Pricing</div>
+        <h2>Almost everything is free. <span style="font-size:.5em;font-weight:500;color:var(--text-2)">(Türkiye reference pricing — the App Store shows prices in your local currency)</span></h2>
+        <p>The Marmara chart, GPS, alarms, weather &amp; sea state, pre-departure check, fleet, notes and voyage history — all free, forever. The only things we charge for: <strong>region packs beyond Marmara</strong> and the <strong>3D satellite view.</strong> Monthly, annual or lifetime — through the App Store / Google Play. Annual ≈ 4 months free.</p>
       </div>
       <div class="pricing">
         <div class="plan">
-          <div class="tier"><b>Ücretsiz</b></div>
+          <div class="tier"><b>Free</b></div>
           <div class="lead-price">₺0</div>
           <ul>
-            <li>Marmara haritası — çevrimdışı, gömülü</li>
-            <li>GPS, hız, rota &amp; tehlike uyarısı</li>
-            <li>Sığlık / demir nöbeti / MOB alarmları</li>
-            <li>Deniz sınırları uyarısı</li>
-            <li>Hava &amp; deniz durumu</li>
-            <li>Kalkış öncesi kontrol</li>
-            <li>Gece modu · Sefer geçmişi · AIS</li>
-            <li>Filo — canlı konum &amp; mesaj</li>
-            <li>Topluluk notları · 3B liman yaklaşımı</li>
+            <li>Marmara chart — offline, built in</li>
+            <li>GPS, speed, routes &amp; hazard alerts</li>
+            <li>Shallow water / anchor watch / MOB alarms</li>
+            <li>Maritime boundary alerts</li>
+            <li>Weather &amp; sea state</li>
+            <li>Pre-departure check</li>
+            <li>Night mode · Voyage history · AIS</li>
+            <li>Fleet — live position &amp; messages</li>
+            <li>Community notes · 3D harbor approach</li>
           </ul>
         </div>
         <div class="plan featured">
-          <div class="tier"><b>Pro</b> <span class="chip pro">En popüler</span></div>
-          <div class="lead-price">₺1.599<span> / yıl</span></div>
+          <div class="tier"><b>Pro</b> <span class="chip pro">Most popular</span></div>
+          <div class="lead-price">₺1.599<span> / year</span></div>
           <div class="prices">
-            <div class="price-row"><span>Aylık</span><b>₺199</b></div>
-            <div class="price-row"><span>Yıllık</span><b>₺1.599</b></div>
-            <div class="price-row"><span>Ömür boyu</span><b>₺4.999</b></div>
+            <div class="price-row"><span>Monthly</span><b>₺199</b></div>
+            <div class="price-row"><span>Annual</span><b>₺1.599</b></div>
+            <div class="price-row"><span>Lifetime</span><b>₺4.999</b></div>
           </div>
           <ul>
-            <li>Ücretsiz'deki her şey</li>
-            <li>Ege · Gökova-Bodrum bölgeleri</li>
-            <li>Akdeniz Batı &amp; Doğu bölgeleri</li>
-            <li>Karadeniz Batı &amp; Doğu bölgeleri</li>
-            <li>Kalkış kontrolünde dalga &amp; deniz durumu</li>
+            <li>Everything in Free</li>
+            <li>Aegean · Gökova-Bodrum regions</li>
+            <li>Mediterranean West &amp; East regions</li>
+            <li>Black Sea West &amp; East regions</li>
+            <li>Wave &amp; sea state in the departure check</li>
           </ul>
         </div>
         <div class="plan">
           <div class="tier"><b>Pro Plus</b></div>
-          <div class="lead-price">₺2.799<span> / yıl</span></div>
+          <div class="lead-price">₺2.799<span> / year</span></div>
           <div class="prices">
-            <div class="price-row"><span>Aylık</span><b>₺349</b></div>
-            <div class="price-row"><span>Yıllık</span><b>₺2.799</b></div>
-            <div class="price-row"><span>Ömür boyu</span><b>₺7.999</b></div>
+            <div class="price-row"><span>Monthly</span><b>₺349</b></div>
+            <div class="price-row"><span>Annual</span><b>₺2.799</b></div>
+            <div class="price-row"><span>Lifetime</span><b>₺7.999</b></div>
           </div>
           <ul>
-            <li>Pro'daki her şey</li>
-            <li>3D uydu sahil görünümü</li>
-            <li>Gelecek premium özellikler</li>
+            <li>Everything in Pro</li>
+            <li>3D satellite coastal view</li>
+            <li>Future premium features</li>
           </ul>
         </div>
       </div>
-      <p class="price-note">Abonelikler dönem sonunda otomatik yenilenir; mağaza hesabından iptal edebilirsin. Ömür boyu seçeneği tek seferlik ödemedir. Fiyatlar TL'dir, mağazada gösterilen fiyat geçerlidir ve değişebilir.</p>
+      <p class="price-note">Subscriptions renew automatically at the end of each period; you can cancel from your store account. The lifetime option is a one-time purchase. Prices are in Turkish lira (₺); the price shown in the store applies and may change.</p>
     </div>
   </section>
 
@@ -543,39 +543,39 @@
   <section id="yolharitasi">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Yol haritası</div>
-        <h2>Nereye gidiyoruz</h2>
-        <p>Dürüst bir plan — söz değil, yön. Sıra ve tarihler değişebilir.</p>
+        <div class="eyebrow">Roadmap</div>
+        <h2>Where we're headed</h2>
+        <p>An honest plan — direction, not promises. Order and dates may change.</p>
       </div>
       <div class="roadmap">
         <div class="phase now">
-          <div class="when">Şimdi · Erken erişim</div>
-          <h3>iOS TestFlight · Android dahili test</h3>
+          <div class="when">Now · Early access</div>
+          <h3>iOS TestFlight · Android internal testing</h3>
           <ul>
-            <li>Çevrimdışı Marmara haritası</li>
-            <li>Rota, tehlike &amp; güvenlik alarmları</li>
-            <li>Hava &amp; deniz durumu · kalkış kontrolü</li>
-            <li>Filo · topluluk notları · sefer geçmişi</li>
-            <li>Pro / Pro Plus abonelik altyapısı</li>
+            <li>Offline Marmara chart</li>
+            <li>Routes, hazards &amp; safety alarms</li>
+            <li>Weather &amp; sea state · departure check</li>
+            <li>Fleet · community notes · voyage history</li>
+            <li>Pro / Pro Plus subscription infrastructure</li>
           </ul>
         </div>
         <div class="phase">
-          <div class="when">Sırada</div>
-          <h3>Yakında</h3>
+          <div class="when">Up next</div>
+          <h3>Coming soon</h3>
           <ul>
-            <li>App Store &amp; Google Play yayını</li>
-            <li>Akdeniz açılımı: Yunanistan, İspanya, Portekiz, Hırvatistan, Malta, Karadağ</li>
-            <li>Yunanca, İspanyolca &amp; Portekizce dil desteği</li>
-            <li>Fotoğraflar (moderasyonlu)</li>
+            <li>App Store &amp; Google Play release</li>
+            <li>Mediterranean expansion: Greece, Spain, Portugal, Croatia, Malta, Montenegro</li>
+            <li>Greek, Spanish &amp; Portuguese language support</li>
+            <li>Photos (moderated)</li>
           </ul>
         </div>
         <div class="phase">
-          <div class="when">İleride</div>
-          <h3>Sonraki dalga</h3>
+          <div class="when">Further out</div>
+          <h3>The next wave</h3>
           <ul>
-            <li>Doğrulanmış topluluk katmanı</li>
-            <li>Yüksek çözünürlüklü uydu görüntüsü</li>
-            <li>Gelişmiş rota &amp; seyir modları</li>
+            <li>Verified community layer</li>
+            <li>High-resolution satellite imagery</li>
+            <li>Advanced routing &amp; navigation modes</li>
           </ul>
         </div>
       </div>
@@ -587,28 +587,28 @@
   <section id="iletisim">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">İletişim</div>
-        <h2>Bize ulaşın</h2>
-        <p>Soru, geri bildirim, iş birliği veya KVKK/veri talepleri için bize yazın.</p>
+        <div class="eyebrow">Contact</div>
+        <h2>Get in touch</h2>
+        <p>Write to us with questions, feedback, partnership ideas, or privacy/data requests.</p>
       </div>
       <div class="contact-grid">
         <div class="contact-card">
-          <div class="lbl">E-posta</div>
+          <div class="lbl">Email</div>
           <div class="val"><a href="mailto:oguzbayar97@gmail.com">oguzbayar97@gmail.com</a></div>
-          <div class="lbl">Destek &amp; geri bildirim</div>
-          <div class="val">Uygulama içinden ya da e-posta ile — yanıtları makul sürede veririz.</div>
-          <div class="lbl">KVKK / veri talepleri</div>
-          <div class="val">Erişim, düzeltme, silme ve diğer haklarınız için <a href="legal.html">KVKK / Gizlilik</a> sayfasına bakın.</div>
+          <div class="lbl">Support &amp; feedback</div>
+          <div class="val">From inside the app or by email — we reply within a reasonable time.</div>
+          <div class="lbl">Privacy / data requests</div>
+          <div class="val">For access, correction, deletion and your other rights, see the <a href="/legal.html">Privacy (KVKK)</a> page.</div>
         </div>
         <div class="contact-card">
-          <div class="lbl">Geliştirici (veri sorumlusu)</div>
+          <div class="lbl">Developer (data controller)</div>
           <div class="val">Oğuz Bayar</div>
-          <div class="lbl">Adres</div>
+          <div class="lbl">Address</div>
           <div class="val">Bursa / Nilüfer</div>
-          <div class="lbl">Yasal metinler</div>
-          <div class="val"><a href="legal.html">Gizlilik Politikası &amp; Kullanım Koşulları</a></div>
-          <div class="lbl">Hesap &amp; veri silme</div>
-          <div class="val"><a href="hesap-sil.html">Hesabımı ve verilerimi sil</a></div>
+          <div class="lbl">Legal documents</div>
+          <div class="val"><a href="/legal.html">Privacy Policy &amp; Terms of Use</a></div>
+          <div class="lbl">Account &amp; data deletion</div>
+          <div class="val"><a href="/hesap-sil.html">Delete my account and data</a></div>
         </div>
       </div>
     </div>
@@ -617,16 +617,16 @@
   <section class="waitlist" id="waitlist">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Android bekleme listesi</div>
-        <h2>iOS yayında — Android sırada</h2>
-        <p>Boreas iOS için <a href="https://apps.apple.com/tr/app/boreas/id6790090752">App Store'da yayında</a>. Android kullanıyorsan e-postanı bırak; hazır olduğunda ilk sen haber al.</p>
+        <div class="eyebrow">Android waitlist</div>
+        <h2>Live on iOS — Android is next</h2>
+        <p>Boreas is <a href="https://apps.apple.com/tr/app/boreas/id6790090752">live on the App Store</a> for iOS. On Android? Leave your email and be the first to know when it's ready.</p>
       </div>
       <form class="form" id="waitlistForm" novalidate>
-        <input type="email" id="email" name="email" placeholder="e-posta adresin" autocomplete="email" required aria-label="E-posta adresi">
-        <button type="submit">Listeye katıl</button>
+        <input type="email" id="email" name="email" placeholder="your email address" autocomplete="email" required aria-label="Email address">
+        <button type="submit">Join the list</button>
       </form>
       <div id="formMsg" role="status" aria-live="polite"></div>
-      <p class="form-note">Tekne adı ile kayıt, uygulamanın içinde olacak. Spam yok; sadece çıkış haberi.</p>
+      <p class="form-note">Signing up with your boat name happens inside the app. No spam — just the launch news.</p>
     </div>
   </section>
 
@@ -643,25 +643,25 @@
           </svg>
           <div>
             <div class="name">Boreas</div>
-            <div class="mono" style="font-size:12px;color:var(--slate)">kuzey rüzgarı · Poyraz</div>
+            <div class="mono" style="font-size:12px;color:var(--slate)">the north wind</div>
           </div>
         </div>
         <div class="foot-links">
-          <a href="#ozellikler">Özellikler</a>
-          <a href="#fiyatlar">Fiyatlar</a>
-          <a href="#yolharitasi">Yol haritası</a>
-          <a href="#iletisim">İletişim</a>
-          <a href="legal.html">Gizlilik &amp; KVKK</a>
-          <a href="legal.html#terms">Kullanım koşulları</a>
-          <a href="hesap-sil.html">Hesap silme</a>
+          <a href="#ozellikler">Features</a>
+          <a href="#fiyatlar">Pricing</a>
+          <a href="#yolharitasi">Roadmap</a>
+          <a href="#iletisim">Contact</a>
+          <a href="/legal.html">Privacy &amp; KVKK</a>
+          <a href="/legal.html#terms">Terms of use</a>
+          <a href="/hesap-sil.html">Account deletion</a>
         </div>
       </div>
       <p style="max-width:70ch;margin:22px 0 0;font-size:13px;color:var(--slate)">
-        Harita ve derinlik verisi entegre edildikçe açık-kaynak sağlayıcılara atıf verilir (ör. OpenSeaMap, GEBCO, EMODnet). Boreas resmi seyir sistemi değildir ve resmi hidrografik veri sağlamaz.
+        As chart and depth data are integrated, open-source providers are credited (e.g. OpenSeaMap, GEBCO, EMODnet). Boreas is not an official navigation system and does not provide official hydrographic data.
       </p>
       <div class="foot-legal">
         <span>© 2026 Boreas · Oğuz Bayar</span>
-        <span>RESMİ SEYİR İÇİN DEĞİLDİR · KARAR KAPTANINDIR</span>
+        <span>NOT FOR OFFICIAL NAVIGATION · THE CAPTAIN HAS THE FINAL SAY</span>
       </div>
     </div>
   </footer>
@@ -683,23 +683,23 @@
       e.preventDefault();
       var v = (email.value || '').trim();
       var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-      if (!ok) { msg.style.color = 'var(--coral)'; msg.textContent = 'Geçerli bir e-posta gir.'; return; }
+      if (!ok) { msg.style.color = 'var(--coral)'; msg.textContent = 'Please enter a valid email address.'; return; }
       msg.style.color = 'var(--marine)';
-      msg.textContent = 'Kaydediliyor…';
-      sb.from('waitlist').insert({ email: v, source: 'web' }).then(function (res) {
+      msg.textContent = 'Saving…';
+      sb.from('waitlist').insert({ email: v, source: 'web-en' }).then(function (res) {
         if (res.error) {
           if ((res.error.code === '23505') || /duplicate/i.test(res.error.message || '')) {
             msg.style.color = 'var(--marine)';
-            msg.textContent = 'Zaten listedesin — çıkışta ilk sen haberdar olacaksın. ⚓';
+            msg.textContent = 'You\'re already on the list — you\'ll be the first to know at launch. ⚓';
             form.reset();
           } else {
             msg.style.color = 'var(--coral)';
-            msg.textContent = 'Bir sorun oldu, birazdan tekrar dene.';
+            msg.textContent = 'Something went wrong — please try again in a moment.';
           }
           return;
         }
         msg.style.color = 'var(--marine)';
-        msg.textContent = 'Teşekkürler! Çıkışta ilk sen haberdar olacaksın. ⚓';
+        msg.textContent = 'Thank you! You\'ll be the first to know at launch. ⚓';
         form.reset();
       });
     });
@@ -714,7 +714,7 @@
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var W = 1, H = 1, DPR = 1, rafId = null, boats = [], msgs = [], lastMsg = 0;
     var CORAL = '#FF6A3D';
-    var greetings = ['Selam! ⚓', 'İyi seyirler', 'Kolay gelsin', 'Rüzgar arkadan', 'Poyraz sert', 'Balık bol', 'Görüşürüz \u{1F44B}', 'Demirdeyim'];
+    var greetings = ['Ahoy! ⚓', 'Fair winds', 'Safe passage', 'Wind astern', 'Fresh northerly', 'Fish are biting', 'See you \u{1F44B}', 'At anchor'];
 
     function pal() {
       var root = document.documentElement, dt = root.getAttribute('data-theme');

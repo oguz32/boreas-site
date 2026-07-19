@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="tr">
+<html lang="el">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Boreas — İnternetsiz deniz haritası · haritayı tarayıcında dene</title>
-<meta name="description" content="Türkiye ve Akdeniz kıyıları için internetsiz çalışan deniz haritası. Tarayıcında dene: kıyı, derinlik, fenerler, balık çiftlikleri ve tehlikeler; tıklayarak rota çiz. Uygulamada offline, GPS ve güvenlik alarmlarıyla.">
+<title>Boreas — Ναυτικός χάρτης εκτός σύνδεσης · δοκίμασε τον χάρτη στον browser σου</title>
+<meta name="description" content="Ναυτικός χάρτης που λειτουργεί χωρίς ίντερνετ για τις ακτές της Τουρκίας και της Μεσογείου. Δοκίμασέ τον στον browser σου: ακτογραμμή, βάθη, φάροι, ιχθυοκαλλιέργειες και κίνδυνοι· σχεδίασε πορεία με κλικ. Στην εφαρμογή λειτουργεί offline, με GPS και συναγερμούς ασφαλείας.">
 <link rel="alternate" hreflang="tr" href="https://boreasmarinemap.com/harita.html">
 <link rel="alternate" hreflang="en" href="https://boreasmarinemap.com/en/harita.html">
 <link rel="alternate" hreflang="el" href="https://boreasmarinemap.com/el/harita.html">
@@ -106,91 +106,91 @@
 <div id="wrap">
   <header>
     <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#0f2a43"/><circle cx="50" cy="50" r="30" fill="none" stroke="#1c7293" stroke-width="5"/><path d="M50 20 L57 50 L50 80 L43 50 Z" fill="#f96167"/><path d="M20 50 L50 43 L80 50 L50 57 Z" fill="#5dcaa5"/><circle cx="50" cy="50" r="4.5" fill="#fff"/></svg>
-    <b>Boreas</b><span class="tag">· Haritayı dene</span>
-    <select id="region" aria-label="Bölge seç"></select>
+    <b>Boreas</b><span class="tag">· Δοκίμασε τον χάρτη</span>
+    <select id="region" aria-label="Επιλογή περιοχής"></select>
     <span class="baseswitch">
-      <button id="baseHarita" class="on" onclick="setBase(false)">Harita</button>
-      <button id="baseUydu" onclick="setBase(true)">Uydu</button>
+      <button id="baseHarita" class="on" onclick="setBase(false)">Χάρτης</button>
+      <button id="baseUydu" onclick="setBase(true)">Δορυφόρος</button>
     </span>
     <span class="spacer"></span>
     <span class="auth" id="auth">
       <span class="email" id="userEmail" style="display:none"></span>
-      <button id="loginBtn">Giriş yap</button>
-      <button id="logoutBtn" style="display:none">Çıkış</button>
+      <button id="loginBtn">Σύνδεση</button>
+      <button id="logoutBtn" style="display:none">Αποσύνδεση</button>
     </span>
-    <a class="back" href="/">← siteye dön</a>
-    <a class="cta" href="https://apps.apple.com/tr/app/boreas/id6790090752">App Store'dan indir</a>
+    <a class="back" href="/el/">← πίσω στο site</a>
+    <a class="cta" href="https://apps.apple.com/tr/app/boreas/id6790090752">Λήψη από το App Store</a>
   </header>
   <div id="map"></div>
 
   <div class="panel" id="tools">
-    <h4>Rota çiz</h4>
-    <p>Tıkla, nokta ekle. Noktayı <b>sürükle</b> ile taşı, <b>tıkla</b> ile sil.</p>
+    <h4>Σχεδίασε πορεία</h4>
+    <p>Κάνε κλικ για να προσθέσεις σημείο. <b>Σύρε</b> το σημείο για μετακίνηση, <b>κλικ</b> για διαγραφή.</p>
     <div class="btns">
-      <button id="undo" class="ghost">Geri al</button>
-      <button id="reverse" class="ghost">Ters çevir</button>
-      <button id="clear" class="ghost">Temizle</button>
+      <button id="undo" class="ghost">Αναίρεση</button>
+      <button id="reverse" class="ghost">Αντιστροφή</button>
+      <button id="clear" class="ghost">Καθαρισμός</button>
     </div>
     <div id="stats">
-      <span class="big" id="dist">0.0 dnm</span>
+      <span class="big" id="dist">0.0 ν.μ.</span>
       <span id="legs" style="color:#9fb6cc"></span>
       <div class="eta-row">
-        <label for="spd">Hız</label>
+        <label for="spd">Ταχύτητα</label>
         <input id="spd" type="number" min="1" max="60" step="0.5" value="6"> kn
         <span id="eta"></span>
       </div>
       <span class="warn" id="hazwarn" style="display:none"></span>
     </div>
-    <button id="save">Rotayı hesabıma kaydet</button>
+    <button id="save">Αποθήκευση πορείας στον λογαριασμό μου</button>
     <div id="myRoutes">
-      <h4>ROTALARIM</h4>
+      <h4>ΟΙ ΠΟΡΕΙΕΣ ΜΟΥ</h4>
       <div id="routesList"></div>
     </div>
   </div>
 
   <div id="modal">
     <div class="box">
-      <button class="x" id="modalClose" aria-label="Kapat">×</button>
+      <button class="x" id="modalClose" aria-label="Κλείσιμο">×</button>
       <div id="loginView">
-        <h3>Boreas hesabına giriş</h3>
-        <p>Uygulamadaki <b>aynı hesabınla</b> giriş yap. Web'de çizip kaydettiğin rotalar telefonundaki Boreas'ta da belirir.</p>
-        <label for="email">E-posta</label>
-        <input id="email" type="email" autocomplete="email" placeholder="ornek@eposta.com">
-        <label for="pass">Şifre</label>
+        <h3>Σύνδεση στον λογαριασμό Boreas</h3>
+        <p>Συνδέσου με <b>τον ίδιο λογαριασμό</b> που χρησιμοποιείς στην εφαρμογή. Οι πορείες που σχεδιάζεις και αποθηκεύεις στο web εμφανίζονται και στο Boreas του τηλεφώνου σου.</p>
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" placeholder="onoma@email.com">
+        <label for="pass">Κωδικός</label>
         <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
         <div class="err" id="loginErr"></div>
-        <button class="go" id="doLogin">Giriş yap</button>
-        <button class="linkbtn" id="toReset">Şifremi unuttum</button>
+        <button class="go" id="doLogin">Σύνδεση</button>
+        <button class="linkbtn" id="toReset">Ξέχασα τον κωδικό μου</button>
       </div>
       <div id="resetView" style="display:none">
-        <h3>Şifre sıfırla</h3>
-        <p>E-postana <b>6 haneli bir kod</b> gönderelim; o kodla yeni şifreni belirle.</p>
-        <label for="rEmail">E-posta</label>
-        <input id="rEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com">
-        <button class="go" id="sendCode">Kod gönder</button>
+        <h3>Επαναφορά κωδικού</h3>
+        <p>Θα σου στείλουμε <b>έναν 6ψήφιο κωδικό</b> στο email σου· με αυτόν όρισε νέο κωδικό πρόσβασης.</p>
+        <label for="rEmail">Email</label>
+        <input id="rEmail" type="email" autocomplete="email" placeholder="onoma@email.com">
+        <button class="go" id="sendCode">Αποστολή κωδικού</button>
         <div id="codeStep" style="display:none">
-          <label for="rCode">E-postana gelen kod</label>
-          <input id="rCode" inputmode="numeric" autocomplete="one-time-code" placeholder="6 haneli kod">
-          <label for="rPass">Yeni şifre</label>
-          <input id="rPass" type="password" autocomplete="new-password" placeholder="en az 6 karakter">
-          <button class="go" id="doReset" style="margin-top:12px">Şifreyi sıfırla</button>
+          <label for="rCode">Ο κωδικός που ήρθε στο email σου</label>
+          <input id="rCode" inputmode="numeric" autocomplete="one-time-code" placeholder="6ψήφιος κωδικός">
+          <label for="rPass">Νέος κωδικός</label>
+          <input id="rPass" type="password" autocomplete="new-password" placeholder="τουλάχιστον 6 χαρακτήρες">
+          <button class="go" id="doReset" style="margin-top:12px">Επαναφορά κωδικού</button>
         </div>
         <div class="err" id="resetErr"></div>
-        <button class="linkbtn" id="toLogin">← Girişe dön</button>
+        <button class="linkbtn" id="toLogin">← Πίσω στη σύνδεση</button>
       </div>
     </div>
   </div>
 
   <div class="panel" id="legend">
-    <div class="ltitle">KATMANLAR · aç/kapat</div>
-    <div class="row" data-k="seamark" onclick="toggleLayer('seamark')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Seyir işaretleri</div>
-    <div class="row off" data-k="depth" onclick="toggleLayer('depth')"><span class="ck"></span><span class="dot" style="background:#4f93bd"></span> Derinlik (renkli)</div>
-    <div class="row" data-k="fishfarm" onclick="toggleLayer('fishfarm')"><span class="ck"></span><span class="dot" style="background:#a25bd8"></span> Balık çiftliği</div>
-    <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#e63030"></span> Kayalık / tehlike</div>
+    <div class="ltitle">ΕΠΙΠΕΔΑ · εμφάνιση/απόκρυψη</div>
+    <div class="row" data-k="seamark" onclick="toggleLayer('seamark')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Ναυτιλιακά σήματα</div>
+    <div class="row off" data-k="depth" onclick="toggleLayer('depth')"><span class="ck"></span><span class="dot" style="background:#4f93bd"></span> Βάθη (χρωματικά)</div>
+    <div class="row" data-k="fishfarm" onclick="toggleLayer('fishfarm')"><span class="ck"></span><span class="dot" style="background:#a25bd8"></span> Ιχθυοκαλλιέργεια</div>
+    <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#e63030"></span> Βράχια / κίνδυνος</div>
   </div>
 
   <div class="panel" id="note">
-    <b>Bu bir tadımlık.</b> Uygulamada bu harita <b>internetsiz</b> çalışır; GPS, hıza bağlı sığlık alarmı, demir nöbeti ve 3B sahil görünümü eklenir. Altlık: CARTO · Uydu: Sentinel-2 (EOX) · İşaretler: OpenSeaMap · Derinlik: EMODnet · Tehlike & çiftlik: açık kaynak türevi. Resmi seyir haritası değildir.
+    <b>Αυτή είναι μια γεύση.</b> Στην εφαρμογή ο χάρτης λειτουργεί <b>χωρίς ίντερνετ</b>· προστίθενται GPS, συναγερμός αβαθών ανάλογα με την ταχύτητα, επιτήρηση αγκυροβολίας και 3D απεικόνιση ακτής. Υπόβαθρο: CARTO · Δορυφόρος: Sentinel-2 (EOX) · Σήματα: OpenSeaMap · Βάθη: EMODnet · Κίνδυνοι &amp; ιχθυοκαλλιέργειες: παράγωγα ανοιχτού κώδικα. Δεν είναι επίσημος ναυτικός χάρτης.
   </div>
 </div>
 
@@ -202,6 +202,30 @@ const NM = 1852;
 const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a', fishfarm:'#8e44ad' };
 const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:5, maxZoom:18 }).setView([40.75,28.3], 9);
 const canvas = L.canvas({ padding:0.5 });
+
+// Greek display names for the region dropdown (ids and JSON paths unchanged)
+const REGION_EL = {
+  'marmara':'Μαρμαράς',
+  'ege':'Τουρκία – Αιγαίο',
+  'gokova':'Γκιόκοβα – Μπόντρουμ',
+  'akdeniz-bati':'Μεσόγειος – Δυτικά',
+  'akdeniz-dogu':'Μεσόγειος – Ανατολικά',
+  'karadeniz-bati':'Μαύρη Θάλασσα – Δυτικά',
+  'karadeniz-dogu':'Μαύρη Θάλασσα – Ανατολικά',
+  'kibris':'Κύπρος',
+  'yunanistan-ion':'Ελλάδα – Ιόνιο',
+  'yunanistan-ege':'Ελλάδα – Αιγαίο',
+  'yunanistan-girit':'Ελλάδα – Κρήτη',
+  'ispanya-dogu':'Ισπανία – Καταλονία/Βαλένθια',
+  'ispanya-guney':'Ισπανία – Νότια',
+  'balear':'Βαλεαρίδες Νήσοι',
+  'portekiz-guney':'Πορτογαλία – Αλγκάρβε',
+  'portekiz-bati':'Πορτογαλία – Ατλαντικός',
+  'hirvatistan-kuzey':'Κροατία – Βόρεια',
+  'hirvatistan-guney':'Κροατία – Νότια',
+  'malta':'Μάλτα',
+  'karadag':'Μαυροβούνιο'
+};
 
 // ---- base + tile overlays: the app's online look ----
 const cartoBase = L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', { maxZoom:19 });
@@ -242,7 +266,7 @@ function renderRegion(data){
     if(k==='hazard') hazards.push(ll);
     const style = k==='hazard' ? {r:3.6,color:'#7a0f0f',fill:'#e63030'} : {r:3.2,color:'#4a2160',fill:'#a25bd8'};
     const mk = L.circleMarker(ll,{ radius:style.r, color:style.color, weight:1.2, fillColor:style.fill, fillOpacity:.95, renderer:canvas });
-    const label = k==='hazard' ? 'Kayalık / tehlike' : 'Balık çiftliği';
+    const label = k==='hazard' ? 'Βράχια / κίνδυνος' : 'Ιχθυοκαλλιέργεια';
     mk.bindPopup('<span class="k">'+label+'</span>'+(m.n?'<br>'+m.n:''));
     mk.addTo(groups[k]);
   });
@@ -305,11 +329,11 @@ function liveStats(){
   let tot=0; for(let i=1;i<pts.length;i++) tot+=hav(pts[i-1],pts[i]);
   const nmv=tot/NM;
   statsEl.style.display = pts.length? 'block':'none';
-  dEl.textContent = nmv.toFixed(1)+' dnm';
-  legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' bacak':' · başla';
+  dEl.textContent = nmv.toFixed(1)+' ν.μ.';
+  legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' σκέλη':' · ξεκίνα';
   const spd=parseFloat(document.getElementById('spd').value)||0, etaEl=document.getElementById('eta');
   if(pts.length>1 && spd>0){ const hrs=nmv/spd, h=Math.floor(hrs), mn=Math.round((hrs-h)*60);
-    etaEl.textContent='≈ '+(h?h+' sa ':'')+mn+' dk'; }
+    etaEl.textContent='≈ '+(h?h+' ω ':'')+mn+' λ'; }
   else etaEl.textContent='';
   let near=0;
   if(pts.length>1){
@@ -317,7 +341,7 @@ function liveStats(){
       for(const h of hazards){ if(segDist([h[0],h[1]],pts[i-1],pts[i])<140){ near++; break; } }
     }
   }
-  if(near){ warnEl.style.display='block'; warnEl.textContent='⚠ '+near+' bacakta rota yakınında kayalık/tehlike var'; }
+  if(near){ warnEl.style.display='block'; warnEl.textContent='⚠ Βράχια/κίνδυνος κοντά στην πορεία σε '+near+' σκέλη'; }
   else warnEl.style.display='none';
 }
 function clearRoute(){ pts=[]; redraw(); }
@@ -330,7 +354,7 @@ document.getElementById('spd').addEventListener('input', liveStats);
 // ---- init: region index + selector ----
 fetch('/demo/regions.json').then(r=>r.json()).then(list=>{
   const sel=document.getElementById('region');
-  list.forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=e.name; sel.appendChild(o); });
+  list.forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=REGION_EL[e.id]||e.name; sel.appendChild(o); });
   sel.value='marmara';
   sel.onchange=()=>loadRegion(sel.value);
   loadRegion('marmara');
@@ -370,10 +394,10 @@ function updateSaveBtn(){ saveBtn.style.display=(user && pts.length>=2)?'block':
 document.getElementById('doLogin').onclick=async()=>{
   const email=document.getElementById('email').value.trim();
   const password=document.getElementById('pass').value;
-  if(!email||!password){ loginErr.textContent='E-posta ve şifre gerekli.'; return; }
-  loginErr.textContent='Giriş yapılıyor…';
+  if(!email||!password){ loginErr.textContent='Απαιτούνται email και κωδικός.'; return; }
+  loginErr.textContent='Γίνεται σύνδεση…';
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if(error){ loginErr.textContent = error.message.includes('Invalid')?'E-posta veya şifre hatalı.':error.message; return; }
+  if(error){ loginErr.textContent = error.message.includes('Invalid')?'Λάθος email ή κωδικός.':error.message; return; }
   user=data.user; closeModal(); setAuthUI(); loadMyRoutes();
 };
 logoutBtn.onclick=async()=>{ await sb.auth.signOut(); user=null; setAuthUI(); routesList.innerHTML=''; };
@@ -386,22 +410,22 @@ document.getElementById('toReset').onclick=()=>{ loginView.style.display='none';
 document.getElementById('toLogin').onclick=()=>{ resetView.style.display='none'; loginView.style.display='block'; };
 document.getElementById('sendCode').onclick=async()=>{
   const email=document.getElementById('rEmail').value.trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ resetErr.style.color='var(--coral)'; resetErr.textContent='Geçerli bir e-posta gir.'; return; }
-  resetErr.style.color='#9fb6cc'; resetErr.textContent='Kod gönderiliyor…';
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ resetErr.style.color='var(--coral)'; resetErr.textContent='Δώσε ένα έγκυρο email.'; return; }
+  resetErr.style.color='#9fb6cc'; resetErr.textContent='Αποστολή κωδικού…';
   const { error } = await sb.auth.resetPasswordForEmail(email);
   if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent=error.message; return; }
   codeStep.style.display='block';
-  resetErr.style.color='var(--mint)'; resetErr.textContent='Kod e-postana gönderildi. Gelen kutusu / spam klasörünü kontrol et.';
+  resetErr.style.color='var(--mint)'; resetErr.textContent='Ο κωδικός στάλθηκε στο email σου. Έλεγξε τα εισερχόμενα / τον φάκελο spam.';
 };
 document.getElementById('doReset').onclick=async()=>{
   const email=document.getElementById('rEmail').value.trim();
   const token=document.getElementById('rCode').value.trim();
   const password=document.getElementById('rPass').value;
-  if(!token){ resetErr.style.color='var(--coral)'; resetErr.textContent='E-postana gelen kodu gir.'; return; }
-  if((password||'').length<6){ resetErr.style.color='var(--coral)'; resetErr.textContent='Yeni şifre en az 6 karakter olmalı.'; return; }
-  resetErr.style.color='#9fb6cc'; resetErr.textContent='Doğrulanıyor…';
+  if(!token){ resetErr.style.color='var(--coral)'; resetErr.textContent='Γράψε τον κωδικό που ήρθε στο email σου.'; return; }
+  if((password||'').length<6){ resetErr.style.color='var(--coral)'; resetErr.textContent='Ο νέος κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.'; return; }
+  resetErr.style.color='#9fb6cc'; resetErr.textContent='Γίνεται επαλήθευση…';
   const { data, error } = await sb.auth.verifyOtp({ email, token, type:'recovery' });
-  if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent = /expired|invalid/i.test(error.message)?'Kod hatalı veya süresi dolmuş.':error.message; return; }
+  if(error){ resetErr.style.color='var(--coral)'; resetErr.textContent = /expired|invalid/i.test(error.message)?'Ο κωδικός είναι λάθος ή έχει λήξει.':error.message; return; }
   const up = await sb.auth.updateUser({ password });
   if(up.error){ resetErr.style.color='var(--coral)'; resetErr.textContent=up.error.message; return; }
   // reset succeeds with an active session — log the captain straight in.
@@ -411,17 +435,17 @@ document.getElementById('doReset').onclick=async()=>{
 };
 
 async function loadMyRoutes(){
-  routesList.innerHTML='<div class="empty">Yükleniyor…</div>';
+  routesList.innerHTML='<div class="empty">Φόρτωση…</div>';
   const { data, error } = await sb.from('routes').select('payload').is('deleted_at',null);
-  if(error){ routesList.innerHTML='<div class="empty">Rotalar okunamadı.</div>'; return; }
+  if(error){ routesList.innerHTML='<div class="empty">Δεν ήταν δυνατή η ανάγνωση των πορειών.</div>'; return; }
   const routes=(data||[]).map(r=>r.payload).filter(p=>p&&p.points&&p.points.length>1)
     .sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
-  if(!routes.length){ routesList.innerHTML='<div class="empty">Henüz kayıtlı rota yok. Haritada çiz, kaydet.</div>'; return; }
+  if(!routes.length){ routesList.innerHTML='<div class="empty">Δεν υπάρχουν αποθηκευμένες πορείες ακόμη. Σχεδίασε στον χάρτη και αποθήκευσε.</div>'; return; }
   routesList.innerHTML='';
   routes.forEach(p=>{
     const el=document.createElement('div'); el.className='r';
-    const d=p.createdAt?new Date(p.createdAt).toLocaleDateString('tr-TR'):'';
-    el.innerHTML='<span>'+(p.name||'Rota')+'</span><span class="d">'+d+'</span>';
+    const d=p.createdAt?new Date(p.createdAt).toLocaleDateString('el-GR'):'';
+    el.innerHTML='<span>'+(p.name||'Πορεία')+'</span><span class="d">'+d+'</span>';
     el.onclick=()=>{ pts=p.points.map(pt=>[pt[0],pt[1]]); redraw();
       if(pts.length){ map.fitBounds(pts,{padding:[60,60]}); } };
     routesList.appendChild(el);
@@ -430,17 +454,17 @@ async function loadMyRoutes(){
 
 saveBtn.onclick=async()=>{
   if(!user||pts.length<2) return;
-  const name=prompt('Rota adı:','Rota '+new Date().toLocaleDateString('tr-TR'));
+  const name=prompt('Όνομα πορείας:','Πορεία '+new Date().toLocaleDateString('el-GR'));
   if(name===null) return;
   const now=new Date().toISOString();
   const id=(crypto.randomUUID?crypto.randomUUID():(Date.now()+''+Math.random()).replace('.',''));
-  const payload={ name:name||'Rota', points:pts.map(p=>[p[0],p[1]]), createdAt:now,
+  const payload={ name:name||'Πορεία', points:pts.map(p=>[p[0],p[1]]), createdAt:now,
     meta:{ id, schemaVersion:2, updatedAt:now, deletedAt:null } };
-  saveBtn.textContent='Kaydediliyor…'; saveBtn.disabled=true;
+  saveBtn.textContent='Αποθήκευση…'; saveBtn.disabled=true;
   const { error } = await sb.from('routes').upsert({ id, payload, schema_version:2, updated_at:now, deleted_at:null });
-  saveBtn.disabled=false; saveBtn.textContent='Rotayı hesabıma kaydet';
-  if(error){ alert('Kaydedilemedi: '+error.message); return; }
-  saveBtn.textContent='✓ Kaydedildi — telefonunda görünecek'; setTimeout(()=>saveBtn.textContent='Rotayı hesabıma kaydet',2500);
+  saveBtn.disabled=false; saveBtn.textContent='Αποθήκευση πορείας στον λογαριασμό μου';
+  if(error){ alert('Δεν αποθηκεύτηκε: '+error.message); return; }
+  saveBtn.textContent='✓ Αποθηκεύτηκε — θα εμφανιστεί στο τηλέφωνό σου'; setTimeout(()=>saveBtn.textContent='Αποθήκευση πορείας στον λογαριασμό μου',2500);
   loadMyRoutes();
 };
 
