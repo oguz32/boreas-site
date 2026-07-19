@@ -64,6 +64,23 @@
     transition:transform .15s ease, filter .15s ease}
   .nav-cta:hover{filter:brightness(1.05); transform:translateY(-1px)}
 
+  /* announcement bar (ad-landing energy: one line, sweep highlight, two CTAs) */
+  .annc{position:relative; overflow:hidden; background:var(--navy); color:#eaf2f8; z-index:21}
+  .annc::before{content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(115deg, transparent 0%, rgba(46,211,198,.16) 35%, rgba(255,106,61,.15) 55%, transparent 75%);
+    background-size:250% 100%; animation:anncSweep 7s linear infinite}
+  @keyframes anncSweep{from{background-position:230% 0}to{background-position:-130% 0}}
+  @media (prefers-reduced-motion:reduce){.annc::before{animation:none}}
+  .annc .wrap{display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
+    padding-top:9px; padding-bottom:9px; font-family:var(--font-display); font-size:14.5px; line-height:1.4}
+  .annc .tag{background:var(--coral); color:#fff; font-family:var(--font-mono); font-size:11px;
+    letter-spacing:.12em; padding:3px 9px; border-radius:999px; font-weight:600; flex:0 0 auto}
+  .annc a{color:var(--aqua); font-weight:600; text-decoration:none; white-space:nowrap}
+  .annc a .ar{display:inline-block; transition:transform .15s ease}
+  .annc a:hover .ar{transform:translateX(3px)}
+  .annc .sep{opacity:.4}
+  @media (max-width:640px){.annc .lead{display:none}}
+
   /* hero */
   .hero{position:relative; overflow:hidden; text-align:center; min-height:720px; display:flex; align-items:flex-start; padding:60px 0 0}
   #seaCanvas{position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block}
@@ -224,6 +241,15 @@
 </style>
 </head>
 <body>
+<div class="annc" role="region" aria-label="Duyuru">
+  <div class="wrap">
+    <span class="tag">YENİ</span>
+    <span class="lead">Boreas haritası artık tarayıcında — rota çiz, tehlikeleri ve balık çiftliklerini gör.</span>
+    <a href="/harita.html">Haritayı dene <span class="ar">→</span></a>
+    <span class="sep">·</span>
+    <a href="#waitlist">Erken erişime katıl</a>
+  </div>
+</div>
 <header>
   <div class="wrap">
     <nav>
