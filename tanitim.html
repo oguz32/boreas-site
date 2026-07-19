@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boreas — İnternetsiz çalışan deniz asistanı</title>
+<meta name="description" content="Türkiye kıyıları için internetsiz çalışan deniz haritası: rota, tehlike ve sığlık alarmları, hava & deniz durumu, filo. Bir planlama ve farkındalık aracıdır — resmi seyir haritası değildir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --foam:#F2F7FA; --navy:#0A2540; --navy-2:#134a78; --marine:#1B6CA8;
+    --aqua:#2ED3C6; --coral:#FF6A3D; --amber:#FFC24B; --ink:#0E1822;
+    --slate:#5B6B7A;
+    /* tokens (light) */
+    --bg:var(--foam); --bg-2:#ffffff; --text:var(--ink); --text-2:#43586a;
+    --line:#d3e0e4; --brand:var(--navy); --accent:var(--coral); --card:#ffffff;
+    --grid:rgba(10,37,64,.05); --chip:#e7eef1; --chip-text:#33566b;
+    --font-display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospace;
+    --maxw:1080px; --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#081a2b; --bg-2:#0c2338; --text:#eaf2f8; --text-2:#9fb2c2;
+      --line:#1d3a52; --brand:#eaf2f8; --card:#0e2740;
+      --grid:rgba(255,255,255,.05); --chip:#123049; --chip-text:#9fd7df;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#081a2b; --bg-2:#0c2338; --text:#eaf2f8; --text-2:#9fb2c2;
+    --line:#1d3a52; --brand:#eaf2f8; --card:#0e2740; --grid:rgba(255,255,255,.05);
+    --chip:#123049; --chip-text:#9fd7df;
+  }
+  :root[data-theme="light"]{
+    --bg:var(--foam); --bg-2:#ffffff; --text:var(--ink); --text-2:#43586a;
+    --line:#d3e0e4; --brand:var(--navy); --card:#ffffff; --grid:rgba(10,37,64,.05);
+    --chip:#e7eef1; --chip-text:#33566b;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:var(--font-body); font-size:17px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  h1,h2,h3{font-family:var(--font-display); font-weight:600; line-height:1.1; text-wrap:balance; margin:0}
+  a{color:inherit}
+  .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--marine)}
+  .mono{font-family:var(--font-mono)}
+
+  /* nav */
+  header{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  nav{display:flex; align-items:center; justify-content:space-between; height:64px}
+  .brand{display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--brand)}
+  .brand .name{font-family:var(--font-display); font-weight:700; font-size:20px; letter-spacing:.01em}
+  .nav-cta{font-family:var(--font-display); font-weight:600; font-size:14px; text-decoration:none;
+    color:#fff; background:var(--coral); padding:9px 16px; border-radius:999px;
+    transition:transform .15s ease, filter .15s ease}
+  .nav-cta:hover{filter:brightness(1.05); transform:translateY(-1px)}
+
+  /* hero */
+  .hero{position:relative; overflow:hidden; text-align:center; min-height:720px; display:flex; align-items:flex-start; padding:60px 0 0}
+  #seaCanvas{position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block}
+  .hero .inner{position:relative; z-index:2; width:100%}
+  .hero .logo-lg{width:132px; height:132px; margin:0 auto 22px; display:block}
+  .hero h1{font-size:clamp(38px,6vw,62px); color:var(--brand); letter-spacing:.005em}
+  .hero .lede{max-width:56ch; margin:18px auto 0; color:var(--text-2); font-size:clamp(17px,2.2vw,20px)}
+  .coord{display:inline-flex; gap:14px; margin-top:20px; font-family:var(--font-mono);
+    font-size:13px; color:var(--marine); letter-spacing:.02em}
+  .coord span{opacity:.85}
+  .cta-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:30px}
+  .btn{font-family:var(--font-display); font-weight:600; font-size:15px; text-decoration:none;
+    padding:13px 24px; border-radius:999px; transition:transform .15s ease, filter .15s ease}
+  .btn-primary{background:var(--coral); color:#fff}
+  .btn-primary:hover{filter:brightness(1.05); transform:translateY(-1px)}
+  .btn-ghost{border:1px solid var(--line); color:var(--text)}
+  .btn-ghost:hover{border-color:var(--marine); transform:translateY(-1px)}
+  .platform-note{margin-top:14px; font-family:var(--font-mono); font-size:12px; color:var(--slate);
+    letter-spacing:.03em}
+
+  /* safety strip */
+  .safety{background:var(--navy); color:#dbe8ef; border-top:1px solid var(--navy-2)}
+  :root[data-theme="light"] .safety, :root:not([data-theme]) .safety{background:var(--navy)}
+  .safety .wrap{display:flex; gap:16px; align-items:flex-start; padding:20px 24px}
+  .safety .dot{flex:none; margin-top:3px; width:22px; height:22px; border-radius:50%;
+    display:grid; place-items:center; background:rgba(255,106,61,.16); color:var(--coral); font-weight:700; font-size:13px; font-family:var(--font-mono)}
+  .safety p{margin:0; font-size:14.5px; line-height:1.6}
+  .safety strong{color:#fff}
+
+  /* sections */
+  section{padding:74px 0}
+  .section-head{max-width:60ch}
+  .section-head h2{font-size:clamp(26px,3.6vw,38px); color:var(--brand); margin-top:10px}
+  .section-head p{color:var(--text-2); margin:14px 0 0}
+  .rule{height:1px; background:var(--line); border:0; margin:0}
+
+  /* features */
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; margin-top:40px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px;
+    display:flex; flex-direction:column; gap:10px}
+  .card .ic{width:38px; height:38px; border-radius:9px; display:grid; place-items:center;
+    background:color-mix(in srgb,var(--aqua) 20%,transparent); color:var(--marine)}
+  .card h3{font-size:18px; color:var(--brand)}
+  .card p{margin:0; font-size:14.5px; color:var(--text-2)}
+  .chip{align-self:flex-start; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em;
+    text-transform:uppercase; padding:4px 9px; border-radius:999px; background:var(--chip); color:var(--chip-text)}
+  .chip.early{background:color-mix(in srgb,var(--aqua) 24%,transparent); color:#0d6c73}
+  :root[data-theme="dark"] .chip.early{color:#8fe6ed}
+  .chip.free{background:color-mix(in srgb,var(--aqua) 24%,transparent); color:#0d6c73}
+  :root[data-theme="dark"] .chip.free{color:#8fe6ed}
+  .chip.planned{background:var(--chip); color:var(--chip-text)}
+
+  /* community layer split */
+  .split{display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center}
+  .split .layers{display:flex; flex-direction:column; gap:14px}
+  .layer{border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; background:var(--card)}
+  .layer .lbl{font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--marine)}
+  .layer .val{margin-top:6px; font-size:15px; color:var(--text-2)}
+  .layer.own{border-color:color-mix(in srgb,var(--coral) 40%,var(--line))}
+  .layer.own .lbl{color:var(--coral)}
+  .between{font-family:var(--font-mono); font-size:12px; color:var(--slate); text-align:center; letter-spacing:.04em}
+
+  /* waitlist */
+  .waitlist{background:var(--bg-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .form{display:flex; gap:12px; margin-top:26px; flex-wrap:wrap; max-width:520px}
+  .form input{flex:1 1 240px; font-family:var(--font-body); font-size:16px; padding:14px 16px;
+    border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--text)}
+  .form input:focus{outline:2px solid var(--marine); outline-offset:1px; border-color:transparent}
+  .form button{font-family:var(--font-display); font-weight:600; font-size:15px; color:#fff;
+    background:var(--coral); border:0; padding:14px 24px; border-radius:999px; cursor:pointer;
+    transition:transform .15s ease, filter .15s ease}
+  .form button:hover{filter:brightness(1.05); transform:translateY(-1px)}
+  .form-note{margin-top:12px; font-size:13px; color:var(--slate)}
+  #formMsg{margin-top:14px; font-family:var(--font-mono); font-size:13px; color:var(--marine); min-height:18px}
+
+  /* footer */
+  footer{padding:48px 0 40px; color:var(--text-2); font-size:13.5px}
+  .foot-top{display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; align-items:flex-start}
+  .foot-brand{display:flex; align-items:center; gap:10px; color:var(--brand)}
+  .foot-brand .name{font-family:var(--font-display); font-weight:700; font-size:17px}
+  .foot-links{display:flex; gap:22px; flex-wrap:wrap}
+  .foot-links a{text-decoration:none; color:var(--text-2)}
+  .foot-links a:hover{color:var(--marine)}
+  .foot-legal{margin-top:26px; padding-top:20px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-family:var(--font-mono); font-size:12px; color:var(--slate)}
+
+  @media (max-width:760px){
+    .split{grid-template-columns:1fr; gap:28px}
+    section{padding:56px 0}
+    .hero{min-height:560px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .needle{animation:none !important}
+    *{scroll-behavior:auto}
+  }
+  .needle{transform-origin:70px 70px; animation:settle 1.4s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes settle{0%{transform:rotate(-46deg)}70%{transform:rotate(6deg)}100%{transform:rotate(0)}}
+
+  /* nav links (corporate) */
+  .nav-links{display:flex; gap:24px; align-items:center}
+  .nav-links a{text-decoration:none; color:var(--text-2); font-size:14.5px; font-weight:500}
+  .nav-links a:hover{color:var(--marine)}
+  .nav-cta{text-decoration:none; font-family:var(--font-display); font-weight:600; font-size:14px;
+    color:#fff; background:var(--coral); padding:9px 16px; border-radius:999px}
+  @media (max-width:820px){ .nav-links{display:none} }
+
+  /* new chips */
+  .chip.pro{background:color-mix(in srgb,var(--marine) 22%,transparent); color:#0f4f7d}
+  :root[data-theme="dark"] .chip.pro{color:#8fc4ec}
+  .chip.proplus{background:color-mix(in srgb,var(--coral) 22%,transparent); color:#b5401f}
+  :root[data-theme="dark"] .chip.proplus{color:#ffb59c}
+
+  /* pricing */
+  .pricing{display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:18px; margin-top:40px}
+  .plan{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:26px;
+    display:flex; flex-direction:column; gap:16px}
+  .plan.featured{border-color:color-mix(in srgb,var(--marine) 55%,var(--line));
+    box-shadow:0 14px 36px -22px rgba(10,37,64,.55)}
+  .plan .tier{display:flex; align-items:center; gap:10px}
+  .plan .tier b{font-family:var(--font-display); font-weight:700; font-size:20px; color:var(--brand)}
+  .plan .lead-price{font-family:var(--font-display); font-weight:700; font-size:30px; color:var(--brand)}
+  .plan .lead-price span{font-size:14px; font-weight:500; color:var(--text-2)}
+  .plan .prices{border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:12px 0; display:flex; flex-direction:column; gap:7px}
+  .plan .price-row{display:flex; justify-content:space-between; font-size:14px; color:var(--text-2)}
+  .plan .price-row b{color:var(--text); font-family:var(--font-mono)}
+  .plan ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:9px}
+  .plan li{font-size:14.5px; color:var(--text-2); padding-left:22px; position:relative}
+  .plan li::before{content:"›"; position:absolute; left:4px; color:var(--marine); font-weight:700}
+  .price-note{margin-top:16px; font-size:13px; color:var(--slate)}
+
+  /* roadmap */
+  .roadmap{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; margin-top:40px}
+  .phase{border:1px solid var(--line); border-radius:14px; padding:24px; background:var(--card)}
+  .phase.now{border-color:color-mix(in srgb,var(--aqua) 45%,var(--line))}
+  .phase .when{font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--marine)}
+  .phase h3{font-size:18px; color:var(--brand); margin:8px 0 12px}
+  .phase ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px}
+  .phase li{font-size:14.5px; color:var(--text-2); padding-left:20px; position:relative}
+  .phase li::before{content:"—"; position:absolute; left:0; color:var(--slate)}
+
+  /* contact */
+  .contact-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:40px; margin-top:36px; align-items:start}
+  .contact-card{border:1px solid var(--line); border-radius:14px; padding:24px; background:var(--card)}
+  .contact-card .lbl{font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--marine)}
+  .contact-card .val{margin:6px 0 18px; font-size:16px; color:var(--text)}
+  .contact-card a{color:var(--marine)}
+  @media (max-width:760px){ .contact-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top" aria-label="Boreas ana sayfa">
+        <svg width="34" height="34" viewBox="0 0 140 140" aria-hidden="true">
+          <rect x="4" y="4" width="132" height="132" rx="30" fill="#0A2540"/>
+          <circle cx="70" cy="70" r="48" fill="none" stroke="#2ED3C6" stroke-opacity=".3" stroke-width="2"/>
+          <polygon points="118,70 70,64 22,70 70,76" fill="#2ED3C6" fill-opacity=".9"/>
+          <polygon points="70,120 78,70 62,70" fill="#F2F7FA"/>
+          <polygon points="70,20 78,70 62,70" fill="#FF6A3D"/>
+          <circle cx="70" cy="70" r="6" fill="#0A2540" stroke="#F2F7FA" stroke-width="2.4"/>
+          <circle cx="70" cy="70" r="2.4" fill="#FF6A3D"/>
+        </svg>
+        <span class="name">Boreas</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Haritayı dene</a>
+        <a href="#ozellikler">Özellikler</a>
+        <a href="#fiyatlar">Fiyatlar</a>
+        <a href="#yolharitasi">Yol haritası</a>
+        <a href="#iletisim">İletişim</a>
+        <a href="legal.html">KVKK</a>
+      </div>
+      <a class="nav-cta" href="#waitlist">Erken erişim</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <canvas id="seaCanvas" aria-hidden="true"></canvas>
+    <div class="wrap inner">
+      <svg class="logo-lg" viewBox="0 0 140 140" role="img" aria-label="Boreas — kuzeyi gösteren pusula ibresi">
+        <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0A2540"/><stop offset="1" stop-color="#134a78"/>
+        </linearGradient></defs>
+        <rect x="4" y="4" width="132" height="132" rx="30" fill="url(#bg)"/>
+        <g stroke="#F2F7FA" stroke-opacity=".06" stroke-width="1.2">
+          <line x1="40" y1="4" x2="40" y2="136"/><line x1="70" y1="4" x2="70" y2="136"/><line x1="100" y1="4" x2="100" y2="136"/>
+          <line x1="4" y1="40" x2="136" y2="40"/><line x1="4" y1="70" x2="136" y2="70"/><line x1="4" y1="100" x2="136" y2="100"/>
+        </g>
+        <circle cx="70" cy="70" r="48" fill="none" stroke="#2ED3C6" stroke-opacity=".3" stroke-width="2.4"/>
+        <g class="needle">
+          <polygon points="118,70 70,64 22,70 70,76" fill="#2ED3C6" fill-opacity=".9"/>
+          <polygon points="70,120 78,70 62,70" fill="#F2F7FA"/>
+          <polygon points="70,20 78,70 62,70" fill="#FF6A3D"/>
+        </g>
+        <circle cx="70" cy="70" r="7" fill="#0A2540" stroke="#F2F7FA" stroke-width="2.6"/>
+        <circle cx="70" cy="70" r="2.8" fill="#FF6A3D"/>
+        <text x="70" y="30" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#FF6A3D">N</text>
+      </svg>
+      <div class="eyebrow">Poyraz · kuzey rüzgarı</div>
+      <h1>Çekim gitse de rotan yanında</h1>
+      <p class="lede">Türkiye kıyıları için <strong>internetsiz çalışan</strong> deniz asistanı. Harita, GPS, rota ve alarmlar açık denizde de cebinde. Bir <strong>planlama ve farkındalık aracıdır</strong> — resmi seyir haritası değildir, kararı hep kaptan verir.</p>
+      <div class="coord" aria-hidden="true"><span>40.9°N</span><span>·</span><span>28.2°E</span><span>·</span><span>SOG 6.4 kn</span></div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Haritayı tarayıcında dene</a>
+        <a class="btn btn-ghost" href="#waitlist">Erken erişime katıl</a>
+        <a class="btn btn-ghost" href="#ozellikler">Ne yapar?</a>
+      </div>
+      <div class="platform-note">ERKEN ERİŞİM · iOS TESTFLIGHT · ANDROID DAHİLİ TEST</div>
+    </div>
+  </section>
+
+  <div class="safety" id="guvenlik-strip">
+    <div class="wrap">
+      <div class="dot">!</div>
+      <p><strong>Boreas bir planlama ve farkındalık aracıdır.</strong> Resmi seyir haritası değildir; resmi haritaların, yerel kuralların, kaptan yargısının, denizcilik becerisinin veya gerçek koşulların yerine geçmez. Rota önerileri kaptan doğrulaması gerektirir.</p>
+    </div>
+  </div>
+
+  <section id="ozellikler">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Ne yapar</div>
+        <h2>Denizde farkındalık, tek bir sade araçta</h2>
+        <p>Boreas'ın çoğu <span class="mono">ÜCRETSİZ</span>. Abonelik gerektirenler <span class="mono">PRO</span> / <span class="mono">PRO+</span>; henüz yapılmamış olanlar <span class="mono">PLANLI</span> olarak işaretli — hiçbir şey abartılmıyor.</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="ic">◎</div><span class="chip free">Ücretsiz</span>
+          <h3>Çevrimdışı deniz haritası</h3>
+          <p>Marmara haritası uygulamayla birlikte gelir — indirme yok, internet yok. Derinlik, konturlar, iskandiller, fenerler ve seyir işaretleri açık denizde de yanında.</p>
+        </div>
+        <div class="card">
+          <div class="ic">➤</div><span class="chip free">Ücretsiz</span>
+          <h3>Konum · hız · rota</h3>
+          <p>GPS ile anlık konum, hız (knot) ve gidiş yönü. Zayıf sinyali sana söyler; duruşta yön göstermez — çünkü durunca yön güvenilir değildir.</p>
+        </div>
+        <div class="card">
+          <div class="ic">↝</div><span class="chip free">Ücretsiz</span>
+          <h3>Rota planlama &amp; tehlike</h3>
+          <p>Karadan ve sığlıktan kaçınan <em>önerilen</em> rota; noktaları sürükleyerek düzenle. Rotandaki kayalık, sığlık ve batıklar önceden işaretlenir — açık kaynak batimetri ve batık kayıtlarından türetilmiş binlerce tehlike noktası. Kaptan doğrulaması gerektirir.</p>
+        </div>
+        <div class="card">
+          <div class="ic">!</div><span class="chip free">Ücretsiz</span>
+          <h3>Güvenlik alarmları</h3>
+          <p>Sığlık alarmı <strong>senin su çekimine</strong> göre çalışır. Demir nöbeti taramayı yakalar, MOB tek dokunuşla noktayı işaretler.</p>
+        </div>
+        <div class="card">
+          <div class="ic">⌖</div><span class="chip free">Ücretsiz</span>
+          <h3>Deniz sınırları uyarısı</h3>
+          <p>Karasularına yaklaşınca haber verir. İç sular, karasuları ve uluslararası sular haritada ayrı — farkında olmadan sınır geçme.</p>
+        </div>
+        <div class="card">
+          <div class="ic">☼</div><span class="chip free">Ücretsiz</span>
+          <h3>Hava &amp; deniz durumu</h3>
+          <p>Rüzgar, hamle, saatlik tahmin, dalga, akıntı ve deniz seviyesi — Open-Meteo verisiyle. Tahmindir, kesin değil. Son veriyi çevrimdışı saklar ve eskidiğini söyler.</p>
+        </div>
+        <div class="card">
+          <div class="ic">✓</div><span class="chip free">Ücretsiz</span>
+          <h3>Kalkış öncesi kontrol</h3>
+          <p>Halat çözmeden tek ekranda hüküm: rota, rüzgar ve değişen hava. Tahmin, son konumundan değil <em>rotanın kalkış noktasından</em> alınır. Dalga &amp; deniz durumu satırı Pro'dadır.</p>
+        </div>
+        <div class="card">
+          <div class="ic">☾</div><span class="chip free">Ücretsiz</span>
+          <h3>Gece modu</h3>
+          <p>Kırmızı ışık düzeni gece görüşünü korur. Elle aç, ya da gün batımına göre kendi açılsın.</p>
+        </div>
+        <div class="card">
+          <div class="ic">⚓</div><span class="chip free">Ücretsiz</span>
+          <h3>Tekne profili</h3>
+          <p>Su çekimi, seyir hızı, yakıt kapasitesi ve tüketim — cihazda kayıtlı. Menzili hesaplar, sığlık alarmını teknene göre ayarlar.</p>
+        </div>
+        <div class="card">
+          <div class="ic">◈</div><span class="chip free">Ücretsiz</span>
+          <h3>Filo — canlı konum &amp; mesaj</h3>
+          <p>İstersen konumunu filoya aç, yakındaki tekneleri gör, selamla, karşılıklı kabul edilen bağlantılarla mesajlaş. İstediğin an kapat ya da engelle.</p>
+        </div>
+        <div class="card">
+          <div class="ic">✎</div><span class="chip free">Ücretsiz</span>
+          <h3>Topluluk notları + bildir</h3>
+          <p>Koya not bırak: demirleme, sığ su, kaya, marina, yakıt, balık noktası. Notlar <em>doğrulanmamış kullanıcı bildirimi</em> olarak işaretlenir; uygunsuz içeriği tek dokunuşla bildir.</p>
+        </div>
+        <div class="card">
+          <div class="ic">↺</div><span class="chip free">Ücretsiz</span>
+          <h3>Sefer geçmişi</h3>
+          <p>Her seyir kendiliğinden kaydedilir. Geçmiş seferini haritada izle, süre ve mesafeyi gör, seyir kartını paylaş.</p>
+        </div>
+        <div class="card">
+          <div class="ic">◱</div><span class="chip free">Ücretsiz</span>
+          <h3>3B liman yaklaşımı</h3>
+          <p>Limana 6 km kala, o limanın önceden hazırlanmış 3B yaklaşım kartı çıkar — nereden gireceğini görerek yaklaş.</p>
+        </div>
+        <div class="card">
+          <div class="ic">◇</div><span class="chip free">Ücretsiz</span>
+          <h3>AIS gemi trafiği</h3>
+          <p>Çevrendeki canlı gemiler (çevrimiçi, isteğe bağlı katman). Bilgi amaçlıdır — <strong>çatışma önleme için değildir.</strong></p>
+        </div>
+        <div class="card">
+          <div class="ic">⇩</div><span class="chip pro">Pro</span>
+          <h3>Çevrimdışı bölge paketleri</h3>
+          <p>Ege, Gökova-Bodrum, Akdeniz (Batı &amp; Doğu), Karadeniz (Batı &amp; Doğu) ve Kıbrıs. Gideceğin bölgeyi indir, açık denizde internetsiz kullan. Marmara zaten ücretsiz.</p>
+        </div>
+        <div class="card">
+          <div class="ic">≋</div><span class="chip pro">Pro</span>
+          <h3>Kalkış kontrolünde deniz durumu</h3>
+          <p>Kalkış öncesi hükme dalga yüksekliği ve deniz durumu satırı eklenir — rüzgarın yanında denizin kendisini de gör.</p>
+        </div>
+        <div class="card">
+          <div class="ic">▲</div><span class="chip proplus">Pro+</span>
+          <h3>3D sahil görünümü</h3>
+          <p>Sahili denizden gör: gerçek arazi yüksekliği (dağlar yükselir) + güncel uydu dokusu, cihazında canlı bakış açısıyla. Güverte ve kuş bakışı iki kamera. Yanaşma ve koy girişinde arazi farkındalığı.</p>
+        </div>
+        <div class="card">
+          <div class="ic">★</div><span class="chip planned">Planlı</span>
+          <h3>Doğrulanmış topluluk katmanı</h3>
+          <p>Zamanla doğrulanan topluluk gözlemleri — temel harita verisine karıştırılmadan, ayrı bir Boreas katmanında.</p>
+        </div>
+        <div class="card">
+          <div class="ic">◐</div><span class="chip planned">Planlı</span>
+          <h3>Fotoğraflar</h3>
+          <p>Koy ve marina fotoğrafları — moderasyon ve açık rıza sonrası, topluluk katmanında.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="katman">
+    <div class="wrap split">
+      <div class="section-head">
+        <div class="eyebrow">Veri ilkesi</div>
+        <h2>Topluluk bilgisi, resmi veriye karışmadan</h2>
+        <p>Boreas'ın topluluk gözlemleri, açık-kaynak temel harita verisinden <strong>ayrı</strong> tutulur. Kullanıcı notları hiçbir zaman OpenSeaMap/OSM türevi temel haritaya karıştırılmaz. Doğruluğu zamanla teyit edilenler ayrı bir "Doğrulanmış Topluluk Katmanı"na taşınır — yine bir farkındalık kaynağı, resmi kaynak değil.</p>
+      </div>
+      <div class="layers">
+        <div class="layer">
+          <div class="lbl">Temel harita verisi</div>
+          <div class="val">Açık-kaynak deniz verisi (atıflı). Salt görüntüleme; resmi seyir haritası değildir.</div>
+        </div>
+        <div class="between">— ayrı katmanlar, karıştırılmaz —</div>
+        <div class="layer own">
+          <div class="lbl">Boreas topluluk katmanı</div>
+          <div class="val">Kullanıcı notları ve gözlemleri — Boreas'a ait, temel haritaya yazılmaz.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="fiyatlar">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Fiyatlar</div>
+        <h2>Neredeyse her şey ücretsiz.</h2>
+        <p>Marmara haritası, GPS, alarmlar, hava &amp; deniz durumu, kalkış kontrolü, filo, notlar ve sefer geçmişi — hepsi ücretsiz, süresiz. Para istediğimiz tek şey: <strong>Marmara dışındaki bölge paketleri</strong> ve <strong>3D uydu görünümü.</strong> Aylık, yıllık veya ömür boyu — App Store / Google Play üzerinden. Yıllık ≈ 4 ay bedava.</p>
+      </div>
+      <div class="pricing">
+        <div class="plan">
+          <div class="tier"><b>Ücretsiz</b></div>
+          <div class="lead-price">₺0</div>
+          <ul>
+            <li>Marmara haritası — çevrimdışı, gömülü</li>
+            <li>GPS, hız, rota &amp; tehlike uyarısı</li>
+            <li>Sığlık / demir nöbeti / MOB alarmları</li>
+            <li>Deniz sınırları uyarısı</li>
+            <li>Hava &amp; deniz durumu</li>
+            <li>Kalkış öncesi kontrol</li>
+            <li>Gece modu · Sefer geçmişi · AIS</li>
+            <li>Filo — canlı konum &amp; mesaj</li>
+            <li>Topluluk notları · 3B liman yaklaşımı</li>
+          </ul>
+        </div>
+        <div class="plan featured">
+          <div class="tier"><b>Pro</b> <span class="chip pro">En popüler</span></div>
+          <div class="lead-price">₺1.599<span> / yıl</span></div>
+          <div class="prices">
+            <div class="price-row"><span>Aylık</span><b>₺199</b></div>
+            <div class="price-row"><span>Yıllık</span><b>₺1.599</b></div>
+            <div class="price-row"><span>Ömür boyu</span><b>₺4.999</b></div>
+          </div>
+          <ul>
+            <li>Ücretsiz'deki her şey</li>
+            <li>Ege · Gökova-Bodrum bölgeleri</li>
+            <li>Akdeniz Batı &amp; Doğu bölgeleri</li>
+            <li>Karadeniz Batı &amp; Doğu bölgeleri</li>
+            <li>Kalkış kontrolünde dalga &amp; deniz durumu</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <div class="tier"><b>Pro Plus</b></div>
+          <div class="lead-price">₺2.799<span> / yıl</span></div>
+          <div class="prices">
+            <div class="price-row"><span>Aylık</span><b>₺349</b></div>
+            <div class="price-row"><span>Yıllık</span><b>₺2.799</b></div>
+            <div class="price-row"><span>Ömür boyu</span><b>₺7.999</b></div>
+          </div>
+          <ul>
+            <li>Pro'daki her şey</li>
+            <li>3D uydu sahil görünümü</li>
+            <li>Gelecek premium özellikler</li>
+          </ul>
+        </div>
+      </div>
+      <p class="price-note">Abonelikler dönem sonunda otomatik yenilenir; mağaza hesabından iptal edebilirsin. Ömür boyu seçeneği tek seferlik ödemedir. Fiyatlar TL'dir, mağazada gösterilen fiyat geçerlidir ve değişebilir.</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="yolharitasi">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Yol haritası</div>
+        <h2>Nereye gidiyoruz</h2>
+        <p>Dürüst bir plan — söz değil, yön. Sıra ve tarihler değişebilir.</p>
+      </div>
+      <div class="roadmap">
+        <div class="phase now">
+          <div class="when">Şimdi · Erken erişim</div>
+          <h3>iOS TestFlight · Android dahili test</h3>
+          <ul>
+            <li>Çevrimdışı Marmara haritası</li>
+            <li>Rota, tehlike &amp; güvenlik alarmları</li>
+            <li>Hava &amp; deniz durumu · kalkış kontrolü</li>
+            <li>Filo · topluluk notları · sefer geçmişi</li>
+            <li>Pro / Pro Plus abonelik altyapısı</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="when">Sırada</div>
+          <h3>Yakında</h3>
+          <ul>
+            <li>App Store &amp; Google Play yayını</li>
+            <li>Akdeniz açılımı: Yunanistan, İspanya, Portekiz, Hırvatistan, Malta, Karadağ</li>
+            <li>Yunanca, İspanyolca &amp; Portekizce dil desteği</li>
+            <li>Fotoğraflar (moderasyonlu)</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="when">İleride</div>
+          <h3>Sonraki dalga</h3>
+          <ul>
+            <li>Doğrulanmış topluluk katmanı</li>
+            <li>Yüksek çözünürlüklü uydu görüntüsü</li>
+            <li>Gelişmiş rota &amp; seyir modları</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="iletisim">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">İletişim</div>
+        <h2>Bize ulaşın</h2>
+        <p>Soru, geri bildirim, iş birliği veya KVKK/veri talepleri için bize yazın.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="lbl">E-posta</div>
+          <div class="val"><a href="mailto:oguzbayar97@gmail.com">oguzbayar97@gmail.com</a></div>
+          <div class="lbl">Destek &amp; geri bildirim</div>
+          <div class="val">Uygulama içinden ya da e-posta ile — yanıtları makul sürede veririz.</div>
+          <div class="lbl">KVKK / veri talepleri</div>
+          <div class="val">Erişim, düzeltme, silme ve diğer haklarınız için <a href="legal.html">KVKK / Gizlilik</a> sayfasına bakın.</div>
+        </div>
+        <div class="contact-card">
+          <div class="lbl">Geliştirici (veri sorumlusu)</div>
+          <div class="val">Oğuz Bayar</div>
+          <div class="lbl">Adres</div>
+          <div class="val">Bursa / Nilüfer</div>
+          <div class="lbl">Yasal metinler</div>
+          <div class="val"><a href="legal.html">Gizlilik Politikası &amp; Kullanım Koşulları</a></div>
+          <div class="lbl">Hesap &amp; veri silme</div>
+          <div class="val"><a href="hesap-sil.html">Hesabımı ve verilerimi sil</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="waitlist" id="waitlist">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Erken erişim</div>
+        <h2>İlk denizciler arasında ol</h2>
+        <p>Boreas önce Android'de, erken erişim olarak açılıyor. E-postanı bırak; hazır olduğunda ilk sen haber al.</p>
+      </div>
+      <form class="form" id="waitlistForm" novalidate>
+        <input type="email" id="email" name="email" placeholder="e-posta adresin" autocomplete="email" required aria-label="E-posta adresi">
+        <button type="submit">Listeye katıl</button>
+      </form>
+      <div id="formMsg" role="status" aria-live="polite"></div>
+      <p class="form-note">Tekne adı ile kayıt, uygulamanın içinde olacak. Spam yok; sadece çıkış haberi.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-top">
+        <div class="foot-brand">
+          <svg width="30" height="30" viewBox="0 0 140 140" aria-hidden="true">
+            <rect x="4" y="4" width="132" height="132" rx="30" fill="#0A2540"/>
+            <polygon points="118,70 70,64 22,70 70,76" fill="#2ED3C6" fill-opacity=".9"/>
+            <polygon points="70,120 78,70 62,70" fill="#F2F7FA"/>
+            <polygon points="70,20 78,70 62,70" fill="#FF6A3D"/>
+            <circle cx="70" cy="70" r="6" fill="#0A2540" stroke="#F2F7FA" stroke-width="2.4"/>
+          </svg>
+          <div>
+            <div class="name">Boreas</div>
+            <div class="mono" style="font-size:12px;color:var(--slate)">kuzey rüzgarı · Poyraz</div>
+          </div>
+        </div>
+        <div class="foot-links">
+          <a href="#ozellikler">Özellikler</a>
+          <a href="#fiyatlar">Fiyatlar</a>
+          <a href="#yolharitasi">Yol haritası</a>
+          <a href="#iletisim">İletişim</a>
+          <a href="legal.html">Gizlilik &amp; KVKK</a>
+          <a href="legal.html#terms">Kullanım koşulları</a>
+          <a href="hesap-sil.html">Hesap silme</a>
+        </div>
+      </div>
+      <p style="max-width:70ch;margin:22px 0 0;font-size:13px;color:var(--slate)">
+        Harita ve derinlik verisi entegre edildikçe açık-kaynak sağlayıcılara atıf verilir (ör. OpenSeaMap, GEBCO, EMODnet). Boreas resmi seyir sistemi değildir ve resmi hidrografik veri sağlamaz.
+      </p>
+      <div class="foot-legal">
+        <span>© 2026 Boreas · Oğuz Bayar</span>
+        <span>RESMİ SEYİR İÇİN DEĞİLDİR · KARAR KAPTANINDIR</span>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Waitlist — writes to the Supabase `waitlist` table (anon insert; the
+  // publishable key is safe to ship, RLS allows insert only, never select).
+  (function () {
+    var form = document.getElementById('waitlistForm');
+    var msg = document.getElementById('formMsg');
+    var email = document.getElementById('email');
+    if (!form) return;
+    var sb = window.supabase.createClient(
+      'https://szjaxfnystiqmgluupbl.supabase.co',
+      'sb_publishable_tHqBBRUQUIYv4ggQYiVqmw_LKu-h7VY');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = (email.value || '').trim();
+      var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      if (!ok) { msg.style.color = 'var(--coral)'; msg.textContent = 'Geçerli bir e-posta gir.'; return; }
+      msg.style.color = 'var(--marine)';
+      msg.textContent = 'Kaydediliyor…';
+      sb.from('waitlist').insert({ email: v, source: 'web' }).then(function (res) {
+        if (res.error) {
+          if ((res.error.code === '23505') || /duplicate/i.test(res.error.message || '')) {
+            msg.style.color = 'var(--marine)';
+            msg.textContent = 'Zaten listedesin — çıkışta ilk sen haberdar olacaksın. ⚓';
+            form.reset();
+          } else {
+            msg.style.color = 'var(--coral)';
+            msg.textContent = 'Bir sorun oldu, birazdan tekrar dene.';
+          }
+          return;
+        }
+        msg.style.color = 'var(--marine)';
+        msg.textContent = 'Teşekkürler! Çıkışta ilk sen haberdar olacaksın. ⚓';
+        form.reset();
+      });
+    });
+  })();
+</script>
+<script>
+  // Boreas hero — live sea chart animation on a canvas.
+  (function () {
+    var canvas = document.getElementById('seaCanvas');
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var W = 1, H = 1, DPR = 1, rafId = null, boats = [], msgs = [], lastMsg = 0;
+    var CORAL = '#FF6A3D';
+    var greetings = ['Selam! ⚓', 'İyi seyirler', 'Kolay gelsin', 'Rüzgar arkadan', 'Poyraz sert', 'Balık bol', 'Görüşürüz \u{1F44B}', 'Demirdeyim'];
+
+    function pal() {
+      var root = document.documentElement, dt = root.getAttribute('data-theme');
+      var dark = dt ? (dt === 'dark') : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      return dark ? {
+        sea1:'#0a1f33', sea2:'#0f2c47', grid:'rgba(255,255,255,0.055)', coast:'rgba(160,178,194,0.06)',
+        wake:'rgba(210,230,240,0.18)', ping:'46,211,198', hull:'#7fb7c6', hull2:'#2ED3C6',
+        bubbleBg:'rgba(14,39,64,0.94)', bubbleBorder:'rgba(46,211,198,0.55)', bubbleText:'#eaf2f8',
+        link:'rgba(46,211,198,0.55)', topFade:'#081a2b'
+      } : {
+        sea1:'#eef7f6', sea2:'#d9ebeb', grid:'rgba(10,37,64,0.06)', coast:'rgba(185,163,106,0.13)',
+        wake:'rgba(27,108,168,0.18)', ping:'27,108,168', hull:'#1B6CA8', hull2:'#178090',
+        bubbleBg:'rgba(255,255,255,0.96)', bubbleBorder:'rgba(27,108,168,0.35)', bubbleText:'#0E1822',
+        link:'rgba(27,108,168,0.45)', topFade:'#F2F7FA'
+      };
+    }
+    var C = pal();
+    function rand(a, b) { return a + Math.random() * (b - a); }
+    function hexA(hex, a) {
+      var h = hex.replace('#', ''); if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+      var n = parseInt(h, 16); return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')';
+    }
+    function buildBoats() {
+      boats = [{ hero:true, color:CORAL, t:rand(0,1), x:0, y:0, angle:0, wake:[], pings:[], nextPing:0 }];
+      var n = W < 640 ? 4 : 6;
+      for (var i = 0; i < n; i++) boats.push({
+        hero:false, color:(i%2===0)?C.hull:C.hull2, bx:rand(W*0.1, W*0.9), by:rand(H*0.62, H*0.92),
+        phase:rand(0, Math.PI*2), drift:rand(6,15), baseAngle:rand(-0.5,0.5),
+        x:0, y:0, angle:0, s:rand(0.85,1.12), pings:[], nextPing:0
+      });
+    }
+    function resize() {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      buildBoats();
+    }
+    function boatPos(t) {
+      var x = (t % 1) * (W + 140) - 70;
+      var y = H*0.7 + Math.sin(t*Math.PI*2.2)*H*0.1;
+      return { x:x, y:y };
+    }
+    function drawBoat(x, y, angle, color, s) {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(angle);
+      ctx.beginPath(); ctx.moveTo(10*s,0);
+      ctx.quadraticCurveTo(3*s,5.5*s,-8*s,4.2*s); ctx.lineTo(-8*s,-4.2*s);
+      ctx.quadraticCurveTo(3*s,-5.5*s,10*s,0); ctx.closePath();
+      ctx.fillStyle = color; ctx.fill();
+      ctx.beginPath(); ctx.arc(-1*s,0,1.7*s,0,Math.PI*2); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill();
+      ctx.restore();
+    }
+    function drawPings(bo, now) {
+      for (var i = bo.pings.length-1; i >= 0; i--) {
+        var pr = (now - bo.pings[i]) / 1700;
+        if (pr >= 1) { bo.pings.splice(i,1); continue; }
+        var r = 6 + pr*(bo.hero?62:42), a = (1-pr)*(bo.hero?0.5:0.36);
+        ctx.beginPath(); ctx.arc(bo.x, bo.y, r, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(' + (bo.hero?'255,106,61':C.ping) + ',' + a.toFixed(3) + ')';
+        ctx.lineWidth = 1.4; ctx.stroke();
+      }
+    }
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r);
+      ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+    }
+    function spawnMsg(now) {
+      if (boats.length < 3) return;
+      var a = boats[1 + Math.floor(Math.random()*(boats.length-1))], b = null, best = 1e9;
+      for (var i = 0; i < boats.length; i++) { var o = boats[i]; if (o === a) continue;
+        var dx = o.x-a.x, dy = o.y-a.y, d = dx*dx+dy*dy; if (d < best) { best = d; b = o; } }
+      if (b) msgs.push({ a:a, b:b, text:greetings[Math.floor(Math.random()*greetings.length)], start:now, life:3200 });
+    }
+    function drawMsg(m, now) {
+      var pr = (now - m.start) / m.life; if (pr >= 1) return false;
+      var fade = pr < 0.15 ? pr/0.15 : (pr > 0.8 ? (1-pr)/0.2 : 1);
+      ctx.save(); ctx.globalAlpha = fade;
+      ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(m.a.x,m.a.y); ctx.lineTo(m.b.x,m.b.y);
+      ctx.strokeStyle = C.link; ctx.lineWidth = 1.2; ctx.stroke(); ctx.setLineDash([]);
+      var tt = Math.min(1, pr/0.6), dx = m.a.x+(m.b.x-m.a.x)*tt, dy = m.a.y+(m.b.y-m.a.y)*tt;
+      ctx.beginPath(); ctx.arc(dx,dy,2.6,0,Math.PI*2); ctx.fillStyle = C.link; ctx.fill();
+      ctx.font = "500 13px 'Inter', system-ui, sans-serif";
+      var tw = ctx.measureText(m.text).width, bw = tw+20, bh = 26;
+      var bx = Math.max(6, Math.min(W-bw-6, m.a.x-bw/2)), by = Math.max(6, m.a.y-36);
+      roundRect(bx,by,bw,bh,9); ctx.fillStyle = C.bubbleBg; ctx.fill();
+      ctx.strokeStyle = C.bubbleBorder; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = C.bubbleText; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      ctx.fillText(m.text, bx+10, by+bh/2+0.5); ctx.restore();
+      return true;
+    }
+    var start = (window.performance && performance.now) ? performance.now() : Date.now();
+    function frame(now) {
+      var t = (now - start) / 1000;
+      ctx.clearRect(0,0,W,H);
+      var g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,C.sea1); g.addColorStop(1,C.sea2);
+      ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+      ctx.strokeStyle = C.grid; ctx.lineWidth = 1; var step = 46;
+      for (var x = (t*6 % step); x < W; x += step) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for (var y = 0; y < H; y += step) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(0,H); ctx.lineTo(0,H*0.84);
+      ctx.quadraticCurveTo(W*0.14,H*0.74,W*0.24,H*0.88); ctx.quadraticCurveTo(W*0.33,H*0.98,W*0.44,H);
+      ctx.closePath(); ctx.fillStyle = C.coast; ctx.fill();
+      var hero = boats[0];
+      if (hero) {
+        hero.t += reduce ? 0 : 0.00092;
+        var p = boatPos(hero.t), p2 = boatPos(hero.t + 0.004);
+        hero.x = p.x; hero.y = p.y; hero.angle = Math.atan2(p2.y-p.y, p2.x-p.x);
+        hero.wake.push({ x:hero.x, y:hero.y }); if (hero.wake.length > 26) hero.wake.shift();
+        ctx.beginPath();
+        for (var i = 0; i < hero.wake.length; i++) { var wp = hero.wake[i]; if (i===0) ctx.moveTo(wp.x,wp.y); else ctx.lineTo(wp.x,wp.y); }
+        ctx.strokeStyle = C.wake; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.stroke();
+      }
+      for (var b = 1; b < boats.length; b++) {
+        var o = boats[b];
+        o.x = o.bx + Math.sin(t*0.5+o.phase)*o.drift;
+        o.y = o.by + Math.cos(t*0.4+o.phase)*o.drift*0.5;
+        o.angle = o.baseAngle + Math.sin(t*0.3+o.phase)*0.25;
+      }
+      for (var b2 = 0; b2 < boats.length; b2++) {
+        var bo = boats[b2], interval = bo.hero ? 2600 : 3200;
+        if (!bo.nextPing) bo.nextPing = now + rand(300, interval);
+        if (!reduce && now >= bo.nextPing) { bo.pings.push(now); bo.nextPing = now + interval + rand(-400,700); }
+        if (reduce && bo.pings.length === 0) bo.pings.push(now - 700);
+        drawPings(bo, now);
+      }
+      if (!reduce && now-lastMsg > 2200 && msgs.length < 2) { spawnMsg(now); lastMsg = now; }
+      for (var mi = msgs.length-1; mi >= 0; mi--) { if (!drawMsg(msgs[mi], now)) msgs.splice(mi,1); }
+      for (var b3 = 0; b3 < boats.length; b3++) { var bb = boats[b3]; drawBoat(bb.x, bb.y, bb.angle, bb.color, bb.hero?1.3:(bb.s||1)); }
+      var tf = ctx.createLinearGradient(0,0,0,H*0.6);
+      tf.addColorStop(0, hexA(C.topFade, 0.9)); tf.addColorStop(1, hexA(C.topFade, 0));
+      ctx.fillStyle = tf; ctx.fillRect(0,0,W,H*0.6);
+      if (!reduce) rafId = requestAnimationFrame(frame);
+    }
+    function go() { resize(); if (reduce) frame(start); else rafId = requestAnimationFrame(frame); }
+    var rt = null;
+    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () {
+      if (rafId) cancelAnimationFrame(rafId); resize(); if (reduce) frame(start); else rafId = requestAnimationFrame(frame);
+    }, 150); });
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', function () { C = pal(); });
+    try { new MutationObserver(function () { C = pal(); }).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] }); } catch (e) {}
+    go();
+  })();
+</script>
+</body>
+</html>
