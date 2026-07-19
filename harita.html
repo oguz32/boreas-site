@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Boreas — İnternetsiz deniz haritası · haritayı tarayıcında dene</title>
 <meta name="description" content="Türkiye ve Akdeniz kıyıları için internetsiz çalışan deniz haritası. Tarayıcında dene: kıyı, derinlik, fenerler, balık çiftlikleri ve tehlikeler; tıklayarak rota çiz. Uygulamada offline, GPS ve güvenlik alarmlarıyla.">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
 <style>
   :root{ --navy:#0f2a43; --navy2:#0a1e30; --sea:#aed2e2; --teal:#1c7293; --mint:#5dcaa5; --coral:#f96167; --ice:#cADCFC; --line:#20455f; }
   *{box-sizing:border-box}
@@ -188,8 +188,8 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script src="/vendor/supabase.js"></script>
 <script>
 if (/[?&]embed/.test(location.search)) document.body.classList.add('embed');
 const NM = 1852;
