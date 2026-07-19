@@ -19,6 +19,9 @@
   header a.cta{background:var(--coral);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 14px;border-radius:20px;white-space:nowrap}
   header a.back{color:#9fb6cc;text-decoration:none;font-size:13px;margin-right:4px}
   header select{background:var(--navy2);color:#eaf2f8;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;cursor:pointer;max-width:210px}
+  header .baseswitch{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  header .baseswitch button{background:var(--navy2);color:#9fb6cc;border:0;padding:7px 13px;font-size:12.5px;font-weight:700;cursor:pointer}
+  header .baseswitch button.on{background:var(--teal);color:#fff}
   header select:focus{outline:1px solid var(--teal)}
   #map{flex:1;background:var(--sea)}
   .leaflet-container{background:var(--sea)}
@@ -88,6 +91,10 @@
     <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#0f2a43"/><circle cx="50" cy="50" r="30" fill="none" stroke="#1c7293" stroke-width="5"/><path d="M50 20 L57 50 L50 80 L43 50 Z" fill="#f96167"/><path d="M20 50 L50 43 L80 50 L50 57 Z" fill="#5dcaa5"/><circle cx="50" cy="50" r="4.5" fill="#fff"/></svg>
     <b>Boreas</b><span class="tag">· Haritayı dene</span>
     <select id="region" aria-label="Bölge seç"></select>
+    <span class="baseswitch">
+      <button id="baseHarita" class="on" onclick="setBase(false)">Harita</button>
+      <button id="baseUydu" onclick="setBase(true)">Uydu</button>
+    </span>
     <span class="spacer"></span>
     <span class="auth" id="auth">
       <span class="email" id="userEmail" style="display:none"></span>
@@ -134,16 +141,14 @@
 
   <div class="panel" id="legend">
     <div class="ltitle">KATMANLAR · aç/kapat</div>
-    <div class="row" data-k="light" onclick="toggleLayer('light')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Fener</div>
-    <div class="row" data-k="buoy" onclick="toggleLayer('buoy')"><span class="ck"></span><span class="dot" style="background:#2e9e6b"></span> Şamandıra</div>
-    <div class="row" data-k="harbour" onclick="toggleLayer('harbour')"><span class="ck"></span><span class="dot" style="background:#2b6da0"></span> Liman / marina</div>
-    <div class="row" data-k="fishfarm" onclick="toggleLayer('fishfarm')"><span class="ck"></span><span class="dot" style="background:#8e44ad"></span> Balık çiftliği</div>
-    <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#d8352a"></span> Kayalık / tehlike</div>
-    <div class="row" data-k="contour" onclick="toggleLayer('contour')"><span class="ck"></span><span style="width:16px;height:0;border-top:2px solid #437ea6;display:inline-block"></span> Derinlik konturu</div>
+    <div class="row" data-k="seamark" onclick="toggleLayer('seamark')"><span class="ck"></span><span class="dot" style="background:#f5a623"></span> Seyir işaretleri</div>
+    <div class="row off" data-k="depth" onclick="toggleLayer('depth')"><span class="ck"></span><span class="dot" style="background:#4f93bd"></span> Derinlik (renkli)</div>
+    <div class="row" data-k="fishfarm" onclick="toggleLayer('fishfarm')"><span class="ck"></span><span class="dot" style="background:#a25bd8"></span> Balık çiftliği</div>
+    <div class="row" data-k="hazard" onclick="toggleLayer('hazard')"><span class="ck"></span><span class="di" style="background:#e63030"></span> Kayalık / tehlike</div>
   </div>
 
   <div class="panel" id="note">
-    <b>Bu bir tadımlık.</b> Uygulamada bu harita <b>internetsiz</b> çalışır; GPS, hıza bağlı sığlık alarmı, demir nöbeti ve 3B sahil görünümü eklenir. Veri: açık kaynak (GSHHG · OpenStreetMap · EMODnet). Resmi seyir haritası değildir.
+    <b>Bu bir tadımlık.</b> Uygulamada bu harita <b>internetsiz</b> çalışır; GPS, hıza bağlı sığlık alarmı, demir nöbeti ve 3B sahil görünümü eklenir. Altlık: CARTO · Uydu: Sentinel-2 (EOX) · İşaretler: OpenSeaMap · Derinlik: EMODnet · Tehlike & çiftlik: açık kaynak türevi. Resmi seyir haritası değildir.
   </div>
 </div>
 
@@ -153,68 +158,62 @@
 if (/[?&]embed/.test(location.search)) document.body.classList.add('embed');
 const NM = 1852;
 const COL = { land:'#f1ebd8', landEdge:'#c9b98a', light:'#f5a623', buoy:'#2e9e6b', harbour:'#2b6da0', hazard:'#d8352a', fishfarm:'#8e44ad' };
-const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:5, maxZoom:15 }).setView([40.75,28.3], 9);
+const map = L.map('map',{ zoomControl:true, attributionControl:false, minZoom:5, maxZoom:18 }).setView([40.75,28.3], 9);
 const canvas = L.canvas({ padding:0.5 });
-const landLayer = L.layerGroup().addTo(map);   // land — always shown
-// Toggleable layers, one group per kind so the captain can hide clutter.
-const groups = { contour:L.layerGroup(), harbour:L.layerGroup(), light:L.layerGroup(),
-                 buoy:L.layerGroup(), fishfarm:L.layerGroup(), hazard:L.layerGroup() };
-const vis = { contour:true, harbour:true, light:true, buoy:true, fishfarm:true, hazard:true };
-Object.keys(groups).forEach(k=>{ if(vis[k]) groups[k].addTo(map); });
+
+// ---- base + tile overlays: the app's online look ----
+const cartoBase = L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', { maxZoom:19 });
+const satBase   = L.tileLayer('https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg', { maxNativeZoom:16, maxZoom:19 });
+const tiles = {
+  seamark: L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', { maxNativeZoom:18, maxZoom:19 }),
+  depth:   L.tileLayer('https://tiles.emodnet-bathymetry.eu/2020/baselayer/web_mercator/{z}/{x}/{y}.png', { maxNativeZoom:12, maxZoom:19, opacity:.62 }),
+};
+cartoBase.setZIndex(1).addTo(map);
+tiles.depth.setZIndex(2);
+tiles.seamark.setZIndex(3).addTo(map);
+satBase.setZIndex(1);
+
+let baseSat = false;
+function setBase(sat){
+  baseSat = sat;
+  if(sat){ if(map.hasLayer(cartoBase)) map.removeLayer(cartoBase); satBase.addTo(map); }
+  else   { if(map.hasLayer(satBase)) map.removeLayer(satBase); cartoBase.addTo(map); }
+  var bh=document.getElementById('baseHarita'), bu=document.getElementById('baseUydu');
+  if(bh&&bu){ bh.classList.toggle('on', !sat); bu.classList.toggle('on', sat); }
+}
+
+// our own vector overlays (the unique value: derived hazards + fish farms)
+const groups = { fishfarm:L.layerGroup().addTo(map), hazard:L.layerGroup().addTo(map) };
+const vis = { seamark:true, depth:false, fishfarm:true, hazard:true };
 let hazards = [];
 
 function sw(pt){ return [pt[1], pt[0]]; }          // [lon,lat] -> [lat,lon]
-function ringLL(r){ return r.map(sw); }
-const depthColor = d => d<=5?'#8fbcd6':d<=10?'#6ea6c6':d<=20?'#5590b5':d<=50?'#437ea6':d<=100?'#356a90':'#284f70';
 
 function renderRegion(data){
-  landLayer.clearLayers();
   Object.values(groups).forEach(g=>g.clearLayers());
   hazards = [];
   clearRoute();
-
-  data.contours.slice().reverse().forEach(c=>{
-    c.l.forEach(line=>{
-      L.polyline(ringLL(line),{ color:depthColor(c.d), weight:1, opacity:.7, renderer:canvas, interactive:false }).addTo(groups.contour);
-    });
-  });
-
-  data.land.forEach(f=>{
-    const polys = f.t==='MultiPolygon' ? f.c : [f.c];
-    polys.forEach(poly=>{
-      const outer = ringLL(poly[0]);
-      const holes = poly.slice(1).map(ringLL);
-      L.polygon([outer,...holes],{ color:COL.landEdge, weight:.8, fillColor:COL.land, fillOpacity:1, renderer:canvas, interactive:false }).addTo(landLayer);
-    });
-  });
-
   data.marks.forEach(m=>{
-    const ll = sw(m.c), k=m.k;
+    const k=m.k;
+    if(k!=='hazard' && k!=='fishfarm') return;   // basemap + OpenSeaMap cover lights/buoys/harbours
+    const ll = sw(m.c);
     if(k==='hazard') hazards.push(ll);
-    const style = {
-      light:  {r:3.2, color:'#8a6d00', fill:COL.light},
-      buoy:   {r:2.8, color:'#1f6b53', fill:COL.buoy},
-      harbour:{r:3.6, color:'#1a4f7a', fill:COL.harbour},
-      fishfarm:{r:3.0, color:'#5e2d75', fill:COL.fishfarm},
-      hazard: {r:3.2, color:'#a11', fill:COL.hazard},
-    }[k] || {r:2.5,color:'#888',fill:'#aaa'};
-    const mk = L.circleMarker(ll,{ radius:style.r, color:style.color, weight:1, fillColor:style.fill, fillOpacity:.95, renderer:canvas });
-    const label = {light:'Fener',buoy:'Şamandıra',harbour:'Liman / marina',fishfarm:'Balık çiftliği',hazard:'Kayalık / tehlike'}[k]||k;
-    const nm = m.n ? '<br>'+m.n : '';
-    const lt = m.lt ? '<br><span style="color:#9fb6cc">'+m.lt+'</span>' : '';
-    mk.bindPopup('<span class="k">'+label+'</span>'+nm+lt);
-    mk.addTo(groups[k] || landLayer);
+    const style = k==='hazard' ? {r:3.6,color:'#7a0f0f',fill:'#e63030'} : {r:3.2,color:'#4a2160',fill:'#a25bd8'};
+    const mk = L.circleMarker(ll,{ radius:style.r, color:style.color, weight:1.2, fillColor:style.fill, fillOpacity:.95, renderer:canvas });
+    const label = k==='hazard' ? 'Kayalık / tehlike' : 'Balık çiftliği';
+    mk.bindPopup('<span class="k">'+label+'</span>'+(m.n?'<br>'+m.n:''));
+    mk.addTo(groups[k]);
   });
-
   const b=data.bbox;
-  map.setMaxBounds([[b[1]-0.5,b[0]-0.5],[b[3]+0.5,b[2]+0.5]]);
+  map.setMaxBounds([[b[1]-0.6,b[0]-0.6],[b[3]+0.6,b[2]+0.6]]);
   map.fitBounds([[b[1],b[0]],[b[3],b[2]]]);
 }
 
-// legend rows double as filters
+// legend rows double as filters (tile overlays + our vector overlays)
 function toggleLayer(k){
   vis[k]=!vis[k];
-  if(vis[k]) groups[k].addTo(map); else map.removeLayer(groups[k]);
+  const layer = (k==='seamark') ? tiles.seamark : (k==='depth') ? tiles.depth : groups[k];
+  if(vis[k]) layer.addTo(map); else map.removeLayer(layer);
   const row=document.querySelector('#legend .row[data-k="'+k+'"]');
   if(row) row.classList.toggle('off', !vis[k]);
 }

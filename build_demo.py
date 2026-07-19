@@ -54,10 +54,14 @@ def marks_out(seamarks):
     return out
 
 def write_region(rid, name, bbox, land, contours, marks):
-    marks = marks + [{"k": "fishfarm", "n": m.get("n", ""), "c": m["c"], "lt": ""}
-                     for m in FF.get(rid, [])]
-    obj = {"id": rid, "name": name, "bbox": [r(x) for x in bbox],
-           "land": land, "contours": contours, "marks": marks}
+    # The web map draws a real basemap (CARTO/Sentinel-2) + OpenSeaMap marks,
+    # so it only needs OUR unique overlays: derived hazards + fish farms.
+    # Land/contours/lights/buoys/harbours come from the tiles — dropped here,
+    # which shrinks each region file by ~10-30x.
+    keep = [m for m in marks if m.get("k") == "hazard"]
+    keep += [{"k": "fishfarm", "n": m.get("n", ""), "c": m["c"], "lt": ""}
+             for m in FF.get(rid, [])]
+    obj = {"id": rid, "name": name, "bbox": [r(x) for x in bbox], "marks": keep}
     path = os.path.join(OUT, f"{rid}.json")
     open(path, "w", encoding="utf-8").write(
         json.dumps(obj, ensure_ascii=False, separators=(",", ":")))
