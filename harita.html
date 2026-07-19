@@ -33,6 +33,15 @@
   #tools .btns{display:flex;gap:6px}
   #tools button{flex:1;background:var(--teal);color:#fff;border:0;border-radius:8px;padding:8px;font-size:12.5px;font-weight:600;cursor:pointer}
   #tools button.ghost{background:transparent;border:1px solid var(--line);color:#cfe0ee}
+  #tools .eta-row{margin-top:8px;font-size:12.5px;color:#cfe0ee;display:flex;align-items:center;gap:6px}
+  #tools .eta-row input{width:54px;background:var(--navy2);border:1px solid var(--line);border-radius:6px;color:#eaf2f8;padding:5px 7px;font-size:12.5px}
+  #tools #eta{color:var(--mint);font-weight:800;margin-left:6px}
+  /* numbered, draggable route waypoints */
+  .leaflet-div-icon.wp,.wp{background:#ff8a4a;color:#08243a;border:2px solid #fff;border-radius:50%;
+    width:22px;height:22px;line-height:18px;text-align:center;font-size:11px;font-weight:800;
+    box-shadow:0 1px 5px rgba(0,0,0,.45);cursor:move;box-sizing:border-box}
+  .wp.start{background:#5dcaa5}
+  .wp.end{background:#e63030;color:#fff}
   #stats{margin-top:8px;font-size:12px;color:#eaf2f8;display:none}
   #stats .big{font-size:20px;font-weight:800;color:#fff}
   #stats .warn{color:var(--coral);font-weight:700;margin-top:4px;display:block}
@@ -108,14 +117,20 @@
 
   <div class="panel" id="tools">
     <h4>Rota çiz</h4>
-    <p>Haritaya tıklayarak nokta ekle — mesafeyi ve rotandaki tehlikeleri gör.</p>
+    <p>Tıkla, nokta ekle. Noktayı <b>sürükle</b> ile taşı, <b>tıkla</b> ile sil.</p>
     <div class="btns">
       <button id="undo" class="ghost">Geri al</button>
+      <button id="reverse" class="ghost">Ters çevir</button>
       <button id="clear" class="ghost">Temizle</button>
     </div>
     <div id="stats">
       <span class="big" id="dist">0.0 dnm</span>
       <span id="legs" style="color:#9fb6cc"></span>
+      <div class="eta-row">
+        <label for="spd">Hız</label>
+        <input id="spd" type="number" min="1" max="60" step="0.5" value="6"> kn
+        <span id="eta"></span>
+      </div>
       <span class="warn" id="hazwarn" style="display:none"></span>
     </div>
     <button id="save">Rotayı hesabıma kaydet</button>
@@ -241,17 +256,34 @@ function segDist(p,a,b){
   let t = L2? ((px-ax)*dx+(py-ay)*dy)/L2 : 0; t=Math.max(0,Math.min(1,t));
   const cx=ax+t*dx, cy=ay+t*dy; return Math.hypot(px-cx,py-cy);
 }
+function wpIcon(i,last){ return L.divIcon({ className:'wp'+(i===0?' start':last?' end':''),
+  html:String(i+1), iconSize:[22,22], iconAnchor:[11,11] }); }
+// leg readout: distance + course as a tooltip on hover
 function redraw(){
   if(line){ map.removeLayer(line); line=null; }
   markers.forEach(m=>map.removeLayer(m)); markers=[];
   if(pts.length){
-    line=L.polyline(pts,{color:'#ff8a4a',weight:3,opacity:.95}).addTo(map);
-    pts.forEach(p=>{ markers.push(L.circleMarker(p,{radius:4,color:'#fff',weight:2,fillColor:'#ff8a4a',fillOpacity:1}).addTo(map)); });
+    line=L.polyline(pts,{color:'#ff8a4a',weight:3.5,opacity:.95}).addTo(map);
+    pts.forEach((p,i)=>{
+      const m=L.marker(p,{ icon:wpIcon(i,i===pts.length-1), draggable:true, keyboard:false, zIndexOffset:1000 });
+      m.on('drag', ev=>{ pts[i]=[ev.latlng.lat, ev.latlng.lng]; if(line) line.setLatLngs(pts); liveStats(); });
+      m.on('dragend', redraw);
+      m.on('click', ev=>{ L.DomEvent.stopPropagation(ev); pts.splice(i,1); redraw(); });
+      markers.push(m.addTo(map));
+    });
   }
+  liveStats();
+}
+function liveStats(){
   let tot=0; for(let i=1;i<pts.length;i++) tot+=hav(pts[i-1],pts[i]);
+  const nmv=tot/NM;
   statsEl.style.display = pts.length? 'block':'none';
-  dEl.textContent = (tot/NM).toFixed(1)+' dnm';
+  dEl.textContent = nmv.toFixed(1)+' dnm';
   legsEl.textContent = pts.length>1? ' · '+(pts.length-1)+' bacak':' · başla';
+  const spd=parseFloat(document.getElementById('spd').value)||0, etaEl=document.getElementById('eta');
+  if(pts.length>1 && spd>0){ const hrs=nmv/spd, h=Math.floor(hrs), mn=Math.round((hrs-h)*60);
+    etaEl.textContent='≈ '+(h?h+' sa ':'')+mn+' dk'; }
+  else etaEl.textContent='';
   let near=0;
   if(pts.length>1){
     for(let i=1;i<pts.length;i++){
@@ -265,6 +297,8 @@ function clearRoute(){ pts=[]; redraw(); }
 map.on('click',e=>{ pts.push([e.latlng.lat,e.latlng.lng]); redraw(); });
 document.getElementById('undo').onclick=()=>{ pts.pop(); redraw(); };
 document.getElementById('clear').onclick=()=>{ pts=[]; redraw(); };
+document.getElementById('reverse').onclick=()=>{ pts.reverse(); redraw(); };
+document.getElementById('spd').addEventListener('input', liveStats);
 
 // ---- init: region index + selector ----
 fetch('/demo/regions.json').then(r=>r.json()).then(list=>{
