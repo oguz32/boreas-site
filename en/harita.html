@@ -100,6 +100,19 @@
   #modal .linkbtn{display:block;width:100%;margin-top:12px;background:0;border:0;color:#9fb6cc;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   #modal .linkbtn:hover{color:var(--mint)}
   #modal .box{position:relative}
+  /* ---- cruise simulation ---- */
+  #simRow{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;color:#9fb6cc}
+  #simRow input{width:56px;background:#0b2036;border:1px solid #24425f;border-radius:6px;color:#eaf2f8;padding:4px 6px;font-size:13px}
+  #simBtn{margin-left:auto;background:#ff8a4a;border:0;border-radius:8px;color:#0b1626;font-weight:700;font-size:12.5px;padding:6px 10px;cursor:pointer}
+  #simBtn:hover{filter:brightness(1.08)}
+  #simHud{display:none;margin-top:10px;background:#0b2036;border:1px solid #24425f;border-radius:10px;padding:8px 10px}
+  .simbar{height:6px;background:#16324d;border-radius:4px;overflow:hidden}
+  #simFill{height:100%;width:0%;background:#ff8a4a;border-radius:4px;transition:width .1s linear}
+  .simstats{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:12.5px;color:#cfe0ee;font-variant-numeric:tabular-nums}
+  .simctl{display:flex;gap:6px;margin-top:8px}
+  .simctl button{flex:1;background:#16324d;border:0;border-radius:7px;color:#cfe0ee;font-size:12px;padding:5px 0;cursor:pointer}
+  .simctl button:hover{background:#1d4166}
+  .simboat svg{filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
 </style>
 </head>
 <body>
@@ -138,6 +151,16 @@
         <label for="spd">Speed</label>
         <input id="spd" type="number" min="1" max="60" step="0.5" value="6"> kn
         <span id="eta"></span>
+      </div>
+      <div class="eta-row" id="simRow">
+        <label for="lph" id="lphLabel"></label>
+        <input id="lph" type="number" min="0" max="200" step="0.5" value="8"> <span id="lphUnit"></span>
+        <button id="simBtn"></button>
+      </div>
+      <div id="simHud">
+        <div class="simbar"><div id="simFill"></div></div>
+        <div class="simstats"><span id="simT"></span><span id="simD"></span><span id="simF"></span></div>
+        <div class="simctl"><button id="simPause"></button><button id="simScale"></button><button id="simStop"></button></div>
       </div>
       <span class="warn" id="hazwarn" style="display:none"></span>
     </div>
@@ -326,6 +349,101 @@ document.getElementById('undo').onclick=()=>{ pts.pop(); redraw(); };
 document.getElementById('clear').onclick=()=>{ pts=[]; redraw(); };
 document.getElementById('reverse').onclick=()=>{ pts.reverse(); redraw(); };
 document.getElementById('spd').addEventListener('input', liveStats);
+
+// ---- cruise simulation: a pretend boat sails the drawn route ----
+// One code block for every language edition; UI strings picked by <html lang>.
+const SIMTXT = ({
+  tr:{fuel:'Yakıt', unit:'L/sa', go:'▶ Simüle et', arrive:'🏁 Varış'},
+  en:{fuel:'Fuel', unit:'L/h', go:'▶ Simulate', arrive:'🏁 Arrived'},
+  el:{fuel:'Καύσιμο', unit:'L/h', go:'▶ Προσομοίωση', arrive:'🏁 Άφιξη'},
+  es:{fuel:'Comb.', unit:'L/h', go:'▶ Simular', arrive:'🏁 Llegada'},
+  pt:{fuel:'Comb.', unit:'L/h', go:'▶ Simular', arrive:'🏁 Chegada'},
+})[document.documentElement.lang] || {fuel:'Fuel', unit:'L/h', go:'▶ Simulate', arrive:'🏁 Arrived'};
+const simEl = id => document.getElementById(id);
+simEl('lphLabel').textContent = SIMTXT.fuel;
+simEl('lphUnit').textContent = SIMTXT.unit;
+simEl('simBtn').textContent = SIMTXT.go;
+simEl('simPause').textContent = '⏸';
+simEl('simScale').textContent = '600×';
+simEl('simStop').textContent = '✕';
+const SIM_SCALES = [60, 600, 1800];
+let sim = null;
+function simFmtHM(hrs){ const h = Math.floor(hrs), m = Math.round((hrs - h) * 60); return h + ':' + String(m).padStart(2, '0'); }
+function simIcon(deg){ return L.divIcon({ className:'simboat', iconSize:[26,26], iconAnchor:[13,13],
+  html:'<svg viewBox="0 0 24 24" width="26" height="26" style="transform:rotate(' + deg.toFixed(0) + 'deg)"><path d="M12 1.5 L18.5 21 L12 16.5 L5.5 21 Z" fill="#ff8a4a" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>' }); }
+function simElapsedH(){ return sim.banked + (sim.running ? (performance.now() - sim.ts) / 3600000 * sim.scale : 0); }
+function simBank(){ sim.banked = simElapsedH(); sim.ts = performance.now(); }
+function simAt(nm){
+  const c = sim.cum, p = sim.pts;
+  if (nm <= 0) return { pos: p[0], deg: sim.deg0 };
+  if (nm >= c[c.length - 1]) return { pos: p[p.length - 1], deg: sim.degLast };
+  let i = 1; while (c[i] < nm) i++;
+  const t = (nm - c[i - 1]) / ((c[i] - c[i - 1]) || 1);
+  const a = p[i - 1], b = p[i];
+  const dLon = (b[1] - a[1]) * Math.cos((a[0] + b[0]) * Math.PI / 360), dLat = b[0] - a[0];
+  return { pos: [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t],
+           deg: (Math.atan2(dLon, dLat) * 180 / Math.PI + 360) % 360 };
+}
+function simTick(){
+  if (!sim) return;
+  const covered = Math.min(sim.totNm, simElapsedH() * sim.spd);
+  const at = simAt(covered);
+  sim.marker.setLatLng(at.pos);
+  if (Math.abs(at.deg - sim.lastDeg) > 2){ sim.marker.setIcon(simIcon(at.deg)); sim.lastDeg = at.deg; }
+  simEl('simFill').style.width = (covered / sim.totNm * 100).toFixed(1) + '%';
+  simEl('simD').textContent = covered.toFixed(1) + ' / ' + sim.totNm.toFixed(1) + ' dnm';
+  simEl('simF').textContent = sim.lph > 0 ? Math.round(Math.min(sim.totH, simElapsedH()) * sim.lph) + ' / ' + Math.round(sim.totH * sim.lph) + ' L' : '';
+  if (covered >= sim.totNm - 1e-9){
+    sim.running = false;
+    simEl('simT').textContent = SIMTXT.arrive + ' · ' + simFmtHM(sim.totH);
+    simEl('simPause').textContent = '▶';
+    return;
+  }
+  simEl('simT').textContent = '⏱ ' + simFmtHM(Math.max(0, sim.totH - simElapsedH()));
+  sim.raf = requestAnimationFrame(simTick);
+}
+simEl('simBtn').onclick = () => {
+  const spd = parseFloat(document.getElementById('spd').value) || 0;
+  const lph = parseFloat(simEl('lph').value) || 0;
+  if (pts.length < 2 || spd <= 0) return;
+  const p = pts.map(x => [x[0], x[1]]);
+  const cum = [0]; let tot = 0;
+  for (let i = 1; i < p.length; i++){ tot += hav(p[i - 1], p[i]) / NM; cum.push(tot); }
+  const d0 = simAtSeed(p, 0), dL = simAtSeed(p, p.length - 2);
+  sim = { pts: p, cum, totNm: tot, spd, lph, totH: tot / spd, scale: 600,
+          banked: 0, ts: performance.now(), running: true, lastDeg: d0,
+          deg0: d0, degLast: dL,
+          marker: L.marker(p[0], { icon: simIcon(d0), keyboard: false, zIndexOffset: 2000 }).addTo(map) };
+  simEl('simBtn').style.display = 'none';
+  simEl('simHud').style.display = 'block';
+  simEl('simPause').textContent = '⏸';
+  simEl('simScale').textContent = '600×';
+  simTick();
+};
+function simAtSeed(p, i){
+  const a = p[i], b = p[i + 1];
+  const dLon = (b[1] - a[1]) * Math.cos((a[0] + b[0]) * Math.PI / 360), dLat = b[0] - a[0];
+  return (Math.atan2(dLon, dLat) * 180 / Math.PI + 360) % 360;
+}
+simEl('simPause').onclick = () => {
+  if (!sim) return;
+  if (sim.running){ simBank(); sim.running = false; simEl('simPause').textContent = '▶'; cancelAnimationFrame(sim.raf); }
+  else if (simElapsedH() * sim.spd < sim.totNm){ sim.ts = performance.now(); sim.running = true; simEl('simPause').textContent = '⏸'; simTick(); }
+};
+simEl('simScale').onclick = () => {
+  if (!sim) return;
+  simBank();
+  sim.scale = SIM_SCALES[(SIM_SCALES.indexOf(sim.scale) + 1) % SIM_SCALES.length];
+  simEl('simScale').textContent = sim.scale + '×';
+};
+simEl('simStop').onclick = () => {
+  if (!sim) return;
+  cancelAnimationFrame(sim.raf);
+  map.removeLayer(sim.marker);
+  sim = null;
+  simEl('simHud').style.display = 'none';
+  simEl('simBtn').style.display = '';
+};
 
 // ---- init: region index + selector ----
 const REGION_EN = {
