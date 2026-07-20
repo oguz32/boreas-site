@@ -444,6 +444,17 @@ simEl('simStop').onclick = () => {
   simEl('simHud').style.display = 'none';
   simEl('simBtn').style.display = '';
 };
+// Marketing hook: ?sim=demo draws a sample Marmara route and starts the
+// simulation automatically - shared links land on a moving boat.
+if (/[?&]sim=demo/.test(location.search)){
+  setTimeout(function(){
+    if (pts.length) return;
+    pts.push([40.93,28.75],[40.60,28.60],[40.45,28.20],[40.42,27.80]);
+    redraw();
+    map.fitBounds(L.latLngBounds(pts).pad(0.18));
+    simEl('simBtn').click();
+  }, 1200);
+}
 
 // ---- init: region index + selector ----
 fetch('/demo/regions.json').then(r=>r.json()).then(list=>{
