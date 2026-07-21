@@ -82,7 +82,15 @@ ORDER = [
     ("balear", "Balear Adaları"),
     ("portekiz-guney", "Portekiz – Algarve"), ("portekiz-bati", "Portekiz – Atlantik"),
     ("hirvatistan-kuzey", "Hırvatistan – Kuzey"), ("hirvatistan-guney", "Hırvatistan – Güney"),
-    ("malta", "Malta"), ("karadag", "Karadağ"),
+    ("italya-ligurya", "İtalya – Liguria/Toskana"),
+    ("italya-tiren", "İtalya – Tiren (Roma–Napoli)"),
+    ("italya-sardunya", "İtalya – Sardunya"),
+    ("italya-sicilya", "İtalya – Sicilya"),
+    ("italya-adriyatik-kuzey", "İtalya – Adriyatik Kuzey"),
+    ("italya-adriyatik-guney", "İtalya – Adriyatik Güney"),
+    ("fransa-azur", "Fransa – Côte d'Azur"),
+    ("korsika", "Fransa – Korsika"),
+    ("malta", "Malta"), ("karadag", "Karadağ"), ("arnavutluk", "Arnavutluk"),
 ]
 
 index = []
